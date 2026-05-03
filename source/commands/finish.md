@@ -190,7 +190,7 @@ The report has three parts:
 
 **Don't pad the polish.** If the interface is well-polished and little remains, the change list will be short. Say so. A one-line report saying "the project is in good shape" is stronger than a padded list of marginal tweaks.
 
-**Don't re-run other correctives.** If the user has already run `/typeface`, `/colorgrade`, etc., trust that work. Polish any small drift that's happened since, but don't repeat the substantial decisions.
+**Don't re-run other correctives.** `/finish` is the cross-dimensional polish sweep, not a re-run of any single dimensional corrective. If the user has already run `/typeface`, `/colorgrade`, `/refine`, `/pace`, `/voice`, etc., trust that work as the established direction. Polish only the small drift that's accumulated across dimensions since (a missed smart quote here, a contrast value that's close to minimum there, one focus ring offset that drifted) — not the substantial decisions those correctives already made. The value of `/finish` is touching every dimension lightly in one pass; the moment it starts re-doing dimensional work, it's stopped being polish and become redundant correction.
 
 **Don't introduce new patterns.** Polish is tightening existing patterns, not introducing new ones. If the project could benefit from a new approach (new token scale, new voice convention), that's design work, not polish.
 

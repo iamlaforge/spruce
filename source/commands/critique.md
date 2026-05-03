@@ -30,8 +30,13 @@ Do not use `/critique` when:
 - The user wants structured technical findings (use `/survey`).
 - The user wants UX substrate review (use `/uxreview`).
 - The user wants fast anti-pattern detection (use `/detect`).
+- The user wants HCD-grounded structured findings tied to named personas + jobs (use `/audit`).
 - The user wants fixes applied, not feedback offered (use corrective commands).
 - The work is early enough that directional feedback would be premature — the user should make more decisions before asking for directional critique.
+
+### Relationship to /audit
+
+`/critique` and `/audit` can both address whether the design is serving what it's trying to be — but the format and ground differ. `/critique` evaluates narratively, at the level of character + point of view + coherence, independent of any specific user. `/audit` evaluates structurally against named personas + jobs, with severity-tiered findings tied to specific user impact. The narrative format of `/critique` is the value when you want a design-director-level read; the structured format of `/audit` is the value when you want findings the team can prioritize and act on. They're complementary. Running both on the same scope produces different conversation; neither replaces the other.
 
 ---
 

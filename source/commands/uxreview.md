@@ -51,6 +51,10 @@ Do not use `/uxreview` when:
 
 This discipline keeps `/uxreview` focused. When a finding genuinely crosses domains, note it but stay scoped: "Error states are missing across the checkout flow (UX). The specific copy for these states should be addressed separately with `/voice` once the states exist."
 
+### Relationship to /audit
+
+`/uxreview` and `/audit` (the Discovery tier's HCD-grounded evaluation command) both flag state coverage gaps but frame them differently. `/uxreview` frames findings against general UX principles ("every list needs an empty state"); `/audit` frames them against specific user impact ("this empty state fails [persona] doing [job] because…"). When both have been run on the same scope, `/audit` can reference `/uxreview`'s state-coverage findings rather than re-evaluating them — `/audit`'s distinct value is the HCD-grounded findings only it can surface (behavioral anti-patterns, persona-specific failures, journey-gap analysis). Run `/uxreview` for substrate-discipline review; run `/audit` when the project has `.personas.md` + `.jtbd.md` and you want findings tied to named users + jobs.
+
 ---
 
 ## Scope Handling

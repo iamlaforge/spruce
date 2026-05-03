@@ -27,7 +27,12 @@ Do not use `/detect` when:
 - You want comprehensive findings with severity and action plans (use `/survey`).
 - You want design-direction feedback on feel and character (use `/critique`).
 - You want UX-substrate review specifically (use `/uxreview`).
+- You want HCD-grounded findings tied to named personas + jobs (use `/audit`).
 - You want to fix problems rather than find them (use corrective commands).
+
+### Relationship to /audit
+
+`/detect` scans against the dimensional anti-pattern catalogs — named UI anti-patterns from each reference file (the SaaS CTA, the three-equal-cards layout, the friendly-professional voice, etc.). `/audit` surfaces behavioral anti-patterns grounded in named personas + jobs (Choice Overload, Premature Commitment, Cognitive Tax, Engagement Trap, Persona Mismatch). UI anti-patterns and behavioral anti-patterns are different categories — both can be present in the same surface. `/detect` is fast and binary; `/audit` is structured and grounded in HCD artifacts. Run `/detect` for fast triage; run `/audit` when the project has personas + jobs and you want findings the UI-pattern catalog can't surface.
 
 ---
 

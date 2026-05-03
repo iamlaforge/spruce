@@ -27,8 +27,13 @@ Do not use `/survey` when:
 - The user wants UX-specific review, not full-system review (use `/uxreview`).
 - The user wants opinionated design-director feedback rather than structured findings (use `/critique`).
 - The user wants fast anti-pattern detection without full analysis (use `/detect`).
+- The user wants HCD-grounded findings tied to named personas + jobs (use `/audit`).
 - The user wants to fix something, not find what to fix (use the corrective commands).
 - The user has already identified the problem and just wants it corrected.
+
+### Relationship to /audit
+
+`/survey` and `/audit` both produce structured severity-tiered findings, but the lens differs. `/survey` evaluates against dimensional principles (typography, color, spatial, component, motion, voice, UX). `/audit` evaluates against HCD artifacts (`.personas.md` + `.jtbd.md`, plus `.journeys.md` and `.scenarios.md` when present). `/survey` works without HCD artifacts; `/audit` requires them. Run `/survey` for comprehensive dimensional review; run `/audit` for HCD-grounded evaluation tied to specific user impact. Findings can overlap (a single issue might be flagged by both lenses), but the framings are distinct and complementary.
 
 ---
 
