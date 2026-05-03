@@ -17,6 +17,7 @@ import { PaceDemo } from "@/components/commands/PaceDemo";
 import { ReduceDemo } from "@/components/commands/ReduceDemo";
 import { RefineDemo } from "@/components/commands/RefineDemo";
 import { RemixDemo } from "@/components/commands/RemixDemo";
+import { SketchDemo } from "@/components/commands/SketchDemo";
 import { SpruceUpDemo } from "@/components/commands/SpruceUpDemo";
 import { SurveyDemo } from "@/components/commands/SurveyDemo";
 import { UxreviewDemo } from "@/components/commands/UxreviewDemo";
@@ -28,6 +29,7 @@ import { VoiceDemo } from "@/components/commands/VoiceDemo";
 // no demo (the detail page falls through to prose-only).
 const DEMOS: Record<string, ReactNode> = {
   "spruce-up": <SpruceUpDemo />,
+  sketch: <SketchDemo />,
   foundations: <FoundationsDemo />,
   design: <DesignDemo />,
   decide: <DecideDemo />,

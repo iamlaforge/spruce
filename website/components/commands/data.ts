@@ -65,8 +65,8 @@ export const TIERS: Tier[] = [
     id: "generative",
     label: "Generative",
     essay:
-      "Producing new design work. /foundations generates the tokens and primitives the rest of the system composes into — colors, type scale, spacing, motion. Then three commitment levels for the design work itself: autonomous (/design), guided (/decide), or exploratory (/remix), depending on how directed you want to be.",
-    slugs: ["foundations", "design", "decide", "remix"],
+      "Producing new design work. /sketch establishes visual direction first — typography, color, texture, motion, iconography — before any tokens commit. /foundations then codifies the direction into a starter system: color tokens, type scale, spacing, radius, motion, plus the primitive components everything else composes into. Then three commitment levels for the design work itself: autonomous (/design), guided (/decide), or exploratory (/remix), depending on how directed you want to be.",
+    slugs: ["sketch", "foundations", "design", "decide", "remix"],
   },
   {
     id: "diagnostic",
@@ -160,6 +160,55 @@ export const COMMANDS: Record<string, CommandData> = {
   },
 
   // -------------------------------------------------------------------------
+  // /sketch — visual direction between /spruce-up and /foundations.
+  // -------------------------------------------------------------------------
+  sketch: {
+    slug: "sketch",
+    name: "/sketch",
+    tier: "generative",
+    tagline: "Establish visual direction before tokens commit.",
+    detail: {
+      whatItDoes: [
+        "Most AI design workflows skip a step: nothing asks 'what should this *feel* like?' before production starts. Without that step, design tokens emerge from text alone — exactly the kind of process that produces generic AI-default output. /sketch fills the gap. It reads `.spruce.md` and produces visual direction across the dimensions where character lives — typography, color, texture, iconography, layout, motion, anti-references — and writes the result to `.sketch.md` as a persistent direction document.",
+        "Character, not commitment. /sketch reasons about what the product should *feel* like and names the families and bands that express that feel — 'a humanist sans paired with an editorial serif (candidates: Söhne, Halyard, Inter Display; Lora, Tiempos, Newsreader)', 'warm-neutral palette anchored by sage and deep indigo with restrained lavender and peach accents', 'primary transitions in the slow range, around 300–500ms.' It doesn't pick the specific typeface, the specific OKLCH values, the specific durations. Those are /foundations' work. Keeping the line clean preserves real creative work for both commands.",
+      ],
+      whenToUse: [
+        "You've run /spruce-up and have a `.spruce.md` context file, but haven't yet generated a design system.",
+        "You want to explore visual character before committing to specific tokens or components.",
+        "You want to see what the product could feel like across multiple dimensions — typography, color, texture, motion, iconography — with cohesive direction.",
+        "You're working with stakeholders who need to align on visual character before implementation begins.",
+        "The product's character is clear in your head but you want help articulating it specifically.",
+      ],
+      howToUse: {
+        examples: ["/sketch", "/sketch --auto"],
+        context:
+          "Conversational by default — /sketch walks through the dimensions one at a time, surfacing options and asking for direction at key moments. The --auto flag produces a complete brief in one pass, useful when you've already done the thinking and just need it written up. Output is `.sketch.md` at the project root, alongside `.spruce.md`. /foundations reads both files next, picking the specific values that express the character /sketch established.",
+      },
+      antiPatterns: [
+        {
+          text: "Skipping /sketch and going straight from /spruce-up to /foundations. Tokens emerge from text alone — exactly the kind of process that produces generic AI-default output. The visual exploration step exists for a reason.",
+        },
+        {
+          text: "Committing to single specific typefaces, hex values, or precise durations in the sketch. /sketch is character, not values. Name typeface candidates that fit the character; name color families that anchor the palette; name motion bands that match the tempo. /foundations picks the specific values.",
+        },
+        {
+          text: "Producing a tokenized system inside .sketch.md. 'A 1.25 ratio type scale starting at 16px' is /foundations' work. /sketch establishes 'editorial typography that prioritizes readability at body size.' Crossing this line makes /foundations look like mechanical translation.",
+        },
+        {
+          text: "Vague direction. 'Modern and clean' is not direction. Push for specific character qualities, specific palette families, specific motion tempo. Specificity at the character level is the whole point of the command.",
+        },
+        {
+          text: "Reaching for AI-default visual directions — purple gradients, tech-blue accents, geometric sans everywhere, drop-shadow elevation. /sketch exists to resist these attractors; lean toward direction tied to the product's character.",
+        },
+        {
+          text: "Running /sketch without `.spruce.md`. The command requires the context file as input — without it, there's nothing to calibrate direction against. Run /spruce-up first.",
+        },
+      ],
+      seeAlso: ["spruce-up", "foundations", "remix"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
   // Stubs — name + tier + tagline only. Detail content TBD.
   // -------------------------------------------------------------------------
   "spruce-up": {
@@ -194,7 +243,7 @@ export const COMMANDS: Record<string, CommandData> = {
           text: "Treating the context file as set-and-forget. As the product's audience or direction shifts, the file gets stale. Re-running /spruce-up update keeps it current.",
         },
       ],
-      seeAlso: ["foundations", "design", "decide"],
+      seeAlso: ["sketch", "foundations", "design"],
     },
   },
   foundations: {
@@ -205,10 +254,11 @@ export const COMMANDS: Record<string, CommandData> = {
     detail: {
       whatItDoes: [
         "AI tools generate the same baseline for every product — Inter on white, blue accents, 8px radii, Tailwind's default scale. /foundations replaces the inheritance with a starter system calibrated to your project's character: color tokens, type scale, spacing, radius, motion, plus the primitive components everything else composes from.",
-        "Unlike the corrective commands, /foundations doesn't fix existing code — it generates the design substrate from scratch, calibrated to your `.spruce.md` context. The full system is generated end-to-end; significant character shifts (accent strategy, type pairing, spacing base) are surfaced for your approval before commitment. Run /foundations once after /spruce-up; every command in the catalog composes within the tokens it produces.",
+        "/foundations is the commit-to-specifics step. It reads `.spruce.md` for context and `.sketch.md` for visual direction, then picks the specific values that express the character /sketch established — which typeface from the candidates, what specific OKLCH values for the color families /sketch named, what scale, what spacing rhythm, what specific durations within /sketch's motion bands, what primitive components anchor the system. The creative work at this stage is selection and codification, not character discovery — that already happened in /sketch.",
+        "The output is end-to-end: design tokens across all domains, three to five primitive components implementing the system, plus a brief system guide. Significant decisions inside the codification step (accent strategy, type pairing, spacing base) are surfaced for your approval before commitment. When `.sketch.md` doesn't exist, /foundations can still run — it makes the character calls inside itself but flags them clearly so they're easy to redirect.",
       ],
       whenToUse: [
-        "Starting a new project after running /spruce-up.",
+        "Starting a new project after /spruce-up has captured context and /sketch has captured visual direction.",
         "The project has no design tokens or primitive components yet.",
         "Existing tokens are arbitrary — no scale, no system, just one-off values.",
         "A project's existing design system needs regenerating for a new direction.",
@@ -240,7 +290,7 @@ export const COMMANDS: Record<string, CommandData> = {
           text: "“Custom” tokens that just rename Tailwind defaults without character consideration — `color.primary = blue-500`.",
         },
       ],
-      seeAlso: ["spruce-up", "design", "typeface"],
+      seeAlso: ["sketch", "spruce-up", "design"],
     },
   },
   decide: {
