@@ -5,7 +5,7 @@ import { ALL_SLUGS, TIERS } from "@/components/commands/data";
 export const metadata: Metadata = {
   title: "Commands — Spruce",
   description:
-    "Nineteen commands across three tiers — diagnostic, corrective, generative. Each opens a specific conversation with your AI tool.",
+    "Commands across five tiers — setup, discovery, generative, diagnostic, corrective. Each opens a specific conversation with your AI tool.",
 };
 
 /**
@@ -29,7 +29,7 @@ export default function CommandsIndex() {
           </span>
         </h1>
         <p className="font-display italic font-normal text-xl md:text-2xl text-ink-muted leading-snug text-balance max-w-prose">
-          Spruce is structured as three tiers. They aren&rsquo;t levels of
+          Spruce is structured as five tiers. They aren&rsquo;t levels of
           capability — they&rsquo;re shapes of conversation. Picking the right
           tier matters more than picking the right command within it.
         </p>

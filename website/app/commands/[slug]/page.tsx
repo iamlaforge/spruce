@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CommandDetail } from "@/components/commands/CommandDetail";
 import { ALL_SLUGS, COMMANDS } from "@/components/commands/data";
 import { ArrangeDemo } from "@/components/commands/ArrangeDemo";
+import { AuditDemo } from "@/components/commands/AuditDemo";
 import { ColorgradeDemo } from "@/components/commands/ColorgradeDemo";
 import { CritiqueDemo } from "@/components/commands/CritiqueDemo";
 import { DecideDemo } from "@/components/commands/DecideDemo";
@@ -13,10 +14,14 @@ import { ExplainDemo } from "@/components/commands/ExplainDemo";
 import { FinishDemo } from "@/components/commands/FinishDemo";
 import { FortifyDemo } from "@/components/commands/FortifyDemo";
 import { FoundationsDemo } from "@/components/commands/FoundationsDemo";
+import { JourneyDemo } from "@/components/commands/JourneyDemo";
+import { JtbdDemo } from "@/components/commands/JtbdDemo";
 import { PaceDemo } from "@/components/commands/PaceDemo";
+import { PersonasDemo } from "@/components/commands/PersonasDemo";
 import { ReduceDemo } from "@/components/commands/ReduceDemo";
 import { RefineDemo } from "@/components/commands/RefineDemo";
 import { RemixDemo } from "@/components/commands/RemixDemo";
+import { ScenariosDemo } from "@/components/commands/ScenariosDemo";
 import { SketchDemo } from "@/components/commands/SketchDemo";
 import { SpruceUpDemo } from "@/components/commands/SpruceUpDemo";
 import { SurveyDemo } from "@/components/commands/SurveyDemo";
@@ -29,6 +34,11 @@ import { VoiceDemo } from "@/components/commands/VoiceDemo";
 // no demo (the detail page falls through to prose-only).
 const DEMOS: Record<string, ReactNode> = {
   "spruce-up": <SpruceUpDemo />,
+  personas: <PersonasDemo />,
+  jtbd: <JtbdDemo />,
+  journey: <JourneyDemo />,
+  scenarios: <ScenariosDemo />,
+  audit: <AuditDemo />,
   sketch: <SketchDemo />,
   foundations: <FoundationsDemo />,
   design: <DesignDemo />,

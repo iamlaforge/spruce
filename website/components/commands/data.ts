@@ -8,7 +8,12 @@
 // (intentionally not alphabetical; reflects how commands are typically
 // reached for in practice).
 
-export type CommandTier = "setup" | "diagnostic" | "corrective" | "generative";
+export type CommandTier =
+  | "setup"
+  | "discovery"
+  | "diagnostic"
+  | "corrective"
+  | "generative";
 
 export type AntiPattern = {
   text: string;
@@ -49,9 +54,10 @@ export type Tier = {
 
 // Tier order reflects a natural workflow path:
 //   1. Setup the project context.
-//   2. Generate something (tokens first, then design work).
-//   3. Diagnose what was generated.
-//   4. Correct what's drifted.
+//   2. Discovery — ground the work in named users, jobs, journeys, scenarios.
+//   3. Generate something (tokens first, then design work).
+//   4. Diagnose what was generated.
+//   5. Correct what's drifted.
 // Sidebar and index page render in this order.
 export const TIERS: Tier[] = [
   {
@@ -60,6 +66,13 @@ export const TIERS: Tier[] = [
     essay:
       "One command, run before everything else. /spruce-up captures your project's character — what you're building, who uses it, what voice and visual direction you want — into a context file the rest of Spruce reads from. Every other command works better when this exists; many work poorly without it.",
     slugs: ["spruce-up"],
+  },
+  {
+    id: "discovery",
+    label: "Discovery",
+    essay:
+      "Reasoning about who the design serves, before reasoning about how it should look. The Discovery tier produces the HCD artifacts — personas, jobs-to-be-done, journeys, scenarios — that downstream commands read from when they need to ground a decision in a real user doing a real thing. Each command runs in three modes: draft from context when no research exists, structure user-supplied research when it does, or pressure-test a finished artifact for assumptions. /audit is the diagnostic counterpart — the only diagnostic command that frames findings against named personas + jobs rather than against general principles. Discovery is optional; every other tier can run without it, and most do. But work that's grounded in Discovery reads as work made for someone specifically rather than work made for the average of training data.",
+    slugs: ["personas", "jtbd", "journey", "scenarios", "audit"],
   },
   {
     id: "generative",
@@ -98,6 +111,7 @@ export const TIERS: Tier[] = [
 
 export const TIER_LABELS: Record<CommandTier, string> = {
   setup: "Setup",
+  discovery: "Discovery",
   diagnostic: "Diagnostic",
   corrective: "Corrective",
   generative: "Generative",
@@ -205,6 +219,258 @@ export const COMMANDS: Record<string, CommandData> = {
         },
       ],
       seeAlso: ["spruce-up", "foundations", "remix"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // /personas — Discovery tier. Drafts user types from context (Mode A),
+  // structures supplied research (Mode B), or pressure-tests an existing
+  // file (Mode C). Output: .personas.md.
+  // -------------------------------------------------------------------------
+  personas: {
+    slug: "personas",
+    name: "/personas",
+    tier: "discovery",
+    tagline: "Establish who the design is for, not just what it should look like.",
+    detail: {
+      whatItDoes: [
+        "Most AI design workflows treat “the user” as an undifferentiated abstraction — a stand-in for whoever the model has seen most. /personas replaces the abstraction with named primary and secondary user types calibrated to the product, written into `.personas.md` so every downstream command (/design, /decide, /critique, /uxreview, /audit) can ground decisions in a specific person doing a specific thing rather than an average reader.",
+        "Three modes, surfaced before the work begins. Mode A drafts personas from `.spruce.md` when no research exists — every persona explicitly labelled as a structured assumption rather than a finding. Mode B structures user-supplied research into the artifact format. Mode C pressure-tests a finished `.personas.md` against context for character drift, missing dimensions, or unstated assumptions. The mode question protects the artifact's truth value — context-derived personas don't get presented as research-grounded.",
+      ],
+      whenToUse: [
+        "Starting a project where downstream design decisions should be grounded in named users rather than an average reader.",
+        "You have user research and want it structured into the artifact format Spruce reads from.",
+        "An existing `.personas.md` exists but hasn't been pressure-tested for assumptions or drift.",
+        "Another command flagged that audience context was thin and suggested grounding work in named users first.",
+        "Preparing to run /audit and want HCD artifacts in place to ground its findings.",
+      ],
+      howToUse: {
+        examples: ["/personas", "/personas pressure-test", "/personas update"],
+        context:
+          "By default /personas asks which mode to run — drafting from context, structuring supplied research, or pressure-testing an existing file. Every persona names its confidence (research-grounded / context-derived / assumed) so downstream commands can weight findings appropriately. Output is `.personas.md` at the project root, alongside `.spruce.md`.",
+      },
+      antiPatterns: [
+        {
+          text: "Stock-template personas with names, photos, and demographics that read as marketing personas rather than design tools. Personas should serve specific design decisions, not populate a slide.",
+        },
+        {
+          text: "Context-derived personas presented as research-grounded findings. Without the confidence label, downstream commands can't weight the artifact correctly — and the team can't tell what they actually know about their users.",
+        },
+        {
+          text: "Personas that describe demographics (“34-year-old marketing manager in Austin”) without naming what jobs they're doing or what they need from the design. Demographics aren't a design constraint; jobs and needs are.",
+        },
+        {
+          text: "Five-or-more personas that fragment design attention. The artifact is most useful with a primary + secondary; additional personas dilute focus without adding decision-grounding power.",
+        },
+        {
+          text: "Personas that don't inform any design decision. If a persona's existence wouldn't change a design call, it's documentation rather than a design tool — cut it.",
+        },
+      ],
+      seeAlso: ["jtbd", "journey", "scenarios", "audit"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // /jtbd — Discovery tier. Articulates the underlying jobs the personas in
+  // .personas.md are trying to accomplish, independent of any specific
+  // solution. Output: .jtbd.md.
+  // -------------------------------------------------------------------------
+  jtbd: {
+    slug: "jtbd",
+    name: "/jtbd",
+    tier: "discovery",
+    tagline: "Name the jobs the personas hire the product to do.",
+    detail: {
+      whatItDoes: [
+        "Personas describe who the user is; jobs describe what they're trying to accomplish. /jtbd articulates the underlying jobs — functional, emotional, social — that the personas in `.personas.md` are hiring the product to do, independent of any specific feature or solution. Output is `.jtbd.md`, read by every command that should ground feature or copy decisions in real user motivation rather than in surface-level feature descriptions.",
+        "Three layers, captured per persona. Functional jobs name what someone is trying to get done in the world. Emotional jobs name how they want to feel about it. Social jobs name how they want to be perceived. Cross-persona analysis surfaces shared jobs (designs that serve multiple personas at once), diverging jobs (same situation, different motivation), and conflicting jobs (serving one works against another) — each with downstream design implications.",
+      ],
+      whenToUse: [
+        "Personas exist (`.personas.md`) but feature decisions feel disconnected from underlying user motivation.",
+        "Multiple legitimate features could be built and you want a way to evaluate them against real user jobs.",
+        "Copy is drifting toward feature descriptions (“Manage your projects with our tool”) rather than job descriptions (“Settle the day's loose ends before they become tomorrow's problem”).",
+        "You want cross-persona conflict to surface as design tradeoffs rather than getting averaged-away in implementation.",
+        "Preparing to /design or /decide a new feature and want to ground the decisions in jobs rather than competitive feature parity.",
+      ],
+      howToUse: {
+        examples: ["/jtbd", "/jtbd update", "/jtbd pressure-test"],
+        context:
+          "By default /jtbd asks which mode to run — drafting from `.personas.md`, structuring supplied research, or pressure-testing an existing file. Every job names its confidence so downstream commands can weight it. Output is `.jtbd.md`, organized by persona with cross-persona analysis at the end.",
+      },
+      antiPatterns: [
+        {
+          text: "Feature descriptions disguised as jobs (“Use the calendar to schedule meetings”). A real job is solution-independent — it would still exist if the feature didn't.",
+        },
+        {
+          text: "Functional jobs only, no emotional or social. The functional layer is the easiest to articulate but the most generic; the emotional and social layers are where character-driven design decisions live.",
+        },
+        {
+          text: "Jobs that don't connect to any persona. Floating jobs without a named user can't be evaluated — every job should belong to a specific persona doing a specific thing.",
+        },
+        {
+          text: "Cross-persona conflicts averaged away rather than surfaced. The value of /jtbd is naming the conflicts so /decide can address them deliberately, not hiding them in a compromise neither persona wants.",
+        },
+        {
+          text: "Stock JTBD framings (“I want to save time and reduce friction”) that could apply to any product. Specificity is the point — jobs that could be on any company's website aren't doing design work.",
+        },
+      ],
+      seeAlso: ["personas", "journey", "scenarios", "audit"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // /journey — Discovery tier. Maps how a specific persona accomplishes a
+  // specific job through real touchpoints, with emotional state, friction,
+  // and opportunity tracked along the way. Output: .journeys.md.
+  // -------------------------------------------------------------------------
+  journey: {
+    slug: "journey",
+    name: "/journey",
+    tier: "discovery",
+    tagline: "Map a persona's path through a real flow, with emotional arc and friction.",
+    detail: {
+      whatItDoes: [
+        "Personas and jobs describe who and what; journeys describe how. /journey maps a specific persona accomplishing a specific job through real touchpoints — what happens at each step, what emotional state they're in, what friction they encounter, what opportunity each touchpoint represents. Output is `.journeys.md`, read by /design, /decide, and /audit when decisions should be grounded in the lived experience of a flow rather than in its idealized happy path.",
+        "Current-state vs. future-state, paired. The default /journey output maps the current-state journey (how it works today, friction included) and an optional future-state journey (how it should work after the design intervention) so the comparison itself becomes the design brief. The journey's emotional arc, key moments, and named opportunities feed directly into /design briefs, /decide tradeoffs, and /audit findings.",
+      ],
+      whenToUse: [
+        "A specific flow feels off and you want to understand where the friction actually lives, not where it's most visible.",
+        "Designing a new flow and want to map the lived experience before committing to the structure.",
+        "The team is debating multiple flow designs and a journey would surface which design serves the persona's emotional arc better.",
+        "Preparing to /audit a flow and want a journey artifact in place to ground the findings.",
+        "Comparing current-state vs. proposed-state and want the comparison to be specific rather than abstract.",
+      ],
+      howToUse: {
+        examples: [
+          "/journey",
+          "/journey Maya morning practice",
+          "/journey checkout flow current-state + future-state",
+        ],
+        context:
+          "By default /journey asks which persona, which job, and whether to map current-state, future-state, or both. The journey's setup grounds the moment in specifics (time of day, device, surrounding context); each touchpoint names what happens, the persona's emotional state, friction (if any), and opportunity (if any). Output is `.journeys.md` with a comparison section when both states are mapped.",
+      },
+      antiPatterns: [
+        {
+          text: "Idealized happy-path journeys with no friction. The value of a journey is surfacing where the lived experience diverges from the design's intent — a frictionless journey is documentation, not design tool.",
+        },
+        {
+          text: "Touchpoint counts that double as feature lists. A journey isn't a feature inventory; it's a sequence of moments the persona moves through. If every feature gets a touchpoint, the journey is too granular to be useful.",
+        },
+        {
+          text: "Generic emotional states (“neutral,” “engaged,” “satisfied”). Emotional states should be specific to the moment — “task-focused, slightly impatient because she came to start, not to choose” is useful; “engaged” is not.",
+        },
+        {
+          text: "Opportunity callouts that don't map to design decisions. Every opportunity should connect to a specific corrective or generative move; opportunities without next steps become aspirational notes.",
+        },
+        {
+          text: "Future-state journeys that magically remove all friction. The strongest future-states preserve the friction the design can't solve (system-level constraints, OS-level interruptions) and only address the friction the design owns.",
+        },
+      ],
+      seeAlso: ["personas", "jtbd", "scenarios", "audit"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // /scenarios — Discovery tier. Concrete narratives anchoring a named
+  // persona doing a specific job in a specific moment where the design
+  // will be encountered. Output: .scenarios.md.
+  // -------------------------------------------------------------------------
+  scenarios: {
+    slug: "scenarios",
+    name: "/scenarios",
+    tier: "discovery",
+    tagline: "Anchor design decisions in concrete moments, not abstract use cases.",
+    detail: {
+      whatItDoes: [
+        "Personas describe types; jobs describe motivations; journeys describe sequences. Scenarios are the lightest of the Discovery artifacts and the most concrete — short narratives anchoring a named persona doing a specific job in a specific moment where the design will be encountered. Output is `.scenarios.md`, the artifact designers keep on the wall while making specific design decisions.",
+        "A scenario is one moment, not one flow. Where /journey maps a sequence, /scenarios captures the lived specificity of a single moment — Tuesday morning at 6:45am, kitchen counter, coffee brewing, fourteen unread notifications, half-attention. The specificity is the point: a scenario lets the design team test whether a design serves the moment as it actually exists, rather than the moment as the design team imagines it.",
+      ],
+      whenToUse: [
+        "Personas and jobs exist but design decisions feel abstract — the team wants concrete moments to test against.",
+        "A specific surface (a home page, a dialog, an empty state) needs design decisions and you want a scenario to anchor them.",
+        "The team is debating attention assumptions (“how much can we ask of the user here?”) and a scenario would clarify the actual context of use.",
+        "Two scenarios from different personas would surface a tradeoff worth designing for explicitly.",
+        "You want a quick HCD artifact without committing to the depth of /journey.",
+      ],
+      howToUse: {
+        examples: [
+          "/scenarios",
+          "/scenarios Maya morning kitchen",
+          "/scenarios Jordan first-time on the couch",
+        ],
+        context:
+          "By default /scenarios drafts one or two scenarios per significant decision surface, anchored to specific personas + jobs. Each scenario names the persona, the job, the lived narrative, and the design implication. Output is `.scenarios.md` — short, readable, designed to live on the wall during design work.",
+      },
+      antiPatterns: [
+        {
+          text: "Generic use-case descriptions (“user logs in to view dashboard”) instead of lived narratives. The whole point of a scenario is its specificity — a use case with a name attached isn't a scenario.",
+        },
+        {
+          text: "Scenarios that describe the design instead of the moment (“the user sees the personalization banner and taps Begin practice”). Scenarios should describe the world the design enters, not the design itself.",
+        },
+        {
+          text: "Aspirational scenarios where the persona is fully attentive, fully informed, and ready to engage. Real scenarios capture half-attention, interruption, fatigue, skepticism — the conditions the design has to work in, not the conditions the design wishes for.",
+        },
+        {
+          text: "Twenty-scenario inventories that try to cover every possible context. Scenarios are most useful when there are few of them and each one carries weight; padding undermines the artifact's role.",
+        },
+        {
+          text: "Scenarios without design implications. The closing line of every scenario should answer “so what does this mean for the design?” — without it, the scenario is fiction rather than a design tool.",
+        },
+      ],
+      seeAlso: ["personas", "jtbd", "journey", "audit"],
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // /audit — Discovery tier (diagnostic counterpart). HCD-grounded
+  // evaluation: findings tied to named personas + jobs, not general
+  // principles. Output: structured findings document, no code changes.
+  // -------------------------------------------------------------------------
+  audit: {
+    slug: "audit",
+    name: "/audit",
+    tier: "discovery",
+    tagline: "HCD-grounded evaluation against named personas and their jobs.",
+    detail: {
+      whatItDoes: [
+        "Where /survey, /uxreview, /critique, and /detect frame findings against general principles, /audit frames them against the specific HCD artifacts — `.personas.md`, `.jtbd.md`, `.journeys.md`, `.scenarios.md`. Every finding is tied to a named persona doing a named job, with the journey or scenario that surfaced it called out explicitly. The frame is “this empty state fails Maya doing her morning practice job because…” rather than “every list needs an empty state.”",
+        "Findings include severity (Blocking / Significant / Friction / Polish), confidence (research-grounded / context-derived / assumed), and behavioral anti-pattern when applicable (Choice Overload, Premature Commitment, Cognitive Tax, Missing Recovery, Engagement Trap, Persona Mismatch). Cross-persona conflicts get surfaced as deliberate /decide calls rather than averaged away. /audit doesn't modify code; it produces findings the team acts on.",
+      ],
+      whenToUse: [
+        "HCD artifacts exist (at minimum `.personas.md` + `.jtbd.md`) and you want findings tied to specific users + jobs.",
+        "A /survey returned generic findings and you want a sharper, persona-grounded read on what to address first.",
+        "Cross-persona conflicts are likely (multiple personas with diverging jobs at the same touchpoint) and you want them surfaced explicitly.",
+        "Behavioral anti-patterns (Choice Overload, Engagement Trap, Cognitive Tax) are suspected and you want them named with their HCD-grounded justification.",
+        "Preparing to ship and want a final HCD-grounded read alongside the cross-dimensional /finish polish pass.",
+      ],
+      howToUse: {
+        examples: [
+          "/audit",
+          "/audit home page",
+          "/audit checkout flow",
+        ],
+        context:
+          "By default /audit reads every Discovery artifact in the project and evaluates the full surface against them. Pass a scope (page, flow, area) to focus the audit. Without HCD artifacts in place, /audit recommends running /personas + /jtbd first rather than degrading to generic findings — it's explicitly the HCD-grounded lens.",
+      },
+      antiPatterns: [
+        {
+          text: "Findings framed against general UX principles (“every list needs an empty state”) instead of against specific personas + jobs. That's /uxreview's frame; /audit's value is the HCD grounding.",
+        },
+        {
+          text: "Running /audit without HCD artifacts and producing generic findings anyway. The command should redirect to /personas + /jtbd rather than degrading silently.",
+        },
+        {
+          text: "Cross-persona conflicts averaged away in single recommendations (“design for both”) rather than surfaced as deliberate /decide tradeoffs.",
+        },
+        {
+          text: "Severity assigned mechanically (every empty state = Significant) rather than calibrated to which persona it affects, doing which job, in which scenario.",
+        },
+        {
+          text: "Behavioral anti-patterns named without justification. “This is Choice Overload” is weaker than “This is Choice Overload because Maya's morning context can't carry a six-option choice — surfaced in her morning kitchen scenario as half-attention.”",
+        },
+      ],
+      seeAlso: ["personas", "jtbd", "journey", "scenarios"],
     },
   },
 
