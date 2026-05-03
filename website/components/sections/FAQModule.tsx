@@ -40,7 +40,7 @@ export function FAQModule() {
 
   return (
     <Section id="faq" tone="default">
-      <SectionHeader mark="§ 04">FAQ &middot; Common questions</SectionHeader>
+      <SectionHeader mark="§ 03">FAQ &middot; Common questions</SectionHeader>
 
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 lg:gap-x-12">
         {/* LEFT: editorial frame. One editorial line that says what the

@@ -34,14 +34,15 @@ export const FAQ_GROUPS: FAQGroup[] = [
             <p>
               Rules files are passive — they load context the AI consults
               while it generates. Spruce is a reasoning system invoked by
-              command. Nineteen commands across three tiers — generative,
-              diagnostic, and corrective — each with its own reference file
-              that loads only when the command runs.
+              command. Twenty-five commands across five tiers — setup,
+              discovery, generative, diagnostic, corrective — each with its
+              own reference file that loads only when the command runs.
             </p>
             <p>
               The deeper difference is positioning. Rules tell the AI what
-              to avoid. Spruce gives you a vocabulary to direct the work and
-              surface the calls a creative director would make.
+              to avoid. Spruce gives you a vocabulary to direct the work,
+              grounds the work in who the product is for, and surfaces the
+              calls a creative director would make.
             </p>
           </>
         ),
@@ -107,13 +108,43 @@ export const FAQ_GROUPS: FAQGroup[] = [
     title: "Working with Spruce.",
     items: [
       {
-        slug: "review-commands-difference",
+        slug: "discovery-research",
         question:
-          "What's the difference between /survey, /critique, /uxreview, and /detect?",
+          "Do I need user research to use the Discovery commands?",
         answer: (
           <>
             <p>
-              Four review lenses, each with a different depth and a
+              No. Every Discovery command (
+              <code className="font-mono text-base text-accent">/personas</code>
+              ,{" "}
+              <code className="font-mono text-base text-accent">/jtbd</code>,{" "}
+              <code className="font-mono text-base text-accent">/journey</code>
+              ,{" "}
+              <code className="font-mono text-base text-accent">/scenarios</code>
+              ) runs in three modes — drafting from your{" "}
+              <code className="font-mono text-base text-accent">.spruce.md</code>{" "}
+              context when no research exists, structuring user-supplied
+              research when it does, or pressure-testing a finished
+              artifact for assumptions.
+            </p>
+            <p>
+              Context-derived artifacts are labelled honestly so downstream
+              commands know what to weight as a finding versus a structured
+              assumption. The point is to ground design decisions in named
+              users either way; research strengthens the artifact, but its
+              absence doesn&rsquo;t block the work.
+            </p>
+          </>
+        ),
+      },
+      {
+        slug: "review-commands-difference",
+        question:
+          "What's the difference between /survey, /critique, /uxreview, /detect, and /audit?",
+        answer: (
+          <>
+            <p>
+              Five review lenses, each with a different depth and a
               different question.{" "}
               <code className="font-mono text-base text-accent">/detect</code>{" "}
               is fast — a scan for named anti-patterns.{" "}
@@ -127,6 +158,18 @@ export const FAQ_GROUPS: FAQGroup[] = [
               speaks at the level of feel — does the design have a point of
               view, does it hedge, is it expressing what it&rsquo;s trying
               to express.
+            </p>
+            <p>
+              <code className="font-mono text-base text-accent">/audit</code>{" "}
+              is the HCD-grounded counterpart — the only diagnostic that
+              frames findings against named personas and the jobs
+              they&rsquo;re hiring the product to do. Requires a{" "}
+              <code className="font-mono text-base text-accent">.personas.md</code>{" "}
+              and{" "}
+              <code className="font-mono text-base text-accent">.jtbd.md</code>{" "}
+              in place; without them, /audit recommends running{" "}
+              <code className="font-mono text-base text-accent">/personas</code>{" "}
+              first rather than degrading to generic findings.
             </p>
             <p>
               For a fuller breakdown, see{" "}

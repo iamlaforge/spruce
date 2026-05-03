@@ -49,15 +49,31 @@ const PATTERNS: Pattern[] = [
     command: "/spruce up",
   },
   {
+    label: "Discover",
+    heading: "Ground the work in users.",
+    body: (
+      <>
+        Run <code className="font-mono text-sm text-ink">/personas</code>{" "}
+        to capture who the product is for. Spruce drafts from your{" "}
+        <code className="font-mono text-sm text-ink">.spruce.md</code>{" "}
+        context when you don&rsquo;t have research yet, structures it
+        when you do, or pressure-tests a finished artifact. Every
+        downstream command reasons from{" "}
+        <code className="font-mono text-sm text-ink">.personas.md</code>.
+      </>
+    ),
+    command: "/personas",
+  },
+  {
     label: "Generate",
     heading: "Generate calibrated design.",
     body: (
       <>
         Run <code className="font-mono text-sm text-ink">/design</code>{" "}
         followed by what you want. The output is calibrated to your
-        project&rsquo;s context, not generic SaaS templates. Spruce reasons
-        through typography, color, spacing, and component decisions before
-        writing code.
+        project&rsquo;s context and the personas you captured, not generic
+        SaaS templates. Spruce reasons through typography, color, spacing,
+        and component decisions before writing code.
       </>
     ),
     command: "/design the pricing page",
@@ -83,7 +99,7 @@ export function InstallParallel() {
 
   return (
     <Section id="install" tone="default">
-      <SectionHeader mark="§ 05">Install &middot; One command</SectionHeader>
+      <SectionHeader mark="§ 04">Install &middot; One command</SectionHeader>
 
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 lg:gap-x-12 gap-y-14 mb-16 md:mb-20">
         {/* LEFT: install action — unchanged. */}
@@ -112,7 +128,7 @@ export function InstallParallel() {
             After installing
           </p>
           <p className="mt-3 font-display font-normal text-xl md:text-2xl leading-tight tracking-tight text-ink text-balance">
-            Three patterns to start with.
+            Four patterns to start with.
           </p>
 
           {/* Tab strip — sits below the heading on a hairline rule. The
