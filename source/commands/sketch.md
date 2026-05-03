@@ -10,7 +10,7 @@ The visual direction command. `/sketch` sits between `/spruce up` and `/foundati
 
 This command exists because there's a gap in most AI design workflows: nothing asks "what should this *feel* like?" before production starts. Without that step, design tokens emerge from text alone, which is exactly the kind of process that produces generic AI-default output. `/sketch` institutionalizes the visual exploration step that real designers do before committing to a system.
 
-The command produces direction, not commitment. It might say "a humanist serif paired with a quiet humanist sans, evocative of editorial wellness publications" — but it doesn't yet specify weights, scale, or exact tokens. That's `/foundations`' job. The separation matters because `/sketch` is the conversation; `/foundations` is the codification.
+The command produces direction, not commitment. It might say "a humanist serif paired with a quiet humanist sans, evocative of editorial wellness publications" — but it doesn't yet specify which typeface, what weights, what scale, or any exact tokens. That's `/foundations`' job. The separation matters because `/sketch` is the conversation about character; `/foundations` is the codification of that character into a system. Keeping the line clean preserves real creative work for both commands — `/sketch` reasons about what the product should *feel* like; `/foundations` picks the specific values that express that feel.
 
 ---
 
@@ -66,14 +66,14 @@ The output covers the dimensions where visual character lives:
 What this product visually evokes. In conversational mode, this is described and explored together. In autonomous mode, it's stated. When the harness supports image generation, also produce 2-4 generated reference images that capture the visual mood. When it doesn't, describe the mood in vivid prose and link to sourced reference imagery if appropriate.
 
 ### Typography direction
-Specific typeface candidates with rationale for their character — *not yet a system*. Output looks like: "A humanist serif (Söhne, Tiempos, GT Sectra) paired with a quiet humanist sans (Söhne again, or Inter Display as a more conservative alternative). The pairing evokes editorial wellness publications — calm, considered, content-first."
+Typeface *character* — what the type should feel like — with candidate examples for illustration, *not a single committed pick and not yet a system*. Output looks like: "A thoughtful humanist serif paired with a quiet humanist sans — editorial register, content-first, evocative of considered wellness publications. Candidates that fit this character: Söhne, Halyard, or Inter Display for the sans; Lora, Tiempos, or Newsreader for the serif. Final pick happens in /foundations."
 
-The recommendation should resist AI-default attractors. If the context calls for a generic geometric sans, push back with reasoning. If it calls for distinction, lean into specific typefaces with character. Always provide rationale tied to the product's described character.
+The recommendation should resist AI-default attractors. If the context calls for a generic geometric sans, push back with reasoning. If it calls for distinction, name the *kind* of distinction the character wants (a feature serif for display, a wide humanist sans, a working serif with strong hierarchy) — then list a few candidate faces that illustrate, with /foundations picking the specific one. Always provide rationale tied to the product's described character.
 
 ### Color direction
-Palette character — warm/cool/neutral, accent strategy, mood — *not yet specific tokens*. Output looks like: "Warm-leaning neutral foundation in cream and sand tones, with sage as a primary accent grounding the warmer palette. Deep indigo as a depth anchor for type and structural elements. Lavender and sunset peach as restrained accents for warmth and energy in interactive moments."
+Palette *character* — warm/cool/neutral, accent strategy, mood, the color families that anchor and accent — *not specific hex values, not specific OKLCH tokens, not a tokenized palette*. Output looks like: "Warm-leaning neutral foundation in cream and sand tones, anchored by sage as a primary accent — soft enough to feel grounding, present enough to anchor structure. Deep indigo as a depth anchor for type and structural elements. Lavender and sunset peach as restrained accents for warmth and energy in interactive moments. Specific values are /foundations' work."
 
-Resist AI-default color patterns (purple gradients, tech-blue-everywhere). When the context calls for warmth, lean into actual warm hues, not "cool with warm tints." When it calls for restraint, commit to neutrals with deliberate accents rather than a full rainbow.
+Resist AI-default color patterns (purple gradients, tech-blue-everywhere). When the context calls for warmth, lean into actual warm hues, not "cool with warm tints." When it calls for restraint, commit to neutral character with deliberate accent character rather than a full rainbow. Name color *families* (sage, indigo, peach) — those characterize without preempting /foundations' job of picking specific values within each family.
 
 ### Texture and material language
 What surfaces feel like. Output options: paper-like, glass-like, organic, technical, layered, flat-with-depth, dimensional, etc. Tied to the product's character. A wellness product probably leans organic and paper-like; a developer tool probably leans technical and flat. Be specific about what materials evoke.
@@ -198,6 +198,8 @@ Output the complete `.sketch.md` file, then provide a summary of the directions 
 
 **Don't produce specific tokens.** `/sketch` is direction, not commitment. "A 1.25 ratio type scale starting at 16px" is `/foundations`' work. "Editorial typography that prioritizes readability at body size" is `/sketch`'s work.
 
+**Don't commit to single specific typefaces, hex values, or precise durations.** These are token-level decisions and they belong to `/foundations`. `/sketch` may *name candidates* that illustrate the character ("Söhne, Halyard, or Inter Display for the sans"); it doesn't pick the one. `/sketch` may *name color families* that anchor and accent the palette ("sage as a primary accent, deep indigo as a depth anchor"); it doesn't specify hex values. `/sketch` may *name timing bands* that match the motion character ("slow primary transitions, around 300–500ms"); it doesn't commit to specific durations. Keeping the line clean leaves real creative work for `/foundations`. Crossing it makes `/foundations` look like mechanical translation.
+
 **Don't run without `.spruce.md`.** The context file is required. If it's missing, prompt the user to run `/spruce up` first.
 
 **Don't run a full interview.** `/spruce up` already captured the verbal context. `/sketch` is for visual exploration, not for re-asking what the product is. Limit clarifying questions to 1-2 at most, and only when critically needed.
@@ -247,21 +249,21 @@ Output the complete `.sketch.md` file, then provide a summary of the directions 
 
 **Spruce:** I see your `.spruce.md` describes Stillpoint — a calm, accessible meditation companion for adults 25-45, with a warm and grounded character. Let's establish the visual direction together. I'll walk through the dimensions where character lives, and we'll build up a brief.
 
-Starting with typography. For Stillpoint, I'd suggest a humanist serif paired with a quiet humanist sans — editorial register, content-first, evocative of considered wellness publications. Specific candidates: Söhne for the sans (designed for clarity and modern human connection) and Lora for the serif (a thoughtful editorial face that suits longer-form content).
+Starting with typography. For Stillpoint, I'd suggest a humanist sans paired with an editorial serif — content-first, evocative of considered wellness publications. The sans handles UI, body, and most display; the serif carries longer-form session intros, marketing headers, quotes. Candidates that fit this character: Söhne, Halyard, or Inter Display for the sans; Lora, Tiempos, or Newsreader for the serif. /foundations picks the specific pair.
 
-The pairing avoids the AI-default of geometric sans everywhere. It also resists the meditation-app cliché of overly soft handwritten faces. Instead, it commits to typography that respects the user as a thoughtful adult.
+The character avoids the AI-default of geometric sans everywhere. It also resists the meditation-app cliché of overly soft handwritten faces. It commits to typography that respects the user as a thoughtful adult.
 
-If you wanted something more distinctive, we could lean into a feature serif for display moments — Tiempos Headline or Editorial New. If you wanted more restraint, we could drop the serif entirely and use Söhne in two weights for hierarchy.
+If you wanted something more distinctive, we could lean into a feature serif for display moments. If you wanted more restraint, we could drop the serif entirely and lean on a humanist sans in two weights for hierarchy.
 
 Does this direction feel right, or do you want to push elsewhere?
 
-**User:** Söhne and Lora feel right.
+**User:** Humanist sans + editorial serif feels right.
 
 **Spruce:** Good. Moving to color.
 
-Stillpoint's character calls for warmth and grounding without aggressive saturation. I'd suggest a warm-leaning neutral foundation in cream and sand tones, with sage as the primary accent — soft enough to feel grounding, present enough to anchor structure. Deep indigo for type and depth (a calm, trustworthy anchor that contrasts the warmth of the neutrals). Lavender and sunset peach as restrained accents for moments of warmth and energy, used sparingly so they don't dilute.
+Stillpoint's character calls for warmth and grounding without aggressive saturation. I'd suggest a warm-leaning neutral foundation in cream and sand tones, with sage as the primary accent — soft enough to feel grounding, present enough to anchor structure. Deep indigo for type and depth (a calm, trustworthy anchor that contrasts the warmth of the neutrals). Lavender and sunset peach as restrained accents for moments of warmth and energy, used sparingly so they don't dilute. Specific values are /foundations' work; this is the palette character.
 
-This avoids the meditation-app default of pastel-everything (which often reads as childish) and the SaaS default of cool-blue-with-purple-accents (which feels generic and clinical). The palette commits to warm earth tones with deliberate accents.
+This avoids the meditation-app default of pastel-everything (which often reads as childish) and the SaaS default of cool-blue-with-purple-accents (which feels generic and clinical).
 
 How does this land?
 
@@ -273,15 +275,15 @@ After all dimensions are settled:
 
 **Spruce:** I've captured the visual direction in `.sketch.md`. Here's the summary:
 
-- Typography: Söhne (humanist sans) + Lora (editorial serif)
-- Color: Cream and sand neutrals, sage primary accent, deep indigo for type, lavender and sunset peach as restrained accents
-- Texture: Paper-like, organic, warm
-- Iconography: Line-based, rounded, 2px weight, open and friendly
-- Layout: Editorial spreads, narrative scrolls, generous spacing
-- Motion: Slow and settled, strong deceleration, 300-500ms primary transitions
+- Typography: humanist sans + editorial serif (candidates: Söhne/Halyard/Inter Display; Lora/Tiempos/Newsreader)
+- Color: warm-neutral foundation in cream and sand tones, sage primary accent, deep indigo as a depth anchor, lavender and peach as restrained accents
+- Texture: paper-like, organic, warm
+- Iconography: line-based, rounded, thin consistent stroke, open and friendly
+- Layout: editorial spreads, narrative scrolls, generous spacing
+- Motion: slow and settled, strong deceleration, primary transitions in the 300–500ms range
 - Anti-references: SaaS purple, generic wellness photography, overly serene clichés
 
-Run `/foundations` next to translate this direction into a design system.
+Run `/foundations` next to translate this direction into a design system — picking the specific typefaces, palette values, type scale, spacing, motion durations, and primitive components that express the character we've established here.
 
 ---
 

@@ -10,6 +10,8 @@ The design system generation command. Where `/design` produces a single artifact
 
 A design system is the cheapest and most durable investment in product design. The decisions made once at the system level cascade through every component, every page, every future feature. Get the foundations right and the work that follows inherits coherence. Get them wrong and every subsequent design choice fights the system. `/foundations` exists to establish the foundations deliberately rather than letting them accumulate by default.
 
+`/foundations` is the codification step in the workflow. `/sketch` produces visual direction — character, color families, typeface character with candidate examples, motion bands, layout archetypes — and writes it to `.sketch.md`. `/foundations` reads both `.spruce.md` (context) and `.sketch.md` (visual direction) and *commits* to the specifics that express the established character: which typeface from the candidates, what specific OKLCH values for the palette character, what type scale, what spacing rhythm, what specific durations within the motion bands, what primitive components anchor the system. The creative work at this stage is selection and codification, not character discovery — that already happened in `/sketch`.
+
 This command produces both working code and documentation. The code is implementable — CSS variables, token files, component implementations ready to integrate. The documentation explains the reasoning, so the team using the system understands what it's trying to be and can extend it coherently.
 
 ---
@@ -77,18 +79,22 @@ The documentation should be short and specific — a page or two at most. It's a
 
 ## The Work Process
 
-### 1. Read the context
+### 1. Read the context and the visual direction
 
-Read the `.spruce.md` context file. `/foundations` depends heavily on context — the system's character, density, voice register, and accent approach all flow from what the product is trying to be.
+Read both `.spruce.md` (the project context) and `.sketch.md` (the visual direction, if it exists). `/foundations` depends heavily on both — `.spruce.md` establishes the product's character, audience, density, and voice; `.sketch.md` establishes the visual direction across typography, color, texture, iconography, layout, motion, and anti-references.
 
-If the context file is rich, proceed directly. If it's missing or thin, identify the critical gaps and ask one or two targeted questions before generating. Do not launch into a long discovery — the goal is to fill the specific gaps that would make autonomous generation unreliable.
+When `.sketch.md` exists, treat its character calls as upstream commitments: the typography character, the palette character, the motion character, the iconography character. `/foundations`' job is to *select* the specific values that express that character — which typeface from the candidates `.sketch.md` named, which specific OKLCH values for the palette families it described, which specific durations within the motion bands it set. Do not re-litigate character at this stage.
+
+When `.sketch.md` doesn't exist, you have two options. The cleaner path is to recommend running `/sketch` first to establish visual direction before committing to tokens — this preserves the creative-director step the workflow expects. The faster path is to make the character calls inside `/foundations` itself, but mark them clearly as character decisions made on the user's behalf so they're easy to redirect later.
+
+If `.spruce.md` is also missing or thin, identify the critical gaps and ask one or two targeted questions before generating. Do not launch into a long discovery — the goal is to fill the specific gaps that would make autonomous generation unreliable.
 
 The critical questions are typically:
 
 - What is the product, and who uses it? (Without this, the system can't have character.)
 - What's the overall density direction — spacious, balanced, or dense? (Without this, the system can't calibrate tokens.)
 
-Ask no more than two questions. If more is needed, suggest running `/spruce init` first to establish full context.
+Ask no more than two questions. If more is needed, suggest running `/spruce up` (and ideally `/sketch` after) before continuing.
 
 ### 2. Establish the system's character
 
@@ -100,17 +106,19 @@ Before generating tokens, name the character the system will express. This is th
 
 The character is not a slogan. It's the design direction that specific token choices will express.
 
-### 3. Make the system-level decisions
+### 3. Commit to specific values within the established direction
 
-Before tokens, decide the system-level directions:
+Before tokens, commit to the specific picks that express the character `.sketch.md` (or the user) established. When `.sketch.md` exists, these are *selection* decisions — picking from the candidates and bands the visual direction set:
 
-- **Typography direction.** Serif, sans, mono, pairing approach. Specific typefaces.
-- **Color direction.** Warm or cool temperature, neutral tinting approach, accent strategy.
-- **Density direction.** Spacious, balanced, or dense. Affects spacing scale and component proportions.
-- **Radius approach.** Sharp, moderate, or heavily rounded; consistent or two-level.
-- **Elevation approach.** Shadows, borders, or flat-plus-space.
-- **Motion character.** Crisp, considered, or expressive. Affects duration and easing defaults.
-- **Voice register.** Formal to casual, warm to neutral, direct to gentle.
+- **Typography selection.** Pick the specific typeface(s) from the candidates `.sketch.md` named, plus the weights, scale ratio, and pairing rules that build a system from those faces. If `.sketch.md` said "humanist sans paired with editorial serif (candidates: Söhne, Halyard, Inter Display; Lora, Tiempos, Newsreader)," pick one from each list and define the scale.
+- **Color selection.** Pick specific OKLCH values for the color families `.sketch.md` named — what specific sage, what specific indigo, the lightness ramps, the dark-mode counterparts, the semantic colors (success/warning/error/info) that fit the palette character.
+- **Density commitment.** Translate the density direction into a specific spacing scale base and step ratio.
+- **Radius approach.** Pick the specific radius values (sharp, moderate, or heavily rounded; consistent or two-level) that fit the character.
+- **Elevation approach.** Decide on shadows, borders, or flat-plus-space, and pick the specific values.
+- **Motion commitment.** Pick the specific durations within the motion bands `.sketch.md` set, and the specific easing curves that match the character.
+- **Voice register.** Carry forward the voice character into specific microcopy patterns the primitives will use.
+
+When `.sketch.md` doesn't exist, these become *full* decisions (character + selection together) rather than selection alone. Mark each as a character decision made on the user's behalf so they're easy to redirect later, and recommend running `/sketch` for character-led work next time.
 
 These decisions cascade into specific token values. Make them explicitly so the token generation is coherent rather than arbitrary.
 
