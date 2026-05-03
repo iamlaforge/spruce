@@ -8,13 +8,53 @@ Forward-looking work for Spruce. Items here are planned but not yet scoped or sc
 - **Homepage + workflow repositioning around HCD foundation.** Hero tagline shifted from "design reasoning system that teaches AI tools how to think" to "The only AI design reasoning system that starts with users, not pixels" — supporting copy reinforces grounding in real people and the jobs they're doing rather than the average of training data. Philosophy section's alternative movement leads with the same positioning claim and unpacks the three-levels framing: the grounding makes the reasoning specific; the reasoning runs in the background; the commands put you in the chair. `/designing` reframed from "the loop in five moments" to "the loop on a foundation" — Discovery is a Foundation phase between Set up and the iteration loop, with a DiscoveryArtifact (Maya persona tile + footer naming the other Discovery artifacts). LoopVisualization extended with a foundation strip beneath the Decide/Review/Refine triangle naming the context files (`.spruce.md` + Discovery artifacts) the loop reads from, animated to land as the diagram's closing beat.
 - **Stillpoint case study artifact.** A complete Stillpoint marketing site lives at `/case-study` (home page) and `/case-study/practice/[slug]` (three practice detail pages — Morning Grounding, Mid-day Reset, Evening Wind-down). Stillpoint is the hypothetical meditation app that threads through every demo in the catalog; the case study surfaces it as the cumulative live result of running the full Spruce workflow. Includes a Stillpoint design system scoped under `.stillpoint` class (Söhne + Lora typography, warm-cream palette with sage primary, sage→peach gradient in light / sage→lavender in dark on the personalization banner), a full set of Stillpoint primitives (Button, Card, Input, Heading, Link, Scope, ThemeToggle), first-class dark mode that cascades with Spruce's theme via CSS scope, and a thin Spruce context banner above each case-study route for navigation back to the catalog. Discreet links from `/commands` and `/designing` point visitors to the artifact.
 - **Stillpoint catalog narrative thread.** Every demo in the catalog rebuilt to ground in the Stillpoint case study. Diagnostic tier (`/survey`, `/uxreview`, `/critique`, `/detect`, `/explain`) renders findings against the actual Stillpoint home; corrective tier (`/voice`, `/typeface`, `/refine`, `/colorgrade`, `/pace`, `/reduce`, `/fortify`, `/arrange`, `/finish`) shows before/after diffs on real Stillpoint surfaces. Four correctives gate real visible changes that ship to the case study via the `applied`-command iteration system; the soft-fit correctives carry visible "On Stillpoint" demo notes naming what's illustrative versus what shipped — keeping the catalog honest about which corrective work the case study actually contains.
+- **Releases section on the homepage.** New `§ 05` section at the close of the homepage, server-fetches the latest GitHub releases at build time with hourly ISR revalidation. Renders the most recent four entries (capped to keep the section tight) as a two-line release-notes list — title (linked to the GitHub release) on the top line + date right-aligned, single-paragraph summary below in muted mono. No editorial display headline, no per-entry "Read full release" link; the title itself is the link, the section reads as a release-notes list rather than another marketing beat. Closing pointer to the full GitHub releases page. Optional `GITHUB_TOKEN` env var supported for private repos or to raise the unauthenticated rate limit. Graceful fallback when the API returns nothing.
 - **Tutorials surfaces.** `/designing/tutorials` lists situation-shaped walkthroughs ("From scratch," "Inherited code," "Critique-driven," "In the browser" — last is a coming-soon placeholder reserved for the Chrome extension). `/designing/tutorials/[slug]` renders each walkthrough as a sequence of beats. Lives under a shared layout with `/designing` via a Workflow / Tutorials tab bar.
 - **FAQ surfaces.** `/faq` dedicated page with nine questions across three groups (The system / Using it / License & support). Homepage FAQ accordion module (`§ 04`) surfaces a curated four for first-time visitors, with shared data source in `lib/faq.tsx`.
 - **Homepage interactivity consolidation.** The Terminal section's three stacked snippets became one tabbed terminal (tabs inside the dark surface, terminal-app pattern). The Install section's three vertically-stacked patterns became tabs above a single panel with body copy restored. Both use the same shared-layout marker animation as the Designing tab bar — coherent vocabulary across all tabbed surfaces on the home page.
 
 ---
 
-## Next release
+## Up next
+
+### Multi-tool support: Codex, Cursor, VS Code, Gemini
+
+Currently Spruce installs into Claude Code only via `npx spruce-skill add`. Multi-tool support is the next priority — the Install section's "Cursor, Gemini, and other harnesses are coming soon" claim needs to become true, and reaching beyond Claude Code is the most direct way to grow Spruce's audience without changing the system itself.
+
+**Priority order (proposed, open to revisiting):**
+
+1. **Cursor first.** Largest user base of any AI coding tool right now; mature `.cursorrules` + `.mdc` rule-file system that maps cleanly to Spruce's skill + references + commands shape; easiest first integration for proving the multi-tool adapter pattern works.
+2. **VS Code second.** Massive base, but the integration is more complex — likely a proper VS Code extension wrapping Spruce reasoning (rather than just rule files), with consideration for how to interop with existing AI extensions (Copilot, Continue, etc.).
+3. **Codex (OpenAI) third.** Integration model needs research — Codex's plugin/extension pattern for context-providing tools isn't as standardized as Cursor's. Worth scoping the integration shape before committing.
+4. **Gemini (Google) fourth.** Most exploratory; integration model TBD. Could be API-based or extension-based depending on how Google's coding tool evolves.
+
+**Shared adapter architecture:**
+
+- The Spruce skill / reference files / commands are the same content across all tools — `source/` is the canonical truth.
+- Each tool gets a tool-specific *adapter* under `dist/<tool-name>/` that translates the canonical content into the tool's preferred mechanism (Claude Code: skill manifest; Cursor: rule files; VS Code: extension package; etc.).
+- The build script (`scripts/build.js`) extends to produce per-adapter outputs from the same source.
+- Installation stays one command per tool: `npx spruce-skill add cursor`, `npx spruce-skill add vscode`, etc. — same pattern as the current Claude Code install.
+
+**Per-tool tactical considerations:**
+
+- **Cursor** — install as a `.cursor/rules/` set: an orchestrating `spruce.mdc` rule that loads the references on context, plus per-command rule files that fire when the command name is mentioned in chat. Reference files load on-demand via Cursor's `globs` and `alwaysApply` mechanics. Test against latest Cursor release.
+- **VS Code** — extension wraps Spruce reasoning. Two integration patterns to evaluate: (a) interop with Copilot/Continue/Cline by feeding context into their existing chat interfaces; (b) a standalone Spruce panel + commands that operates independently. Pattern (a) is lower-friction for users; (b) is more controllable but asks users to adopt a new surface.
+- **Codex** — research what Codex's extension model looks like in late 2025 / early 2026. Potentially an API-based adapter that Codex calls; potentially a plugin Codex loads.
+- **Gemini** — same research need. Lowest priority because Gemini's coding interface is still evolving rapidly; integrating now risks shipping against a target that moves.
+
+**Validation strategy per integration:**
+
+- Each tool integration needs to verify Spruce reasoning actually applies in that tool's context. The `/sketch` → `/foundations` → `/design` arc on Stillpoint is a reasonable smoke-test sequence — if the integration produces coherent output for that workflow, the harness is wired correctly.
+- Anti-patterns to test for: silently dropped references, command name collisions with the host tool's own commands, context-window exhaustion from loading all references unconditionally.
+
+**Site implications:**
+
+- `/install` page becomes the central integration directory — tool-picker that surfaces install command + brief setup notes per tool. Currently the homepage Install section's Setup tab shows the Claude Code command; this page would be the deep version.
+- FAQ updates per tool — version-compatibility notes, harness-specific quirks.
+- Tutorials may need tool-specific notes where the install or invocation pattern differs meaningfully.
+- The roadmap entry above for the Chrome extension and the entry below for Figma read + write are both downstream of multi-tool support — they ride on top of whichever harnesses Spruce supports.
+
+**Currently scoping:** This entry is being expanded as the first concrete priority. The next concrete decisions to direct: tool priority order, adapter architecture commitment, and whether to ship one tool at a time or a Cursor + VS Code pair simultaneously.
 
 ### Imagery as an 8th dimension
 
@@ -36,20 +76,6 @@ A user installing Spruce today can't cleanly indicate "I want photography on my 
 ---
 
 ## Site additions
-
-### Release notes section on the home page
-
-A new section on the marketing site that previews ongoing Spruce updates — wired into GitHub so it pulls live release/changelog data rather than being maintained by hand.
-
-**Implementation considerations:**
-
-- **Source of truth** — GitHub Releases on the spruce repo (using semantic versioning + release notes per tag). Could also pull from `CHANGELOG.md` if we maintain one.
-- **Fetch strategy** — likely build-time (`generateStaticParams` + GitHub API at build) for performance and to avoid rate-limit issues on the client. Could fall back to ISR (Incremental Static Regeneration) for periodic updates without rebuilds.
-- **Display** — most recent 3–5 releases in the section, each with title, date, and a brief excerpt or summary. "View all releases →" link out to GitHub or to a dedicated `/releases` page.
-- **Design** — editorial restraint. Each release as a small entry with version + date + summary, hairline rules between. No badges, no "NEW" labels, no decorative version-bump styling.
-- **Where on the home page** — likely between Demonstration and Install, or at the close of the page after Install. Worth deciding when the section is built.
-
-**Why hold:** No releases to show yet. This section comes alive after the imagery dimension lands or the first multi-tool integration ships — premature to build the showcase before there's anything to showcase.
 
 ### Case studies (extending Stillpoint, second + third cases)
 
@@ -86,25 +112,6 @@ A browser extension for Spruce. Scope and purpose to be defined — possibilitie
 - **Spruce companion** — quick access to the catalog, reference files, or `/decide` flow from any page.
 
 The product question is *what does the extension do that the CLI doesn't* — answering that defines the scope. The "In the browser" tutorial slot at `/designing/tutorials/chrome-extension` is reserved as a placeholder; when the extension ships, that walkthrough lands with it.
-
-### Multi-tool support: Codex, Cursor, VS Code, Gemini
-
-Currently Spruce installs into Claude Code via `npx spruce-skill add`. Need integrations for the other major AI coding tools.
-
-**Per-tool considerations:**
-
-- **Codex (OpenAI)** — integration model TBD. Codex is OpenAI's coding interface; likely has an extension or plugin pattern for adding context-providing tools.
-- **Cursor** — has rules / context files (`.cursorrules`, `.mdc` rule files). Spruce could install as a set of rule files that load the references and enable command-style invocation.
-- **VS Code** — likely a VS Code extension that wraps Spruce reasoning. Could integrate with Copilot, Continue, or other AI extensions in the editor.
-- **Gemini (Google's coding tool)** — integration model TBD. Likely an API-based or extension-based pattern.
-
-**Shared concerns:**
-
-- The Spruce skill / reference files / commands are the same content across all tools. Each tool gets a tool-specific *adapter* that exposes the same content via the tool's preferred mechanism.
-- Installation should be one command per tool (`npx spruce-skill add cursor`, `npx spruce-skill add vscode`, etc.) — same pattern as the current Claude Code install.
-- The `/install` page on the marketing site needs to reflect available tools and install commands as integrations land.
-
-The website currently says "Cursor, Gemini, and other harnesses are coming soon" in the Install section — this work is what makes that claim true.
 
 ### Figma read + write
 
