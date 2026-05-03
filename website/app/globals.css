@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Dark variant follows the .dark class so Tailwind's dark: utilities align
+   with the token-based dark mode below. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* =============================================================================
  * Spruce design system — foundation tokens
  *
@@ -114,42 +118,45 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* --- Color (dark) --------------------------------------------------------- */
+/* --- Color (dark) ---------------------------------------------------------
+ * Triggered by the `.dark` class on `<html>`. The class is applied by an
+ * inline script in app/layout.tsx before paint (using localStorage with a
+ * fallback to prefers-color-scheme), so initial load matches user intent
+ * without a flash.
+ * ------------------------------------------------------------------------- */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: oklch(16% 0.012 68);
-    --color-surface: oklch(20% 0.013 70);
-    --color-surface-elevated: oklch(24% 0.014 72);
+:root.dark {
+  --color-background: oklch(16% 0.012 68);
+  --color-surface: oklch(20% 0.013 70);
+  --color-surface-elevated: oklch(24% 0.014 72);
 
-    --color-rule-subtle: oklch(26% 0.013 72);
-    --color-rule: oklch(34% 0.015 72);
-    --color-rule-strong: oklch(48% 0.017 72);
+  --color-rule-subtle: oklch(26% 0.013 72);
+  --color-rule: oklch(34% 0.015 72);
+  --color-rule-strong: oklch(48% 0.017 72);
 
-    --color-ink: oklch(95% 0.008 78);
-    --color-ink-muted: oklch(74% 0.010 76);
-    --color-ink-subtle: oklch(58% 0.012 74);
-    --color-ink-inverse: oklch(16% 0.012 68);
+  --color-ink: oklch(95% 0.008 78);
+  --color-ink-muted: oklch(74% 0.010 76);
+  --color-ink-subtle: oklch(58% 0.012 74);
+  --color-ink-inverse: oklch(16% 0.012 68);
 
-    --color-accent: oklch(72% 0.095 158);
-    --color-accent-hover: oklch(78% 0.095 158);
-    --color-accent-active: oklch(82% 0.090 158);
-    --color-accent-subtle: oklch(26% 0.050 160);
-    --color-accent-ink: oklch(16% 0.012 68);
+  --color-accent: oklch(72% 0.095 158);
+  --color-accent-hover: oklch(78% 0.095 158);
+  --color-accent-active: oklch(82% 0.090 158);
+  --color-accent-subtle: oklch(26% 0.050 160);
+  --color-accent-ink: oklch(16% 0.012 68);
 
-    --color-success: oklch(70% 0.13 154);
-    --color-warning: oklch(78% 0.13 72);
-    --color-error: oklch(70% 0.16 25);
-    --color-info: oklch(68% 0.10 218);
+  --color-success: oklch(70% 0.13 154);
+  --color-warning: oklch(78% 0.13 72);
+  --color-error: oklch(70% 0.16 25);
+  --color-info: oklch(68% 0.10 218);
 
-    --shadow-subtle: 0 1px 2px oklch(0% 0 0 / 0.3);
-    --shadow-popover:
-      0 4px 16px -4px oklch(0% 0 0 / 0.4),
-      0 2px 4px -2px oklch(0% 0 0 / 0.25);
-    --shadow-modal:
-      0 20px 40px -12px oklch(0% 0 0 / 0.55),
-      0 8px 16px -6px oklch(0% 0 0 / 0.3);
-  }
+  --shadow-subtle: 0 1px 2px oklch(0% 0 0 / 0.3);
+  --shadow-popover:
+    0 4px 16px -4px oklch(0% 0 0 / 0.4),
+    0 2px 4px -2px oklch(0% 0 0 / 0.25);
+  --shadow-modal:
+    0 20px 40px -12px oklch(0% 0 0 / 0.55),
+    0 8px 16px -6px oklch(0% 0 0 / 0.3);
 }
 
 /* --- Base styles ---------------------------------------------------------- */
