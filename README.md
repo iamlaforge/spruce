@@ -47,7 +47,7 @@ Each reference file teaches the reasoning behind good decisions and names the sp
 
 ### The commands
 
-Nineteen commands organized into three tiers:
+Twenty commands organized into three tiers:
 
 **Diagnostic** — analyze without changing code.
 - `/survey` — comprehensive quality review across all seven dimensions
@@ -72,6 +72,7 @@ Nineteen commands organized into three tiers:
 - `/decide` — surface tradeoffs before generating (creative-director mode)
 - `/remix` — generate three distinct design directions
 - `/foundations` — generate a coherent design system
+- `/sketch` — establish visual direction before tokens commit
 - `/spruce up` — interactive context file setup
 
 ---
@@ -108,7 +109,7 @@ spruce/
 ├── source/             # Canonical source files — the truth
 │   ├── PHILOSOPHY.md
 │   ├── skills/spruce/  # Core skill and seven reference files
-│   └── commands/       # Nineteen command files
+│   └── commands/       # Twenty command files
 ├── dist/               # Generated per-provider bundles (Claude Code, Cursor, etc.)
 ├── templates/          # The .spruce.md context file template
 ├── scripts/            # Build and packaging scripts
@@ -123,7 +124,7 @@ Edit source files in `source/`. The provider-specific distributions in `dist/` a
 
 ## Status
 
-Spruce is in active development. The knowledge layer (philosophy, skill, references) and command layer (nineteen commands) are complete. Still in development:
+Spruce is in active development. The knowledge layer (philosophy, skill, references) and command layer (twenty commands) are complete. Still in development:
 
 - Provider-specific build and packaging
 - Chrome extension
