@@ -128,7 +128,10 @@ export function InstallParallel() {
             After installing
           </p>
           <p className="mt-3 font-display font-normal text-xl md:text-2xl leading-tight tracking-tight text-ink text-balance">
-            Four patterns to start with.
+            The workflow, in four moves.{" "}
+            <span className="text-ink-muted">
+              Context first, users next, design from there.
+            </span>
           </p>
 
           {/* Tab strip — sits below the heading on a hairline rule. The
