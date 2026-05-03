@@ -19,11 +19,11 @@ export function HeroSpecimen() {
             Spruce.
           </h1>
           <div className="col-span-12 md:col-span-5 md:pt-6">
-            <p className="text-lg md:text-xl text-ink leading-snug tracking-snug">
+            <p className="text-lg md:text-xl text-ink leading-snug tracking-snug text-balance">
               A design reasoning system that installs into AI coding tools and
               teaches them how to think.
             </p>
-            <p className="mt-5 text-base text-ink-muted leading-relaxed">
+            <p className="mt-5 text-base text-ink-muted leading-relaxed text-pretty">
               Claude Code, Cursor, and the tools you already use &mdash; without
               the generic output.
             </p>
@@ -36,7 +36,7 @@ export function HeroSpecimen() {
             <p className="text-2xs font-mono uppercase tracking-widest text-ink-subtle mb-4">
               What
             </p>
-            <p className="text-base text-ink leading-snug">
+            <p className="text-base text-ink leading-snug text-pretty">
               A vocabulary and a reasoning method for design, delivered as a
               set of commands your AI tools can run.
             </p>
@@ -45,7 +45,7 @@ export function HeroSpecimen() {
             <p className="text-2xs font-mono uppercase tracking-widest text-ink-subtle mb-4">
               How
             </p>
-            <p className="text-base text-ink leading-snug">
+            <p className="text-base text-ink leading-snug text-pretty">
               <code className="font-mono text-sm text-ink">/design</code>{" "}
               generates.{" "}
               <code className="font-mono text-sm text-ink">/remix</code>{" "}
@@ -58,7 +58,7 @@ export function HeroSpecimen() {
             <p className="text-2xs font-mono uppercase tracking-widest text-ink-subtle mb-4">
               For
             </p>
-            <p className="text-base text-ink leading-snug">
+            <p className="text-base text-ink leading-snug text-pretty">
               Developers and designers tired of AI-generated interfaces that
               look AI-generated.
             </p>

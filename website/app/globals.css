@@ -187,6 +187,35 @@ body {
   outline-offset: 2px;
 }
 
+/* --- Surface morph -------------------------------------------------------
+ * Applied to the root of any element inside the home-page Demonstration
+ * surfaces (Dashboard, Pricing, Settings). Targets all descendants so that
+ * when phase changes flip Tailwind classes (colors, borders, padding,
+ * font-weight, radii), the swap animates smoothly. This is the "element-
+ * level diffing" promise: only what each command touched moves, because
+ * only what changed will transition.
+ *
+ * Layout/order changes (e.g. /arrange swapping the chart + metrics order)
+ * are handled separately via motion's `layout` prop — those need FLIP-style
+ * animation that CSS transitions cannot deliver.
+ * ------------------------------------------------------------------------- */
+
+.surface-morph,
+.surface-morph * {
+  transition-property:
+    background-color,
+    color,
+    border-color,
+    border-radius,
+    padding,
+    margin,
+    font-weight,
+    opacity,
+    box-shadow;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-considered);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

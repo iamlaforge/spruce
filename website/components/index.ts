@@ -1,7 +1,10 @@
 export { Button } from "./Button";
 export { Card } from "./Card";
+export { CodeBlock } from "./CodeBlock";
+export { Footer } from "./Footer";
 export { Header } from "./Header";
 export { Heading } from "./Heading";
 export { Link } from "./Link";
 export { Container, Section } from "./Section";
+export { SectionHeader } from "./SectionHeader";
 export { ThemeToggle } from "./ThemeToggle";

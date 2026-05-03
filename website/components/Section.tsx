@@ -10,9 +10,14 @@ const tones: Record<Tone, string> = {
 };
 
 const widths: Record<Width, string> = {
-  reading: "max-w-2xl",    // ~672px — for prose
-  standard: "max-w-5xl",   // ~1024px — default
-  wide: "max-w-7xl",       // ~1280px — gallery-like layouts
+  reading: "max-w-2xl",    // ~672px — narrow prose only
+  standard: "max-w-7xl",   // ~1280px — default; matches the header so sections
+                           //           don't feel concentrated in the middle
+                           //           on wide viewports. Asymmetric column
+                           //           placements within sections still create
+                           //           the editorial offset.
+  wide: "max-w-7xl",       // ~1280px — alias of standard for now; reserved
+                           //           for an even wider treatment later.
 };
 
 type SectionProps = ComponentProps<"section"> & {

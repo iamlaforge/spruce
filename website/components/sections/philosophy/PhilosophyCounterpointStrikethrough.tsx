@@ -1,6 +1,11 @@
-import { Heading } from "@/components/Heading";
+"use client";
+
+import { motion } from "motion/react";
 import { Link } from "@/components/Link";
 import { Section } from "@/components/Section";
+import { SectionHeader } from "@/components/SectionHeader";
+import { useInViewOnce } from "@/hooks/useInViewOnce";
+import { DURATION, EASE_CONSIDERED } from "@/lib/motion";
 
 const revisions: Array<{ defaultText: string; alternative: string }> = [
   { defaultText: "Inter for everything", alternative: "A typeface for this product" },
@@ -14,17 +19,7 @@ const revisions: Array<{ defaultText: string; alternative: string }> = [
 export function PhilosophyCounterpointStrikethrough() {
   return (
     <Section id="philosophy" tone="default">
-      {/* Section header — eyebrow rendered as h2 so the section has a real
-          heading for screen-reader navigation while staying visually quiet. */}
-      <div className="flex items-baseline justify-between border-b border-rule pb-4 mb-12 md:mb-16">
-        <Heading level="eyebrow" as="h2">Philosophy &middot; A revision</Heading>
-        <span
-          aria-hidden
-          className="hidden md:inline font-mono text-2xs uppercase tracking-widest text-ink-subtle"
-        >
-          §
-        </span>
-      </div>
+      <SectionHeader mark="§ 01">Philosophy &middot; A revision</SectionHeader>
 
       {/* Movement 1 — the problem */}
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 mb-12 md:mb-16">
@@ -53,47 +48,7 @@ export function PhilosophyCounterpointStrikethrough() {
         </div>
       </div>
 
-      {/* Movement 2 — the demonstration, immediately following the prose
-          that introduces the cataloged patterns it represents.
-
-          Semantic structure for assistive tech:
-          - <ul role="list"> so VoiceOver announces it as a list even with
-            list-style: none applied (WebKit drops list semantics otherwise).
-          - <del> and <ins> carry the deletion/replacement meaning that the
-            visual line-through can't communicate to non-sighted users.
-          - sr-only "replaced with" gives natural-language flow between the
-            struck text and its replacement on screen readers that don't
-            announce del/ins by default. */}
-      <div
-        id="slop"
-        className="grid grid-cols-12 gap-x-6 md:gap-x-8 mb-12 md:mb-16"
-      >
-        <ul
-          role="list"
-          className="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-9 lg:col-start-2 list-none space-y-3 md:space-y-4"
-        >
-          {revisions.map((row) => (
-            <li
-              key={row.alternative}
-              className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-baseline gap-y-1 gap-x-4 md:gap-x-6 font-display text-lg md:text-xl leading-snug"
-            >
-              <del className="line-through decoration-2 decoration-rule-strong text-ink-subtle">
-                {row.defaultText}
-              </del>
-              <span
-                aria-hidden
-                className="hidden md:inline font-mono text-2xs text-accent uppercase tracking-widest"
-              >
-                &rarr;
-              </span>
-              <span>
-                <span className="sr-only">replaced with </span>
-                <ins className="text-ink no-underline">{row.alternative}</ins>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <RevisionsList />
 
       {/* Movement 3 — the alternative */}
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 mb-12 md:mb-16">
@@ -126,5 +81,76 @@ export function PhilosophyCounterpointStrikethrough() {
         </div>
       </div>
     </Section>
+  );
+}
+
+/**
+ * The signature visual moment of the section: each AI-default phrase has its
+ * strike line drawn in left-to-right when the list enters the viewport. The
+ * strike is a separately-rendered motion span (not text-decoration), animated
+ * via scaleX from 0 to 1 with transform-origin: left.
+ *
+ * Stagger: 90ms between rows. Six rows × 90ms = 540ms total cascade — slow
+ * enough to be felt as a sequence (the rhetorical move executing), fast
+ * enough that the visitor's eye can hold them all in one read.
+ *
+ * The semantic <del> wraps the text for assistive tech; its visual
+ * line-through is suppressed (no-underline) so the motion span can do the
+ * visual work.
+ */
+function RevisionsList() {
+  const { ref, inView } = useInViewOnce<HTMLDivElement>({ threshold: 0.2 });
+
+  return (
+    <div
+      ref={ref}
+      id="slop"
+      className="grid grid-cols-12 gap-x-6 md:gap-x-8 mb-12 md:mb-16"
+    >
+      <ul
+        role="list"
+        className="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-9 lg:col-start-2 list-none space-y-3 md:space-y-4"
+      >
+        {revisions.map((row, i) => (
+          <li
+            key={row.alternative}
+            className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-baseline gap-y-1 gap-x-4 md:gap-x-6 font-display text-lg md:text-xl leading-snug"
+          >
+            <del className="relative inline-block no-underline text-ink-subtle">
+              {row.defaultText}
+              <motion.span
+                aria-hidden
+                className="absolute left-0 right-0 top-1/2 h-0.5 bg-rule-strong origin-left"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: inView ? 1 : 0 }}
+                transition={{
+                  duration: DURATION.slow,
+                  delay: inView ? 0.15 + i * 0.09 : 0,
+                  ease: EASE_CONSIDERED,
+                }}
+              />
+            </del>
+            <span
+              aria-hidden
+              className="hidden md:inline font-mono text-2xs text-accent uppercase tracking-widest"
+            >
+              &rarr;
+            </span>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: inView ? 1 : 0 }}
+              transition={{
+                duration: DURATION.base,
+                delay: inView ? 0.35 + i * 0.09 : 0,
+                ease: EASE_CONSIDERED,
+              }}
+            >
+              <span className="sr-only">replaced with </span>
+              <ins className="text-ink no-underline">{row.alternative}</ins>
+            </motion.span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

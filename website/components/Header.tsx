@@ -4,7 +4,7 @@ import { Link } from "@/components/Link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems: Array<{ href: string; label: string; external?: boolean }> = [
-  { href: "/designing", label: "Designing" },
+  { href: "/designing", label: "Spruce Workflow" },
   { href: "/commands", label: "Commands" },
   { href: "/install", label: "Install" },
   { href: "https://github.com/iamlaforge/spruce", label: "GitHub", external: true },
