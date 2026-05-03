@@ -4,10 +4,10 @@
  * Output of /scenarios — produced from .spruce.md + .personas.md +
  * .jtbd.md context (no observational research). Two scenarios
  * capturing the same general moment (opening the app fresh) from
- * Maya's and Jordan's perspectives, to test the home page's first-
+ * Maya’s and Jordan’s perspectives, to test the home page’s first-
  * impression design against both personas + their primary jobs.
  *
- * Two exports, mirroring the case study's other content modules.
+ * Two exports, mirroring the case study’s other content modules.
  *
  * Source: drafted by /scenarios in Mode A from
  * src/case-studies/stillpoint/content/context.ts +
@@ -65,7 +65,7 @@ export const stillpointScenarios = {
 
 export const stillpointScenariosMarkdown = `# Scenarios
 
-*This file holds concrete narratives — each one anchoring a named persona doing a specific job in a specific moment where the design will be encountered. Scenarios are the lightest of the Discovery artifacts and the most concrete; they're what designers keep on the wall while making specific design decisions.*
+*This file holds concrete narratives — each one anchoring a named persona doing a specific job in a specific moment where the design will be encountered. Scenarios are the lightest of the Discovery artifacts and the most concrete; they’re what designers keep on the wall while making specific design decisions.*
 
 ---
 

@@ -12,13 +12,13 @@
  */
 
 export const stillpointVoice = {
-  sessionIntro: "Let's take a few moments to come back to what matters.",
-  notification: "Breathe in. Breathe out. You've got this.",
+  sessionIntro: "Let’s take a few moments to come back to what matters.",
+  notification: "Breathe in. Breathe out. You’ve got this.",
   onboarding: "Small steps, taken daily, create big change.",
-  emptyState: "Your practice starts here. Pick a session when you're ready.",
+  emptyState: "Your practice starts here. Pick a session when you’re ready.",
   successMessage: "You did good work today.",
   errorMessage:
-    "Something didn't go through. Take a breath; try again when you're ready.",
+    "Something didn’t go through. Take a breath; try again when you’re ready.",
   confirmationPrompt: "Take a moment with this. Are you sure?",
   signoff: "See you tomorrow.",
 
@@ -26,11 +26,11 @@ export const stillpointVoice = {
   // Resumption — when a user returns to a session they paused.
   resumeSession: "Welcome back. Your session is right where you left it.",
   // Streaks — quiet acknowledgment, not performative cheering.
-  streakMilestone: "Seven days in a row. That's a real practice taking shape.",
+  streakMilestone: "Seven days in a row. That’s a real practice taking shape.",
   streakReturn:
-    "It's been a few days. No pressure — just glad you're here when you are.",
+    "It’s been a few days. No pressure — just glad you’re here when you are.",
   // Reminders — gentle, never urgent, never guilt-inducing.
-  gentleReminder: "A few minutes for yourself, when it's right.",
+  gentleReminder: "A few minutes for yourself, when it’s right.",
   eveningReminder:
     "Wind down with a short session before bed — five minutes is plenty.",
   // Interruptions and recovery.

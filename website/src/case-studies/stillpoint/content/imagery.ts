@@ -19,9 +19,9 @@
  *   - stillLife: ceramic, candles, journal, fabric textures (4:3, ~592×443)
  *   - abstract: gradient and geometric compositions (4:3, ~592×444)
  *
- * Captions describe what's pictured plus the imagery role — useful for
- * catalog illustrations that want to label what /sketch's anti-references
- * specifically excluded vs. what /design's hybrid imagery direction
+ * Captions describe what’s pictured plus the imagery role — useful for
+ * catalog illustrations that want to label what /sketch’s anti-references
+ * specifically excluded vs. what /design’s hybrid imagery direction
  * embraces.
  */
 

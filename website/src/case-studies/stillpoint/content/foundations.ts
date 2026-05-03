@@ -5,7 +5,7 @@
  * (tokens/stillpoint.css) and the primitive components (components/
  * Stillpoint{Button,Card,Input,Heading,Link}.tsx). It documents the
  * character the system expresses, the key decisions made when codifying
- * .sketch.md's direction into specific values, and how to extend the
+ * .sketch.md’s direction into specific values, and how to extend the
  * system as Stillpoint grows.
  *
  * Two exports:
@@ -83,7 +83,7 @@ export const stillpointFoundations = {
   ],
 
   howToExtend:
-    "Reference existing tokens via var(--stp-*); never invent values. New tokens land in tokens/stillpoint.css under the .stillpoint scope, prefixed --stp-* to avoid collisions with Spruce's own tokens. Components get rendered inside <StillpointScope> so the variables cascade. Follow the established patterns: soft-moderate radius, warm-tinted elevation, slow settled motion, calm voice. The type scale and weight set are deliberately restrained — resist adding more.",
+    "Reference existing tokens via var(--stp-*); never invent values. New tokens land in tokens/stillpoint.css under the .stillpoint scope, prefixed --stp-* to avoid collisions with Spruce’s own tokens. Components get rendered inside <StillpointScope> so the variables cascade. Follow the established patterns: soft-moderate radius, warm-tinted elevation, slow settled motion, calm voice. The type scale and weight set are deliberately restrained — resist adding more.",
 
   notIncluded:
     "This foundation covers tokens (typography, color, spacing, radius, elevation, motion in light + dark mode) and five primitives (Button, Card, Input, Heading, Link). Other components — navigation, modals, tabs, forms, lists, audio player, session timer — extend this foundation when /design generates them. Page fragments (home, practice library, reflection screen) land in fragments/.",
@@ -113,7 +113,7 @@ ${stillpointFoundations.primitives
 
 ${stillpointFoundations.howToExtend}
 
-## What's not included
+## What’s not included
 
 ${stillpointFoundations.notIncluded}
 `;

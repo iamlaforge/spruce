@@ -1,7 +1,7 @@
 /**
  * Stillpoint .sketch.md content.
  *
- * This is the visual direction file Spruce's /sketch command would have
+ * This is the visual direction file Spruce’s /sketch command would have
  * produced for the Stillpoint project, reading from
  * `content/context.ts` (the .spruce.md). It establishes visual direction
  * — typography, color, texture, motion, iconography — before /foundations
@@ -22,11 +22,11 @@ export const stillpointSketch = {
   typography:
     "A humanist sans for clarity and modern warmth, paired with an editorial serif for longer-form moments — quotes, longer-form session intros, marketing headers. The sans handles UI, body, and most display; the serif carries the editorial register. Candidates that fit the character: Söhne, Halyard, or Inter Display for the sans; Lora, Tiempos, or Newsreader for the serif. /foundations picks the specific pair. The character avoids both the AI-default geometric sans and the meditation-app handwritten cliché — typography that respects users as thoughtful adults.",
   color:
-    "Warm-leaning neutral foundation in cream and warm sand. Sage as the primary accent — soft enough to feel grounding, present enough to anchor structure. Deep indigo as a depth anchor for type and structural elements. Lavender and sunset peach as restrained accents for moments of warmth and energy in interactive elements (buttons, notifications, selected states). Palette character — warm earth tones with deliberate accents, avoiding both meditation-app pastel-everything and SaaS cool-blue-with-purple-accent. Specific values are /foundations' work.",
+    "Warm-leaning neutral foundation in cream and warm sand. Sage as the primary accent — soft enough to feel grounding, present enough to anchor structure. Deep indigo as a depth anchor for type and structural elements. Lavender and sunset peach as restrained accents for moments of warmth and energy in interactive elements (buttons, notifications, selected states). Palette character — warm earth tones with deliberate accents, avoiding both meditation-app pastel-everything and SaaS cool-blue-with-purple-accent. Specific values are /foundations’ work.",
   textureAndMaterial:
     "Paper-like and organic. Surfaces feel like soft paper or matte ceramic — not glossy, not glassy. Subtle warmth in the texture; nothing slick or technical. When dimension is needed, lean on quiet shadows and gentle gradients, not bold elevation.",
   iconography:
-    "Line-based with rounded corners and a consistent thin stroke — open and friendly. Matches the typography's humanist warmth: no sharp geometric shapes, no aggressive angles. Icons feel hand-drawn but precise, like they belong to the same family. Specific stroke weight, scale, and grid set in /foundations.",
+    "Line-based with rounded corners and a consistent thin stroke — open and friendly. Matches the typography’s humanist warmth: no sharp geometric shapes, no aggressive angles. Icons feel hand-drawn but precise, like they belong to the same family. Specific stroke weight, scale, and grid set in /foundations.",
   layoutArchetypes:
     "Editorial spreads and narrative scrolls, not dashboard grids. Generous spacing that signals breathing room. Asymmetric balance over rigid symmetry — but quietly asymmetric, not aggressively so. Content-forward; chrome-light. The layouts feel more like a thoughtful magazine than a SaaS app.",
   motion:

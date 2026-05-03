@@ -5,10 +5,10 @@
  * .jtbd.md context (no observational research). Maps Maya doing her
  * morning practice (job F1) in both current-state and future-state for
  * comparison. Read by design + diagnostic commands that should ground
- * decisions in the morning home + first-practice flow's user
+ * decisions in the morning home + first-practice flow’s user
  * experience.
  *
- * Two exports, mirroring the case study's other content modules:
+ * Two exports, mirroring the case study’s other content modules:
  *   - stillpointJourneys         — structured object for programmatic access
  *   - stillpointJourneysMarkdown — full markdown rendering for the
  *                                  actual .journeys.md artifact format

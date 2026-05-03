@@ -1,13 +1,13 @@
 /**
  * Stillpoint /audit output.
  *
- * HCD-grounded evaluation of Stillpoint's home page → personalization
+ * HCD-grounded evaluation of Stillpoint’s home page → personalization
  * banner → practice detail page → practice begins flow, against
  * .personas.md (Maya, Jordan), .jtbd.md (6 jobs), .journeys.md
  * (Maya morning practice — current + future state), .scenarios.md
  * (Maya morning kitchen, Jordan first-time curious).
  *
- * Two exports, mirroring the case study's other content modules.
+ * Two exports, mirroring the case study’s other content modules.
  *
  * Source: produced by /audit on 2026-05-01 from
  * src/case-studies/stillpoint/content/{personas,jtbd,journeys,scenarios}.ts

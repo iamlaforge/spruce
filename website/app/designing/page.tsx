@@ -221,7 +221,7 @@ function SetUpPhase() {
           {
             role: "spruce",
             content:
-              "What does this product do, and what's the core experience you want users to have?",
+              "What does this product do, and what’s the core experience you want users to have?",
           },
           {
             role: "user",

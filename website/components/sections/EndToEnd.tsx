@@ -50,14 +50,14 @@ type Beat = {
 const BEATS: Beat[] = [
   {
     label: "Set context",
-    caption: "Capture the product's character",
+    caption: "Capture the product’s character",
     command: "/spruce-up",
     turns: [
       { role: "user", content: "/spruce-up" },
       {
         role: "spruce",
         content:
-          "I'll ask a few questions to capture your product's character — what it is, who uses it, what voice it speaks in. The answers go to .spruce.md and every Spruce command reads from it. What does this product do?",
+          "I’ll ask a few questions to capture your product’s character — what it is, who uses it, what voice it speaks in. The answers go to .spruce.md and every Spruce command reads from it. What does this product do?",
       },
       {
         role: "user",
@@ -80,7 +80,7 @@ const BEATS: Beat[] = [
       {
         role: "spruce",
         content:
-          "Drafting personas from .spruce.md context. No research yet, so I'll label every persona as context-derived. Drafting Maya as primary (Daily Practitioner) and Jordan as secondary (Skeptical First-Timer). Writing to .personas.md.",
+          "Drafting personas from .spruce.md context. No research yet, so I’ll label every persona as context-derived. Drafting Maya as primary (Daily Practitioner) and Jordan as secondary (Skeptical First-Timer). Writing to .personas.md.",
       },
     ],
     artifact: <PersonaTile />,
@@ -94,14 +94,14 @@ const BEATS: Beat[] = [
       {
         role: "spruce",
         content:
-          "Designing Stillpoint's home page hero — calibrated to .spruce.md (warm, grounded, quietly confident) and .personas.md (Maya's morning-context entry point). Typography, palette, layout decisions composed from the foundation.",
+          "Designing Stillpoint’s home page hero — calibrated to .spruce.md (warm, grounded, quietly confident) and .personas.md (Maya’s morning-context entry point). Typography, palette, layout decisions composed from the foundation.",
       },
     ],
     artifact: <SurfaceTile />,
   },
   {
     label: "Refine",
-    caption: "Find what's drifted, fix it",
+    caption: "Find what’s drifted, fix it",
     command: "/critique → /voice",
     // No top-level terminal block — this beat's artifact is a two-pane
     // diagnostic + corrective composition with its own internal terminals.
@@ -416,7 +416,7 @@ function SpruceMdTile() {
         />
         <ContextField
           label="Character"
-          body="Warm, grounded, quietly confident. The product respects its own space and the user's time."
+          body="Warm, grounded, quietly confident. The product respects its own space and the user’s time."
         />
         <ContextField
           label="Voice"
@@ -582,7 +582,7 @@ function AuditTile() {
           severity="Blocking"
           severityTone="negative"
           antiPattern="Engagement Trap"
-          affects="Maya doing F1 (settle the nervous system before the day's demands arrive). Highest-leverage moment in the journey."
+          affects="Maya doing F1 (settle the nervous system before the day’s demands arrive). Highest-leverage moment in the journey."
         />
         <AuditFinding
           name="Practice detail page interstitial when starting from recommendation"

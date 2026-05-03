@@ -7,7 +7,7 @@
  * strings to demonstrate the corrective.
  *
  * Voice register matches `content/voice.ts`: calm, specific, respectful.
- * Buttons describe their actions; status messages describe what's
+ * Buttons describe their actions; status messages describe what’s
  * happening; form labels are direct.
  */
 
@@ -48,7 +48,7 @@ export const stillpointMicrocopy = {
   },
 
   notifications: {
-    morning: "A few minutes for yourself, when it's right.",
+    morning: "A few minutes for yourself, when it’s right.",
     evening: "Wind down with a short session before bed.",
     streakHeld: "Your practice is taking shape. See you tomorrow.",
     sessionReady: "Your session is ready when you are.",
@@ -58,12 +58,12 @@ export const stillpointMicrocopy = {
     saving: "Saving…",
     saved: "Saved",
     syncing: "Syncing your practice",
-    offline: "Offline — your progress will sync when you're back online.",
+    offline: "Offline — your progress will sync when you’re back online.",
     sessionLoading: "Preparing your session",
   },
 
   formLabels: {
-    journalEntryTitle: "What's on your mind?",
+    journalEntryTitle: "What’s on your mind?",
     journalEntryPlaceholder: "Write whatever comes up.",
     practiceLength: "How long do you have?",
     reminderTime: "When should we send a gentle reminder?",

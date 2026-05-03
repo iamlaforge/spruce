@@ -66,7 +66,7 @@ export const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         slug: "spruce-md",
-        question: "What's .spruce.md, and where does it live?",
+        question: "What’s .spruce.md, and where does it live?",
         answer: (
           <p>
             A markdown file at the root of your project. It captures your
@@ -140,7 +140,7 @@ export const FAQ_GROUPS: FAQGroup[] = [
       {
         slug: "review-commands-difference",
         question:
-          "What's the difference between /survey, /critique, /uxreview, /detect, and /audit?",
+          "What’s the difference between /survey, /critique, /uxreview, /detect, and /audit?",
         answer: (
           <>
             <p>
@@ -210,7 +210,7 @@ export const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         slug: "open-source-license",
-        question: "Is it open source? What's the license?",
+        question: "Is it open source? What’s the license?",
         answer: (
           <p>
             Apache 2.0. Source is on GitHub at{" "}

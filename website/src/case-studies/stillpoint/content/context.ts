@@ -1,7 +1,7 @@
 /**
  * Stillpoint .spruce.md content.
  *
- * This is the context file Spruce's /spruce up command would have produced
+ * This is the context file Spruce’s /spruce up command would have produced
  * for the Stillpoint project. It is the input that downstream commands
  * (/sketch, /foundations, /design, and the corrective tier) read from when
  * reasoning about design decisions for Stillpoint.
@@ -26,7 +26,7 @@ export const stillpointContext = {
   audience:
     "Primary persona: Maya (Daily Practitioner). Secondary: Jordan (Skeptical First-Timer). See .personas.md for full persona work and downstream-design implications. The original lightweight capture: adults 25–45 seeking stress relief, better sleep, and emotional balance — beginners through intermediate meditators.",
   character:
-    "Warm, grounded, quietly confident, modern, inclusive. The product respects its own space and the user's time.",
+    "Warm, grounded, quietly confident, modern, inclusive. The product respects its own space and the user’s time.",
   density:
     "Spacious leaning balanced — enough room to breathe, not so sparse it feels precious.",
   voice:

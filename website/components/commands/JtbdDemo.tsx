@@ -143,7 +143,7 @@ function PersonaJobMap({
   return (
     <ExpandablePanel ariaLabel={`${name}'s job map`} signature={signature}>
       <div className="divide-y divide-rule-subtle">
-        <JobLayer label="Functional jobs" sub="What they're trying to get done" jobs={functional} />
+        <JobLayer label="Functional jobs" sub="What they’re trying to get done" jobs={functional} />
         <JobLayer label="Emotional jobs" sub="How they want to feel about it" jobs={emotional} />
         <JobLayer label="Social jobs" sub="How they want to be perceived" jobs={social} />
       </div>
