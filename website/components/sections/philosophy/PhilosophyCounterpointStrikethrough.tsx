@@ -57,13 +57,22 @@ export function PhilosophyCounterpointStrikethrough() {
             Spruce is the alternative.
           </p>
           <p className="mt-8 md:mt-10 text-base md:text-lg text-ink leading-relaxed text-pretty">
-            Spruce works at two levels. First, it gives AI tools real design
-            reasoning &mdash; the foundations of typography, color, spacing,
-            components, motion, and voice that good design has always rested
-            on. Second, it gives you tactical control through a set of
-            commands that let you direct, refine, or rethink any decision.
-            The reasoning runs in the background; the commands put you in
-            the chair.
+            Spruce works at three levels. First, it grounds the reasoning in
+            who the product is for &mdash; named personas and the jobs
+            they&rsquo;re hiring it to do, captured into context files every
+            command reads. Most AI design tools have no concept of users at
+            all; in Spruce, that grounding is foundational.
+          </p>
+          <p className="mt-6 text-base md:text-lg text-ink leading-relaxed text-pretty">
+            Second, it gives AI tools real design reasoning &mdash; the
+            foundations of typography, color, spacing, components, motion,
+            and voice that good design has always rested on. Third, it
+            gives you tactical control through a set of commands that let
+            you direct, refine, or rethink any decision.
+          </p>
+          <p className="mt-6 text-base md:text-lg text-ink leading-relaxed text-pretty">
+            The grounding makes the reasoning specific; the reasoning runs
+            in the background; the commands put you in the chair.
           </p>
         </div>
       </div>
