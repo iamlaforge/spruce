@@ -268,10 +268,13 @@ function Section({
   children,
   spacing = "default",
   style,
+  id,
 }: {
   children: React.ReactNode;
   spacing?: "tight" | "default" | "loose";
   style?: CSSProperties;
+  /** Optional anchor id for in-page navigation (e.g., "how-it-works"). */
+  id?: string;
 }) {
   const py =
     spacing === "tight"
@@ -280,7 +283,7 @@ function Section({
         ? "var(--stp-space-20)"
         : "var(--stp-space-16)";
   return (
-    <section style={{ paddingTop: py, paddingBottom: py, ...style }}>
+    <section id={id} style={{ paddingTop: py, paddingBottom: py, ...style }}>
       <div style={CONTAINER_STYLE}>{children}</div>
     </section>
   );
@@ -385,22 +388,25 @@ function Hero({ voiceApplied }: { voiceApplied: boolean }) {
             Five-minute practices designed to fit into the spaces of an
             ordinary day. Take a breath. Begin where you are.
           </p>
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--stp-space-4)",
-              flexWrap: "wrap",
-              marginTop: "var(--stp-space-8)",
-            }}
-          >
-            {/* Primary CTA copy is gated on /voice. Default /design output
-                used "Get Started" — the friendly-professional SaaS default
-                the moodboard's anti-references warned against. /voice
-                rewrites to "Begin practice." */}
+          {/* Primary CTA copy is gated on /voice. Default /design output
+              used "Get Started" — the friendly-professional SaaS default
+              the moodboard's anti-references warned against. /voice
+              rewrites to "Begin practice." The "How it works" path used
+              to sit as a tertiary button at near-equal weight; subordinated
+              to a small text link beneath the primary so the directed path
+              reads as primary and the exploration path as quietly available. */}
+          <div style={{ marginTop: "var(--stp-space-8)" }}>
             <StillpointButton variant="primary">{primaryCta}</StillpointButton>
-            <StillpointButton variant="tertiary">
-              How it works ↓
-            </StillpointButton>
+            <p
+              style={{
+                fontFamily: "var(--stp-font-sans)",
+                fontSize: "var(--stp-text-sm)",
+                color: "var(--stp-color-text-subtle)",
+                margin: "var(--stp-space-4) 0 0 0",
+              }}
+            >
+              Or <StillpointLink href="#how-it-works">see how it works</StillpointLink>.
+            </p>
           </div>
         </div>
         <HeroImage />
@@ -486,6 +492,7 @@ function Practices({
         background: "var(--stp-color-surface)",
         paddingTop: "var(--stp-space-16)",
         paddingBottom: "var(--stp-space-16)",
+        scrollMarginTop: "var(--stp-space-6)",
       }}
     >
       <div style={CONTAINER_STYLE}>
@@ -675,7 +682,10 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <Section>
+    <Section
+      id="how-it-works"
+      style={{ scrollMarginTop: "var(--stp-space-6)" }}
+    >
       <p
         style={{
           fontFamily: "var(--stp-font-sans)",

@@ -1,6 +1,6 @@
 /**
  * Stillpoint practice content. Single source of truth for the three
- * featured practices — used by the home page's practices section
+ * featured practices — used by the home page’s practices section
  * (cards) and by the practice detail pages at /case-study/practice/[slug].
  *
  * The shape is wider than the home cards need (which only use slug,
@@ -43,7 +43,7 @@ export type Practice = {
   duration: string;
   /** One-sentence card description. */
   shortDescription: string;
-  /** Multi-paragraph editorial copy for the detail page's about section. */
+  /** Multi-paragraph editorial copy for the detail page’s about section. */
   longDescription: string[];
   /** Practice category, e.g., "Breath", "Body scan". */
   type: string;
@@ -65,14 +65,14 @@ const MAYA: PracticeGuide = {
   name: "Maya Okafor",
   initials: "MO",
   bio:
-    "Maya leads Stillpoint's morning and mid-day practices. Her background is in somatic-led mindfulness — she favors short, grounded sessions over long retreats. She lives in Brooklyn with two cats who supervise.",
+    "Maya leads Stillpoint’s morning and mid-day practices. Her background is in somatic-led mindfulness — she favors short, grounded sessions over long retreats. She lives in Brooklyn with two cats who supervise.",
 };
 
 const ROHAN: PracticeGuide = {
   name: "Rohan Iyer",
   initials: "RI",
   bio:
-    "Rohan guides Stillpoint's evening body scans. He came to the practice through chronic-pain recovery and brings a quiet, unhurried voice to the work. Trained in the U.K., now teaches from a small studio in Lisbon.",
+    "Rohan guides Stillpoint’s evening body scans. He came to the practice through chronic-pain recovery and brings a quiet, unhurried voice to the work. Trained in the U.K., now teaches from a small studio in Lisbon.",
 };
 
 export const PRACTICES: Practice[] = [
@@ -83,14 +83,14 @@ export const PRACTICES: Practice[] = [
     duration: "5 min · Breath",
     shortDescription: "Begin the day with a few mindful minutes.",
     longDescription: [
-      "Morning Grounding is a short breath-led practice built for the first quiet moment of the day. Five minutes is enough to settle the nervous system before the day's first demands arrive — coffee, kids, calendar, the rest of it.",
-      "The practice doesn't aim to make you feel any particular way. It aims to give you a small window of attention before everything else begins. Some mornings that lands as calm; some mornings as alert; some mornings as nothing in particular. Any of those is fine. The practice is the window, not the mood it produces.",
+      "Morning Grounding is a short breath-led practice built for the first quiet moment of the day. Five minutes is enough to settle the nervous system before the day’s first demands arrive — coffee, kids, calendar, the rest of it.",
+      "The practice doesn’t aim to make you feel any particular way. It aims to give you a small window of attention before everything else begins. Some mornings that lands as calm; some mornings as alert; some mornings as nothing in particular. Any of those is fine. The practice is the window, not the mood it produces.",
     ],
     type: "Breath",
     timeOfDay: "morning",
     audioLength: "5:32",
     environment:
-      "Sit comfortably — a cushion, a chair, the edge of your bed. Eyes open or closed; whichever you prefer. Headphones help but aren't required.",
+      "Sit comfortably — a cushion, a chair, the edge of your bed. Eyes open or closed; whichever you prefer. Headphones help but aren’t required.",
     steps: [
       {
         label: "Settle",
@@ -110,7 +110,7 @@ export const PRACTICES: Practice[] = [
       {
         label: "Carry it forward",
         description:
-          "End with one full breath, then open your eyes if they were closed. Notice what's shifted, if anything. Begin the day from here.",
+          "End with one full breath, then open your eyes if they were closed. Notice what’s shifted, if anything. Begin the day from here.",
       },
     ],
     guide: MAYA,
@@ -124,7 +124,7 @@ export const PRACTICES: Practice[] = [
     shortDescription: "A short pause to reset between meetings.",
     longDescription: [
       "Mid-day Reset is a three-minute breath practice for the moment between things — after a meeting, before a call, in the gap between a hard task and the next one. Short enough to fit anywhere; long enough to actually reset.",
-      "The aim isn't to clear your mind. It's to step out of the flow for a moment, notice what's in your body, and step back in with slightly more space. Three minutes is a small enough commitment that you can use it often without it feeling like a project.",
+      "The aim isn’t to clear your mind. It’s to step out of the flow for a moment, notice what’s in your body, and step back in with slightly more space. Three minutes is a small enough commitment that you can use it often without it feeling like a project.",
     ],
     type: "Breath",
     timeOfDay: "midday",
@@ -135,26 +135,31 @@ export const PRACTICES: Practice[] = [
       {
         label: "Pause",
         description:
-          "Stop whatever's in your hand. Sit back. Notice you've decided to take three minutes.",
+          "Stop whatever’s in your hand. Sit back. Notice you’ve decided to take three minutes.",
       },
       {
         label: "Three slow breaths",
         description:
-          "Slower than your default pace. Don't strain — just longer than usual.",
+          "Slower than your default pace. Don’t strain — just longer than usual.",
       },
       {
         label: "Notice",
         description:
-          "Where's the tension? Shoulders, jaw, hands? You don't need to fix it; just see it.",
+          "Where’s the tension? Shoulders, jaw, hands? You don’t need to fix it; just see it.",
       },
       {
         label: "Return",
         description:
-          "When the audio ends, return to whatever's next — but from a slightly different starting point.",
+          "When the audio ends, return to whatever’s next — but from a slightly different starting point.",
       },
     ],
     guide: MAYA,
-    imageKey: "abstractGradient",
+    // Still-life imagery commitment across all three detail pages — the
+    // home hero is a portrait, but detail-page heroes are still-life
+    // moments (journal/sage for morning, headphones/fabric for mid-day,
+    // candle/stones for evening). Same secondary register across the
+    // detail surfaces; consistent crop in the 4:5 hero container.
+    imageKey: "stillLifeHeadphones",
   },
   {
     slug: "evening-wind-down",
@@ -163,8 +168,8 @@ export const PRACTICES: Practice[] = [
     duration: "7 min · Body scan",
     shortDescription: "Let the day settle before sleep.",
     longDescription: [
-      "Evening Wind-down is a seven-minute body scan for the transition from day into rest. The practice moves attention slowly through the body, from the feet upward, settling each region as it goes. By the end, the day's accumulated tension has somewhere to go besides into sleep.",
-      "It's longer than the morning and mid-day practices for a reason — bodies need time to settle, and rushing the wind-down defeats the purpose. Seven minutes is a calibrated minimum; if you have more, you can stay with the silence at the end.",
+      "Evening Wind-down is a seven-minute body scan for the transition from day into rest. The practice moves attention slowly through the body, from the feet upward, settling each region as it goes. By the end, the day’s accumulated tension has somewhere to go besides into sleep.",
+      "It’s longer than the morning and mid-day practices for a reason — bodies need time to settle, and rushing the wind-down defeats the purpose. Seven minutes is a calibrated minimum; if you have more, you can stay with the silence at the end.",
     ],
     type: "Body scan",
     timeOfDay: "evening",
@@ -180,7 +185,7 @@ export const PRACTICES: Practice[] = [
       {
         label: "Begin at the feet",
         description:
-          "Bring attention to the feet. Notice them without trying to relax them. Just notice they're there.",
+          "Bring attention to the feet. Notice them without trying to relax them. Just notice they’re there.",
       },
       {
         label: "Move attention upward",

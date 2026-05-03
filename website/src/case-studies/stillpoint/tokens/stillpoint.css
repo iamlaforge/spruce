@@ -87,7 +87,7 @@
   /* Color — type hierarchy in deep indigo (warm-anchor character) */
   --stp-color-text: oklch(28% 0.060 270);           /* primary, ~13:1 on bg */
   --stp-color-text-muted: oklch(48% 0.045 270);     /* secondary, ~6:1 */
-  --stp-color-text-subtle: oklch(62% 0.035 270);    /* tertiary, ~4.5:1 */
+  --stp-color-text-subtle: oklch(56% 0.035 270);    /* tertiary, ~5.6:1 — nudged from 62% for comfortable AA buffer on small text against warm cream */
 
   /* Color — sage as primary accent (the grounding anchor) */
   --stp-color-sage: oklch(58% 0.065 145);
@@ -390,7 +390,7 @@
 }
 .stillpoint .stp-link:focus-visible {
   outline: 2px solid var(--stp-color-sage);
-  outline-offset: 3px;
+  outline-offset: 2px;
   border-radius: 2px;
 }
 

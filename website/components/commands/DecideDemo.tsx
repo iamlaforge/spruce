@@ -439,8 +439,13 @@ function Payoff() {
           }}
         >
           {/* Personalization banner — banner-above-grid placement,
-              time-of-day recognition, warm-conversational copy */}
-          <PersonalizationBanner />
+              time-of-day recognition, warm-conversational copy.
+              forceBand="evening" locks the demo to the Evening Wind-down
+              recommendation that /decide built toward in the narrative
+              above — without it, the banner would adapt to the visitor's
+              actual local time and the payoff would drift from the
+              decisions just shown. */}
+          <PersonalizationBanner forceBand="evening" />
 
           {/* Existing three-card practices grid below — eyebrow mirrors
               Home.tsx's current rough-edge state (missing apostrophe + no

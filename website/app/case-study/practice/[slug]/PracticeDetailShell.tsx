@@ -444,8 +444,8 @@ function Specs({ practice }: { practice: Practice }) {
   return (
     <section
       style={{
-        paddingTop: "var(--stp-space-10)",
-        paddingBottom: "var(--stp-space-10)",
+        paddingTop: "var(--stp-space-12)",
+        paddingBottom: "var(--stp-space-12)",
       }}
     >
       <div style={CONTAINER_STYLE}>
