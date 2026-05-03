@@ -19,12 +19,13 @@ export function HeroReduced() {
           </h1>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <p className="text-lg md:text-xl text-ink leading-snug tracking-snug text-balance">
-              A design reasoning system that installs into AI coding tools and
-              teaches them how to think.
+              The only AI design reasoning system that starts with users,
+              not pixels.
             </p>
             <p className="mt-5 text-base text-ink-muted leading-relaxed text-pretty">
-              Claude Code, Cursor, and the tools you already use &mdash; without
-              the generic output.
+              Installs into Claude Code, Cursor, and the tools you already use
+              &mdash; so the design is grounded in real people and the jobs
+              they&rsquo;re doing, not the average of training data.
             </p>
           </div>
         </div>

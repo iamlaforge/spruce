@@ -50,23 +50,30 @@ export function PhilosophyCounterpointStrikethrough() {
 
       <RevisionsList />
 
-      {/* Movement 3 — the alternative */}
+      {/* Movement 3 — the alternative. Leads with the positioning claim
+          (starts with users, not pixels), then unpacks the three levels
+          as how that claim manifests in practice. */}
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 mb-12 md:mb-16">
         <div className="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-2">
           <p className="font-display font-normal text-2xl md:text-3xl leading-tight tracking-tight text-ink text-balance">
-            Spruce is the alternative.
+            Spruce is the alternative.{" "}
+            <span className="text-ink-muted">
+              It starts with users, not pixels.
+            </span>
           </p>
           <p className="mt-8 md:mt-10 text-base md:text-lg text-ink leading-relaxed text-pretty">
-            Spruce works at three levels. First, it grounds the reasoning in
-            who the product is for &mdash; named personas and the jobs
-            they&rsquo;re hiring it to do, captured into context files every
-            command reads. Most AI design tools have no concept of users at
-            all; in Spruce, that grounding is foundational.
+            Most AI design tools generate from prompts and fill in the
+            decisions invisibly. Spruce starts upstream &mdash; with named
+            personas, the jobs they&rsquo;re hiring the product to do, the
+            moments they encounter the design. Captured into context files
+            every command reads from, so every decision can be tied to a
+            real person doing a real thing.
           </p>
           <p className="mt-6 text-base md:text-lg text-ink leading-relaxed text-pretty">
-            Second, it gives AI tools real design reasoning &mdash; the
-            foundations of typography, color, spacing, components, motion,
-            and voice that good design has always rested on. Third, it
+            From that grounding, Spruce composes the design reasoning that
+            follows &mdash; typography, color, spacing, components, motion,
+            voice. The fundamentals good design has always rested on, now
+            calibrated to a specific product for a specific audience. And it
             gives you tactical control through a set of commands that let
             you direct, refine, or rethink any decision.
           </p>
