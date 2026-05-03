@@ -129,3 +129,30 @@ Bidirectional integration with Figma so Spruce reasoning crosses the design ↔ 
 - Scope: start with read (lower complexity, immediate value for evaluation/audit workflows), then write (more complex, opens up generative + handoff workflows).
 
 **Why on the roadmap:** Figma is where most design teams already work. Crossing the design ↔ code boundary makes Spruce useful in mixed workflows where some work happens in Figma and some in code, rather than forcing teams to commit fully to a code-first approach.
+
+### Discovery commands → Figma artifacts
+
+Once the Figma write integration is in place, extend the Discovery tier so each command can materialize its artifact as a Figma frame in addition to writing the canonical `.md` file.
+
+**The disconnect today:** Discovery commands produce markdown — `.personas.md`, `.jtbd.md`, `.journeys.md`, `.scenarios.md`, audit findings. That's the canonical, version-controlled source of truth. But there's no visual rendering for handoff or team review. The Spruce marketing site shows what the artifacts *could* look like rendered (persona canvas with quadrants, job map with When / I want to / So I can flow, journey map with swim lanes and emotional arc), but those are React components on the site — not output that users get when they run the commands in their own projects.
+
+**Scope when the Figma integration is available:**
+
+- **`/personas` → Figma persona canvas frame.** Header band with avatar mark + name + role + anchor quote, four-quadrant body (Context+Expertise / Jobs / Motivations / Fears+Constraints), informs-design footer. Per persona; primary + secondary canvases as a paired frame.
+- **`/jtbd` → Figma job map frame.** Per-job three-part flow (When / I want to / So I can) with persona grouping and per-layer (functional / emotional / social) sectioning. Cross-persona panel renders shared / diverging / conflicting jobs with the conflict visualization.
+- **`/journey` → Figma journey map frame.** Phase band, smooth emotional-arc curve as a vector path, touchpoint columns with swim lanes (Action / Thought / Friction / Opportunity). Current-state and future-state as paired frames for direct comparison.
+- **`/scenarios` → Figma scenario cards.** Editorial scenario cards anchored to persona + job + lived narrative + design implication.
+- **`/audit` → Figma findings document.** Severity-tiered findings with behavioral-anti-pattern badges, persona-grounded "Affects" lines, recommended-corrective pointers.
+
+**Why Figma rather than companion HTML files or a separate viewer tool:**
+
+The strategic answer for visual artifacts. Most design teams already work in Figma; putting the artifacts there means they live alongside the design work they inform, rather than as standalone files that need to be opened separately. Markdown stays as the canonical source of truth (version-controlled, diffable, editable in any text editor); the Figma render becomes the team-facing handoff format. Round-tripping is a future question — does updating the Figma frame propagate back to the markdown? Likely no in v1; the markdown is canonical, the Figma frame is generated from it.
+
+**Implementation considerations:**
+
+- Depends on the Figma read + write item above shipping first — needs the Figma Plugin API integration in place before this work can begin.
+- Each artifact type needs a Figma component template. The existing React components on the marketing site are visual references but won't translate directly — Figma's component model differs from React's.
+- A render sub-command per Discovery command (e.g., `/personas render`) that takes the canonical `.md` and produces the Figma frame. Or a single `/render personas` / `/render journey` pattern that reuses one render orchestrator.
+- The first concrete use case for the Figma write integration — proves the integration's value beyond moodboards and tokens.
+
+**Why hold:** Depends on the Figma read + write item. Once that lands, this becomes the natural next step — and gives the Figma write integration its first concrete payoff.
