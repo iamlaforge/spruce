@@ -26,6 +26,19 @@ app/
     page.tsx                    Index — essay introduction to the catalog
     [slug]/
       page.tsx                  Dynamic per-command route (19 prerendered via SSG)
+  case-study/                   Stillpoint case study artifact (see "The case study artifact")
+    layout.tsx                  Imports stillpoint.css; minimal wrapper (no Spruce shell —
+                                case study renders standalone with its own header / footer)
+    page.tsx                    /case-study — server component, metadata
+    CaseStudyShell.tsx          Client wrapper — local theme state + <StillpointHome />
+    _shared.tsx                 useStillpointTheme hook + ContextBanner — shared between
+                                the home and practice detail routes
+    practice/
+      [slug]/
+        page.tsx                Dynamic practice detail route (3 prerendered: morning,
+                                mid-day, evening)
+        PracticeDetailShell.tsx Full detail page (hero / about / steps / specs / guide /
+                                related / footer)
 
 components/
   Button.tsx Card.tsx Heading.tsx Link.tsx
@@ -51,26 +64,39 @@ components/
                                 shared-layout em-dash marker (motion)
     CommandDetail.tsx           Server component — structured detail rendering
     DetailFade.tsx              Client wrapper — fades content between command routes
-    BeforeAfterDemo.tsx         Shared shell for toggle demos (Pattern A)
-    SpruceUpDemo.tsx            Setup — stepped Q&A → .spruce.md snippet
-    FoundationsDemo.tsx         Generative — editorial token + primitive specimen
-    DesignDemo.tsx              Generative — "Today" home screen mockup
-    DecideDemo.tsx              Generative — stepped decisions → reflection screen
-    RemixDemo.tsx               Generative — three side-by-side variants
-    TypographyDemo.tsx          Corrective — daily reading card before/after
-    ColorgradeDemo.tsx          Corrective — featured practice card before/after
-    ArrangeDemo.tsx             Corrective — settings form before/after
-    RefineDemo.tsx              Corrective — interactive Begin practice button
-    PaceDemo.tsx                Corrective — drawer open/close, side-by-side timing
-    VoiceDemo.tsx               Corrective — connection-dropped error before/after
-    ReduceDemo.tsx              Corrective — practice library header before/after
-    FortifyDemo.tsx             Corrective — state toggle (Loading/Empty/Error)
-    FinishDemo.tsx              Corrective — ship-readiness verdict report
-    SurveyDemo.tsx              Diagnostic — severity-tiered findings + action plan
-    UxreviewDemo.tsx            Diagnostic — UX findings with state-completeness callout
-    CritiqueDemo.tsx            Diagnostic — narrative essay (5 sections)
-    DetectDemo.tsx              Diagnostic — domain-grouped scan report
-    ExplainDemo.tsx             Diagnostic — decision-area walkthrough
+    BeforeAfterDemo.tsx         Shared shell for toggle demos (Pattern A); accepts
+                                optional `demoNote` rendering "On Stillpoint" footer
+    colorgrade-ai-palette.css   Parallel --ai-* CSS-variable scope for /colorgrade's
+                                fabricated AI-default palette (theme cascades)
+    SpruceUpDemo.tsx            Setup — Stillpoint /spruce-up interview → .spruce.md
+    FoundationsDemo.tsx         Generative — Stillpoint token + primitive specimen
+    DesignDemo.tsx              Generative — Stillpoint home rendered with applied=['design']
+    DecideDemo.tsx              Generative — stepped decisions → personalization banner
+    RemixDemo.tsx               Generative — three Stillpoint home directions
+    TypographyDemo.tsx          Corrective — Stillpoint hero + pull quote, fabricated
+                                before (system-ui) vs Stillpoint (Lora + Söhne)
+    ColorgradeDemo.tsx          Corrective — Stillpoint banner + cards, fabricated AI-
+                                default palette (cool blue) vs Stillpoint warm palette
+    ArrangeDemo.tsx             Corrective — Stillpoint settings form before/after
+    RefineDemo.tsx              Corrective — Stillpoint practices grid: three-equal-
+                                cards → asymmetric (featured + 2 supporting) + hover lift
+    PaceDemo.tsx                Corrective — drawer interaction in Stillpoint surface,
+                                two columns comparing 200ms linear vs Stillpoint's
+                                320ms ease-out
+    VoiceDemo.tsx               Corrective — Stillpoint hero + signup CTA copy + social
+                                proof line (real gated changes ship to /case-study)
+    ReduceDemo.tsx              Corrective — Stillpoint practice card padded with AI-
+                                default decoration vs the actual lean card
+    FortifyDemo.tsx             Corrective — "Today's practices" Stillpoint list shell,
+                                state toggle (Loading/Empty/Error)
+    FinishDemo.tsx              Corrective — ship-readiness verdict on Stillpoint home,
+                                closes with link to /case-study artifact
+    SurveyDemo.tsx              Diagnostic — severity-tiered findings on Stillpoint
+    UxreviewDemo.tsx            Diagnostic — Stillpoint signup form + banner state-
+                                completeness audit, coverage map close
+    CritiqueDemo.tsx            Diagnostic — narrative essay on Stillpoint home (5 sections)
+    DetectDemo.tsx              Diagnostic — Stillpoint anti-pattern scan, domain-grouped
+    ExplainDemo.tsx             Diagnostic — walkthrough of /decide's banner decisions
 
 hooks/
   useInViewOnce.ts              IntersectionObserver hook — fires once per element per
@@ -332,35 +358,121 @@ Demo-card chrome is shared across all patterns: a `figure` element with a mono-c
 
 ### The cross-page workflow narrative
 
-All 19 demos thread from the same hypothetical product context — a meditation app for parents established by `/spruce-up`'s sample interview. The same product flows through every demo:
+All 19 demos thread from the same product context — **Stillpoint**, a hypothetical-but-detailed meditation app for adults building a sustainable practice. The same product flows through every demo, and the cumulative live result lives at `/case-study` (see "The case study artifact" section below).
 
 | Command       | What the demo shows                                                  |
 |---------------|----------------------------------------------------------------------|
-| `/spruce-up`  | Interview captures the product's character into `.spruce.md`         |
-| `/foundations`| Tokens calibrated to that character (Lora + Source Sans, Canvas + amber) |
-| `/design`     | "Today" home screen using those tokens                               |
-| `/decide`     | Reflection screen designed via guided decisions                      |
-| `/remix`      | Three distinct directions for the same evening-practice surface      |
-| `/typeface`   | Daily reading card — system-ui → Lora + Source Sans                  |
-| `/colorgrade` | Featured practice card — blue/gradient → warm Canvas + amber         |
-| `/arrange`    | Practice preferences settings — cramped → scale-conformant rhythm    |
-| `/refine`     | Begin practice button — default-only states → all states covered     |
-| `/pace`       | Drawer slide — 360ms linear vs 240ms ease-considered                 |
-| `/voice`      | Connection-dropped error — "Oops!" → "Connection dropped"            |
-| `/reduce`     | Practice library header — chrome accumulation → quiet title          |
-| `/fortify`    | Practice library list — stubbed states → loading/empty/error built   |
-| `/finish`     | Ship-readiness verdict on the meditation app                         |
-| `/survey`     | Comprehensive findings on the meditation app                         |
-| `/uxreview`   | UX findings + state-completeness audit on the meditation app         |
-| `/critique`   | Narrative critique of the meditation app                             |
-| `/detect`     | Anti-pattern scan on the meditation app                              |
-| `/explain`    | Decision walkthrough for the Tonight home screen                     |
+| `/spruce-up`  | Stillpoint interview captures product character into `.spruce.md`    |
+| `/sketch`     | Stillpoint moodboard with palette, typography, anti-references       |
+| `/foundations`| Stillpoint tokens (Söhne + Lora, warm-cream + sage + lavender)       |
+| `/design`     | Stillpoint home rendered with `applied={['design']}` — pre-decide    |
+| `/decide`     | Stepped decisions → personalization banner above practices grid      |
+| `/remix`      | Three Stillpoint home directions (live, letter, ritual)              |
+| `/voice`      | Hero + signup CTA copy + social-proof line — real changes ship       |
+| `/typeface`   | Hero + pull quote: fabricated system-ui before vs Stillpoint after   |
+| `/refine`     | Practices grid: three-equal-cards → asymmetric + hover lift          |
+| `/colorgrade` | Banner + cards: fabricated AI-default cool palette vs Stillpoint warm |
+| `/pace`       | Drawer interaction: 200ms linear vs 320ms ease-out                   |
+| `/reduce`     | Practice card: AI-default-bloated vs lean Stillpoint card            |
+| `/arrange`    | Settings form: cramped → scale-conformant rhythm                     |
+| `/fortify`    | "Today's practices" list: state toggle (Loading/Empty/Error)         |
+| `/finish`     | Ship-readiness verdict on Stillpoint home + link to /case-study      |
+| `/survey`     | Severity-tiered findings on Stillpoint home                          |
+| `/uxreview`   | UX findings + state-completeness audit, coverage map close           |
+| `/critique`   | Narrative critique of Stillpoint home (5 sections)                   |
+| `/detect`     | Anti-pattern scan grouped by domain                                  |
+| `/explain`    | Walkthrough of /decide's personalization banner decisions            |
 
-A visitor browsing the catalog in any order sees the same product surfacing across commands. The same Canvas color, type pair, and accent appear across every "after" state in the corrective tier; the same surfaces (practice library, reflection screen, account settings, evening practice card) recur across diagnostic findings, polish lists, and walkthroughs.
+A visitor browsing the catalog in any order sees the same product surfacing across commands. The same warm-cream + sage palette, Söhne + Lora type pair, and `.stp-card--interactive` hover lift appear across every "after" state; the same surfaces (hero, practices grid, personalization banner, pull quote, signup) recur across diagnostic findings, polish lists, and walkthroughs.
 
-The "after" state in every corrective demo uses the meditation app's actual design system — not a generic disciplined treatment. `/typeface`'s after uses Lora + Source Sans (the meditation app's pair, established by `/foundations`); `/colorgrade`'s after uses warm Canvas + amber-700; `/refine`'s button is amber-700 in both states (color held constant; only state coverage differs). This means the corrective demos read as "Spruce running on this project" rather than "Spruce running on a generic project."
+The "after" state in every corrective demo uses Stillpoint's actual design system — not a generic disciplined treatment. Four correctives gate real visible changes that ship to `/case-study` via the `applied`-command iteration system: `/voice` (CTA + social-proof copy), `/typeface` (apostrophe + tracking + pull-quote curly quotes), `/refine` (asymmetric grid + hover affordance), and `/decide` (personalization banner). The remaining correctives (`/colorgrade`, `/pace`, `/reduce`, `/fortify`, `/arrange`, `/finish`) are documented as verification steps where the actual `/command` work on Stillpoint was minimal — the demos exist to demonstrate the command's character via the fabricated-before treatment, with visible "On Stillpoint" demo notes naming what's illustrative versus what shipped to the case study.
 
-This is the catalog's quiet superpower: the workflow argument becomes tactile rather than described. Visitors don't read "Spruce produces coherent design across commands on a real project" — they see the same project being designed, scanned, polished, and shipped through 19 demos.
+This is the catalog's quiet superpower: the workflow argument becomes tactile rather than described. Visitors don't read "Spruce produces coherent design across commands on a real project" — they see Stillpoint being designed, scanned, polished, and shipped through 19 demos, with the cumulative live artifact at `/case-study`.
+
+## The case study artifact
+
+The Stillpoint case study lives at `/case-study` and extends to practice detail pages at `/case-study/practice/[slug]`. It's the cumulative live result of running the full Spruce workflow — the same Stillpoint home that threads through every demo in the catalog, rendered standalone outside the catalog's docs chrome.
+
+### Directory structure
+
+```
+src/case-studies/stillpoint/
+  components/                 Stillpoint design system primitives. All require a
+                              <StillpointScope> ancestor; visual treatment lives
+                              in tokens/stillpoint.css.
+    StillpointButton.tsx      Three variants (primary / secondary / tertiary)
+    StillpointCard.tsx        Paper-like surface; .stp-card--interactive opt-in
+                              for hover lift + shadow
+    StillpointHeading.tsx     5 levels (display / page / section / sub / minor)
+    StillpointInput.tsx       Calm sage focus ring; passes readOnly etc. through
+    StillpointLink.tsx        Sage-toned underline
+    StillpointScope.tsx       The .stillpoint CSS scope wrapper; takes optional
+                              theme prop (inherit | light | dark)
+    StillpointThemeToggle.tsx Sun/moon icon button; client component
+    StillpointIcons.tsx       Practice category + how-it-works step icons
+  content/
+    foundations.ts            /foundations output reference data
+    imagery.ts                Photography library + moodboard registry
+    practices.ts              Single source of truth for the three practices
+                              (Morning Grounding / Mid-day Reset / Evening Wind-
+                              down); used by home cards + detail pages
+  fragments/
+    Home.tsx                  The Stillpoint home page; takes optional `applied`
+                              and `theme` props for the iteration system
+    PersonalizationBanner.tsx /decide artifact — sage→peach (light) / sage→
+                              lavender (dark) gradient banner
+    HomeLetter.tsx HomeRitual.tsx /remix variants
+  tokens/
+    stillpoint.css            All --stp-* tokens scoped to .stillpoint class;
+                              dark mode cascades from html.dark via the same
+                              cascade that drives Spruce's theme
+  README.md                   Local notes
+```
+
+### Theme cascade
+
+Stillpoint's tokens live under the `.stillpoint` class scope. Three activation paths for dark mode, with explicit `data-theme` winning:
+
+- **Spruce dark cascade** — when `<html class="dark">` is present, `.stillpoint:not([data-theme="light"])` picks up dark tokens via `:where(html.dark) .stillpoint:not([data-theme="light"])`. The `:where()` keeps specificity at zero so explicit `data-theme` on a Stillpoint element wins.
+- **Explicit `data-theme="dark"`** — used by `/case-study`'s local theme toggle (independent of Spruce). When the visitor toggles dark on the case study, this overrides the Spruce cascade.
+- **Explicit `data-theme="light"`** — forces light, used to hold a Stillpoint demo light when Spruce is dark.
+
+There is deliberately no `prefers-color-scheme: dark` `@media` block in `stillpoint.css` — Spruce's themeScript reads OS preference at startup and captures it into `html.dark`, so making Stillpoint also read OS preference directly would mean a Spruce-light + OS-dark user gets dark Stillpoint demos despite their explicit Spruce choice. Following the cascade alone keeps Stillpoint and Spruce in sync.
+
+The personalization banner gradient end (`--stp-color-banner-gradient-end`) is theme-switching: peach in light (sunset character against warm cream), lavender in dark (cooler warmth that holds against deep indigo). Same cascade mechanism, applied per-token.
+
+### Case-study route shape
+
+`/case-study` (Stillpoint home) and `/case-study/practice/[slug]` (practice detail pages) share:
+
+- `_shared.tsx` — `useStillpointTheme` hook (localStorage-persisted, defaults to following Spruce on first visit) + `ContextBanner` (thin Spruce-styled bar above Stillpoint's header with breadcrumb back to the catalog).
+- The Stillpoint header / footer, theme toggle, and overall surface treatment.
+
+The page-level files (`page.tsx`) stay server components for metadata + `generateStaticParams`; the rendering happens in client `*Shell.tsx` components so the local theme state can be managed without making the route fully client. For the dynamic practice route, the server-side `page.tsx` validates the slug and calls `notFound()` if invalid, then passes only the slug string to the client (the `Practice` object contains an `Icon` component reference that can't cross the server→client boundary; the client resolves the practice via `getPractice(slug)`).
+
+### The applied-command iteration system
+
+`StillpointHome` takes an optional `applied: AppliedCommand[]` prop controlling which Spruce commands' modifications render. The `AppliedCommand` union has 11 entries covering the full workflow: `'design'`, `'decide'`, and the nine corrective tier commands.
+
+- **Catalog demos** pass subsets to show iteration points. `DesignDemo` passes `applied={['design']}` (pre-decide state); `RemixDemo` does the same. `DecideDemo` does its own custom rendering of the practices section payoff. The diagnostic demos describe Stillpoint without rendering it.
+- **The case-study route** uses the default — all known commands applied (the cumulative live state).
+
+Convention for what gets gated by `applied` versus direct-edited (documented in `Home.tsx`):
+
+- **Gate visible page-level changes.** Additions, layout shifts, copy rewrites — anything that deserves to be representable as a before/after in the catalog demo for the corrective that produced the change.
+- **Direct-edit micro-craft details.** Single-pixel line-height tweaks, tracking adjustments — the conditional overhead for changes nobody scrutinizes individually isn't worth the noise.
+
+### The fabricated-before precedent + "On Stillpoint" notes
+
+For corrective demos where Stillpoint's actual surface didn't have substantive incremental work to do (`/colorgrade`, `/pace`, `/reduce`, `/arrange`, `/fortify`), the demos use a fabricated-before treatment: the after-state is the actual Stillpoint surface, and the before-state is "what AI defaults would have produced if no discipline had been applied." This was set as a precedent by `/typeface` (which also gates real changes) and adopted across the soft-fit cases.
+
+To keep the catalog honest about what shipped versus what's illustrative, those demos carry visible "On Stillpoint" demo notes — a small footer block under a hairline rule below the annotations, with a `font-mono text-2xs uppercase` eyebrow and a short prose note naming the demo's relationship to the actual case study. `BeforeAfterDemo` accepts an optional `demoNote: ReactNode` prop for this; demos with custom figures (PaceDemo, FortifyDemo) inline the note directly.
+
+The two correctives that DON'T carry "On Stillpoint" notes — `/voice` and `/typeface` — gate real visible Home.tsx changes that ship to `/case-study`. They earn their weight without the framing.
+
+### colorgrade-ai-palette.css
+
+The `/colorgrade` demo's fabricated AI-default palette is defined as a parallel CSS-variable scope (`.colorgrade-ai-palette` in `colorgrade-ai-palette.css`) that mirrors Stillpoint's pattern — light tokens by default, dark overrides under `:where(html.dark) .colorgrade-ai-palette:not([data-theme="light"])`. The `AI_COLORS` object in `ColorgradeDemo.tsx` references `var(--ai-color-*)` tokens, so the cascade resolves them at render time. Without this, the before-state would stay light when Spruce flipped dark while the after-state (using Stillpoint tokens that already cascade) was the only thing that changed.
 
 ## Tailwind v4 + token strategy
 
