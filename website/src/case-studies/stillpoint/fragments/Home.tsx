@@ -1,6 +1,10 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
-import { StillpointScope } from "../components/StillpointScope";
+import Link from "next/link";
+import type { CSSProperties, ReactNode } from "react";
+import {
+  StillpointScope,
+  type StillpointTheme,
+} from "../components/StillpointScope";
 import { StillpointHeading } from "../components/StillpointHeading";
 import { StillpointButton } from "../components/StillpointButton";
 import { StillpointCard } from "../components/StillpointCard";
@@ -9,12 +13,10 @@ import { StillpointLink } from "../components/StillpointLink";
 import {
   LeafIcon,
   ListIcon,
-  MoonIcon,
   SettledIcon,
-  SunRisingIcon,
-  WaveIcon,
 } from "../components/StillpointIcons";
 import { stillpointImagery } from "../content/imagery";
+import { PRACTICES } from "../content/practices";
 import { PersonalizationBanner } from "./PersonalizationBanner";
 
 /**
@@ -53,6 +55,90 @@ import { PersonalizationBanner } from "./PersonalizationBanner";
  *                  output, none of the modifications from later commands)
  *   - 'decide'   — adds the personalization banner above the practices
  *                  grid
+ *   - 'voice'    — rewrites the hero + signup primary CTAs from "Get
+ *                  Started" to practice-led labels ("Begin practice" /
+ *                  "Start practicing") and removes the performative
+ *                  "Join 10,000+ people" social-proof line in the signup
+ *                  section. Three discrete copy moves, all flagged by
+ *                  the diagnostic tier (/survey, /detect, /critique).
+ *   - 'typeface' — two surfaces, three craft moves. Practices eyebrow
+ *                  gets the smart apostrophe ("TODAYS" → "TODAY’S") and
+ *                  the foundation's tracking-wide token applied to the
+ *                  all-caps text. Pull quote gets opening + closing
+ *                  curly quotation marks added (the quote ran without
+ *                  quote marks in the first pass — pull quote convention
+ *                  carries them). Flagged by /survey and /detect as
+ *                  cataloged anti-patterns.
+ *   - 'refine'   — practices grid shifts from three-equal-cards to an
+ *                  asymmetric arrangement (featured Morning Grounding
+ *                  spans full width above two supporting cards stacked
+ *                  beside each other). The featured card uses the
+ *                  larger heading level for editorial weight. Cards
+ *                  also get the .stp-card--interactive modifier so they
+ *                  respond to hover with a subtle lift + deeper shadow.
+ *                  Flagged by /survey, /uxreview, /detect (*The Three-
+ *                  Equal-Cards*, "Practice cards lack interactivity").
+ *   - 'colorgrade' — verification step. The palette /foundations
+ *                  established (warm cream + sand neutrals, sage primary,
+ *                  lavender warmth, deep indigo text) is intact across
+ *                  Stillpoint's surfaces; no incremental Home.tsx
+ *                  changes are gated on this command. The /colorgrade
+ *                  demo uses the fabricated-before treatment (AI-default
+ *                  cool tech-blue + purple-gradient palette vs actual
+ *                  Stillpoint warm palette) to demonstrate what
+ *                  /foundations + /colorgrade preserve at the level of
+ *                  palette character.
+ *   - 'pace'     — verification step. The motion tokens /foundations
+ *                  established (--stp-duration-base 320ms +
+ *                  --stp-ease-out cubic-bezier(0.16, 1, 0.3, 1)) are
+ *                  already wired into .stp-card--interactive via /refine;
+ *                  no incremental Home.tsx changes are gated on this
+ *                  command. The /pace demo shows two columns of the same
+ *                  drawer interaction with AI-default motion (200ms
+ *                  linear) vs Stillpoint motion to demonstrate the
+ *                  character difference.
+ *   - 'reduce'   — verification step. The actual practice cards on
+ *                  Stillpoint home are already lean (icon + duration +
+ *                  title + one-sentence description); no incremental
+ *                  Home.tsx changes are gated on this command. The
+ *                  /reduce demo uses the fabricated-before treatment
+ *                  scoped to a single featured card — same Stillpoint
+ *                  palette + typography, but loaded with the badges,
+ *                  meta lines, multi-paragraph description, rating row,
+ *                  and dual CTAs AI tends to add — to demonstrate the
+ *                  content-discipline argument.
+ *   - 'fortify'  — verification step. /fortify's actual work on
+ *                  Stillpoint surfaced as findings in /uxreview (signup
+ *                  form's missing error/success/validation states; the
+ *                  personalization banner's missing fallback); the
+ *                  implementation of those state treatments is outside
+ *                  the catalog narrative's scope. The /fortify demo
+ *                  illustrates the principle on a "Today's practices"
+ *                  list shell — toggling between Loading / Empty /
+ *                  Error states with AI-default treatments (spinner,
+ *                  null-check copy, failure announcement) vs the
+ *                  designed treatments (skeleton matching list shape,
+ *                  three-part empty state, error with recovery).
+ *   - 'arrange'  — verification step. The actual section spacing and
+ *                  vertical rhythm on Stillpoint home is calibrated by
+ *                  the foundation's space scale + the Section component;
+ *                  no incremental Home.tsx changes are gated on this
+ *                  command. The /arrange demo illustrates the principle
+ *                  on a settings form — same content + Stillpoint
+ *                  palette + typography in both states, only spacing
+ *                  decisions (heading margins, label-input rhythm,
+ *                  helper-text measure, section breathing) differ.
+ *   - 'finish'   — closing pass + ship-readiness verdict. Sweeps
+ *                  micro-craft across the cumulative state (smart-quote
+ *                  conversions, optical centering, focus-ring
+ *                  verification, contrast confirmation, reduced-motion
+ *                  audit, hairline neutral check) and produces the
+ *                  verdict on whether to deploy. Adding 'finish' to the
+ *                  applied set marks the workflow as complete; no
+ *                  incremental Home.tsx changes are gated, since
+ *                  /finish's micro-edits are too small to gate
+ *                  individually (per the in-place-correction
+ *                  convention).
  *
  * As more commands are run on the home page (corrective tier, /critique,
  * /finish), expand this type and the conditionals inside the section
@@ -85,9 +171,32 @@ import { PersonalizationBanner } from "./PersonalizationBanner";
  * eyebrow can be direct-edited; the demo doesn't need to compare 0
  * vs. 0.05.
  */
-export type AppliedCommand = "design" | "decide";
+export type AppliedCommand =
+  | "design"
+  | "decide"
+  | "voice"
+  | "typeface"
+  | "refine"
+  | "colorgrade"
+  | "pace"
+  | "reduce"
+  | "fortify"
+  | "arrange"
+  | "finish";
 
-const DEFAULT_APPLIED: AppliedCommand[] = ["design", "decide"];
+const DEFAULT_APPLIED: AppliedCommand[] = [
+  "design",
+  "decide",
+  "voice",
+  "typeface",
+  "refine",
+  "colorgrade",
+  "pace",
+  "reduce",
+  "fortify",
+  "arrange",
+  "finish",
+];
 
 export type StillpointHomeProps = {
   /**
@@ -95,14 +204,30 @@ export type StillpointHomeProps = {
    * all known commands applied (the cumulative live state).
    */
   applied?: AppliedCommand[];
+  /**
+   * Theme override for the rendered home. Default 'inherit' — follows
+   * ancestor html.dark via CSS cascade (so demos embedded in the Spruce
+   * catalog match the surrounding shell). 'light' or 'dark' force the
+   * theme explicitly, used by /case-study where Stillpoint owns its own
+   * theme state independently of Spruce.
+   */
+  theme?: StillpointTheme;
+  /**
+   * Optional slot rendered in the header nav after the standard links.
+   * /case-study passes a <StillpointThemeToggle /> so visitors can flip
+   * Stillpoint's theme from the page itself; demos pass nothing.
+   */
+  themeToggle?: ReactNode;
 };
 
 export function StillpointHome({
   applied = DEFAULT_APPLIED,
+  theme = "inherit",
+  themeToggle,
 }: StillpointHomeProps = {}) {
   const has = (cmd: AppliedCommand) => applied.includes(cmd);
   return (
-    <StillpointScope as="main">
+    <StillpointScope as="main" theme={theme}>
       <div
         style={{
           background: "var(--stp-color-bg)",
@@ -110,12 +235,16 @@ export function StillpointHome({
           fontFamily: "var(--stp-font-sans)",
         }}
       >
-        <Header />
-        <Hero />
-        <Practices showPersonalization={has("decide")} />
+        <Header themeToggle={themeToggle} />
+        <Hero voiceApplied={has("voice")} />
+        <Practices
+          showPersonalization={has("decide")}
+          typefaceApplied={has("typeface")}
+          refineApplied={has("refine")}
+        />
         <HowItWorks />
-        <PullQuote />
-        <Signup />
+        <PullQuote typefaceApplied={has("typeface")} />
+        <Signup voiceApplied={has("voice")} />
         <Footer />
       </div>
     </StillpointScope>
@@ -162,7 +291,7 @@ function Section({
 // is a typographic moment, not a logo image.
 // ──────────────────────────────────────────────────────────────────────
 
-function Header() {
+function Header({ themeToggle }: { themeToggle?: ReactNode }) {
   return (
     <header
       style={{
@@ -197,13 +326,14 @@ function Header() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "var(--stp-space-6)",
+            gap: "var(--stp-space-5)",
             fontSize: "var(--stp-text-sm)",
           }}
         >
           <StillpointLink href="#practices">Practices</StillpointLink>
           <StillpointLink href="#about">About</StillpointLink>
           <StillpointLink href="#signin">Sign in</StillpointLink>
+          {themeToggle}
         </nav>
       </div>
     </header>
@@ -215,7 +345,10 @@ function Header() {
 // tagline; lede paragraph in sans below; two CTAs (primary + tertiary).
 // ──────────────────────────────────────────────────────────────────────
 
-function Hero() {
+function Hero({ voiceApplied }: { voiceApplied: boolean }) {
+  // /voice rewrites "Get Started" → "Begin practice" — practice-led
+  // language matching Stillpoint's calm-supportive-friend voice.
+  const primaryCta = voiceApplied ? "Begin practice" : "Get Started";
   return (
     <Section spacing="loose">
       {/* Two-column hero — text on the left, photo placeholder on the
@@ -260,11 +393,11 @@ function Hero() {
               marginTop: "var(--stp-space-8)",
             }}
           >
-            {/* INTENTIONAL: "Get Started" is the generic SaaS default —
-                /voice can rewrite to something specific to Stillpoint's
-                practice-led voice ("Begin Your Practice", "Start
-                Practicing"). */}
-            <StillpointButton variant="primary">Get Started</StillpointButton>
+            {/* Primary CTA copy is gated on /voice. Default /design output
+                used "Get Started" — the friendly-professional SaaS default
+                the moodboard's anti-references warned against. /voice
+                rewrites to "Begin practice." */}
+            <StillpointButton variant="primary">{primaryCta}</StillpointButton>
             <StillpointButton variant="tertiary">
               How it works ↓
             </StillpointButton>
@@ -314,38 +447,38 @@ function HeroImage() {
 
 // ──────────────────────────────────────────────────────────────────────
 // Practices — three featured practices in a card grid. The eyebrow
-// here is missing its apostrophe ("TODAYS PRACTICES") for /typeface to
-// catch; the layout leans into the three-equal-cards pattern the
-// moodboard's anti-references warned against ("aggressive symmetry"
-// vs. "quietly asymmetric") for /critique to flag.
+// has two craft details gated on /typeface: smart apostrophe ("TODAYS"
+// → "TODAY’S") and the foundation's tracking-wide token applied to the
+// all-caps text. Both are cataloged as anti-patterns in /detect (*The
+// Missing Apostrophe* and *The Untracked All-Caps*) and surface in
+// /survey under Typography. The layout leans into the three-equal-cards
+// pattern the moodboard's anti-references warned against ("aggressive
+// symmetry" vs. "quietly asymmetric") for /refine to address.
 // ──────────────────────────────────────────────────────────────────────
 
-const PRACTICES = [
-  {
-    title: "Morning Grounding",
-    duration: "5 min · Breath",
-    description: "Begin the day with a few mindful minutes.",
-    Icon: SunRisingIcon,
-  },
-  {
-    title: "Mid-day Reset",
-    duration: "3 min · Breath",
-    description: "A short pause to reset between meetings.",
-    Icon: WaveIcon,
-  },
-  {
-    title: "Evening Wind-down",
-    duration: "7 min · Body scan",
-    description: "Let the day settle before sleep.",
-    Icon: MoonIcon,
-  },
-];
+// PRACTICES content lives in the shared content module (imported at top
+// of file) — same data powers the practice detail pages at
+// /case-study/practice/[slug]. The home cards use slug, title, Icon,
+// duration, shortDescription. The detail pages use the rest.
 
 function Practices({
   showPersonalization,
+  typefaceApplied,
+  refineApplied,
 }: {
   showPersonalization: boolean;
+  typefaceApplied: boolean;
+  refineApplied: boolean;
 }) {
+  // /typeface fixes the practices eyebrow on two craft details: smart
+  // apostrophe and the foundation's tracking-wide token on the all-caps
+  // text.
+  const eyebrowText = typefaceApplied
+    ? "TODAY’S PRACTICES"
+    : "TODAYS PRACTICES";
+  const eyebrowTracking = typefaceApplied
+    ? "var(--stp-tracking-wide)"
+    : "normal";
   return (
     <section
       id="practices"
@@ -368,18 +501,17 @@ function Practices({
         ) : null}
         <p
           style={{
-            // INTENTIONAL: missing apostrophe in "TODAYS" + no
-            // letter-spacing on this all-caps eyebrow. /typeface
-            // can fix both.
+            // Apostrophe + letter-spacing both gated on /typeface.
             fontFamily: "var(--stp-font-sans)",
             fontSize: "var(--stp-text-xs)",
             textTransform: "uppercase",
             fontWeight: 500,
+            letterSpacing: eyebrowTracking,
             color: "var(--stp-color-text-subtle)",
             margin: "0 0 var(--stp-space-3) 0",
           }}
         >
-          TODAYS PRACTICES
+          {eyebrowText}
         </p>
         <StillpointHeading level="page">
           A practice for every moment.
@@ -397,66 +529,117 @@ function Practices({
           A small library of guided practices for the moments that need them.
           Pick one when you&rsquo;re ready.
         </p>
-        {/* INTENTIONAL: three-equal-cards layout. The moodboard's
-            anti-references called out aggressive symmetry; /critique
-            can recommend a more editorial / asymmetric arrangement. */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-3"
-          style={{
-            gap: "var(--stp-space-6)",
-          }}
-        >
-          {PRACTICES.map((p) => {
-            const Icon = p.Icon;
-            return (
-              <StillpointCard key={p.title}>
-                {/* Icon + duration eyebrow paired in a single line so the
-                    icon reads as the category mark for the practice. */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "var(--stp-space-2)",
-                    color: "var(--stp-color-sage)",
-                    margin: "0 0 var(--stp-space-3) 0",
-                  }}
-                >
-                  <Icon size={20} aria-hidden />
-                  <span
-                    style={{
-                      fontFamily: "var(--stp-font-sans)",
-                      fontSize: "var(--stp-text-xs)",
-                      textTransform: "uppercase",
-                      letterSpacing: "var(--stp-tracking-wide)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {p.duration}
-                  </span>
-                </div>
-                <StillpointHeading
-                  level="sub"
-                  style={{ marginBottom: "var(--stp-space-3)" }}
-                >
-                  {p.title}
-                </StillpointHeading>
-                <p
-                  style={{
-                    fontFamily: "var(--stp-font-sans)",
-                    fontSize: "var(--stp-text-base)",
-                    lineHeight: "var(--stp-leading-base)",
-                    color: "var(--stp-color-text-muted)",
-                    margin: 0,
-                  }}
-                >
-                  {p.description}
-                </p>
-              </StillpointCard>
-            );
-          })}
-        </div>
+        {/* Layout + card interactivity both gated on /refine. Default
+            (pre-refine) renders the three-equal-cards grid the moodboard
+            warned against; refined renders an asymmetric arrangement —
+            the morning practice featured full-width above the two
+            supporting practices side-by-side. Cards become interactive
+            (hover lift + shadow) only with /refine applied. */}
+        {refineApplied ? (
+          <div
+            className="grid grid-cols-1 md:grid-cols-2"
+            style={{ gap: "var(--stp-space-6)" }}
+          >
+            <PracticeCard
+              practice={PRACTICES[0]}
+              featured
+              interactive
+              style={{ gridColumn: "1 / -1" }}
+            />
+            <PracticeCard practice={PRACTICES[1]} interactive />
+            <PracticeCard practice={PRACTICES[2]} interactive />
+          </div>
+        ) : (
+          <div
+            className="grid grid-cols-1 md:grid-cols-3"
+            style={{ gap: "var(--stp-space-6)" }}
+          >
+            {PRACTICES.map((p) => (
+              <PracticeCard key={p.title} practice={p} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// PracticeCard — single practice rendering used by both the default
+// three-equal-cards layout and /refine's asymmetric arrangement.
+// `featured` enlarges the heading (StillpointHeading "section" instead
+// of "sub") and bumps the icon size; `interactive` opts the card into
+// .stp-card--interactive so it gets the hover lift treatment.
+// ──────────────────────────────────────────────────────────────────────
+
+function PracticeCard({
+  practice,
+  featured = false,
+  interactive = false,
+  style,
+}: {
+  practice: (typeof PRACTICES)[number];
+  featured?: boolean;
+  interactive?: boolean;
+  style?: CSSProperties;
+}) {
+  const Icon = practice.Icon;
+  // Cards link to the practice detail page at /case-study/practice/[slug].
+  // Wrapping in Link rather than only relying on .stp-card--interactive's
+  // hover affordance — the hover treatment signals interactivity, the
+  // anchor wraps it for actual navigation + screen-reader semantics.
+  return (
+    <Link
+      href={`/case-study/practice/${practice.slug}`}
+      style={{
+        textDecoration: "none",
+        color: "inherit",
+        display: "block",
+        ...style,
+      }}
+    >
+      <StillpointCard interactive={interactive}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--stp-space-2)",
+            color: "var(--stp-color-sage)",
+            margin: "0 0 var(--stp-space-3) 0",
+          }}
+        >
+          <Icon size={featured ? 24 : 20} aria-hidden />
+          <span
+            style={{
+              fontFamily: "var(--stp-font-sans)",
+              fontSize: "var(--stp-text-xs)",
+              textTransform: "uppercase",
+              letterSpacing: "var(--stp-tracking-wide)",
+              fontWeight: 500,
+            }}
+          >
+            {practice.duration}
+          </span>
+        </div>
+        <StillpointHeading
+          level={featured ? "section" : "sub"}
+          style={{ marginBottom: "var(--stp-space-3)" }}
+        >
+          {practice.title}
+        </StillpointHeading>
+        <p
+          style={{
+            fontFamily: "var(--stp-font-sans)",
+            fontSize: "var(--stp-text-base)",
+            lineHeight: "var(--stp-leading-base)",
+            color: "var(--stp-color-text-muted)",
+            margin: 0,
+          }}
+        >
+          {practice.shortDescription}
+        </p>
+      </StillpointCard>
+    </Link>
   );
 }
 
@@ -568,11 +751,16 @@ function HowItWorks() {
 // ──────────────────────────────────────────────────────────────────────
 // PullQuote — editorial moment in Lora. The page's most distinctive
 // typographic beat; a calm, settled sentence to break the marketing
-// rhythm.
+// rhythm. The opening + closing curly quotation marks are gated on
+// /typeface — the first pass shipped the quote without quote marks
+// (pull quotes typically carry them); /typeface adds the proper
+// editorial pair.
 // ──────────────────────────────────────────────────────────────────────
 
-function PullQuote() {
+function PullQuote({ typefaceApplied }: { typefaceApplied: boolean }) {
   const photo = stillpointImagery.stillLifeCandle;
+  const quoteOpen = typefaceApplied ? "“" : "";
+  const quoteClose = typefaceApplied ? "”" : "";
   return (
     <section
       style={{
@@ -629,8 +817,8 @@ function PullQuote() {
                 margin: 0,
               }}
             >
-              A few minutes for yourself are the ones you give back to
-              everyone else.
+              {quoteOpen}A few minutes for yourself are the ones you give
+              back to everyone else.{quoteClose}
             </p>
             <p
               style={{
@@ -653,13 +841,16 @@ function PullQuote() {
 }
 
 // ──────────────────────────────────────────────────────────────────────
-// Signup — email capture for daily reminders. Below the form, a
-// social-proof line that contradicts the moodboard's anti-references
-// (no "join thousands" performative copy). Left intentionally so
-// /critique and /voice can flag and rewrite.
+// Signup — email capture for daily reminders. The primary CTA copy and
+// the social-proof line below the form are both gated on /voice. /design's
+// first pass had "Get Started" + "Join 10,000+ people finding their
+// stillpoint." — the SaaS-default CTA and the performative-proof pattern
+// the moodboard's anti-references explicitly excluded. /voice rewrites
+// the CTA and removes the social-proof line entirely.
 // ──────────────────────────────────────────────────────────────────────
 
-function Signup() {
+function Signup({ voiceApplied }: { voiceApplied: boolean }) {
+  const primaryCta = voiceApplied ? "Start practicing" : "Get Started";
   return (
     <Section>
       <div style={{ maxWidth: "560px" }}>
@@ -690,24 +881,20 @@ function Signup() {
               aria-label="Email address"
             />
           </div>
-          {/* INTENTIONAL: same generic "Get Started" as the hero CTA —
-              /voice can address both at once. */}
-          <StillpointButton variant="primary">Get Started</StillpointButton>
+          <StillpointButton variant="primary">{primaryCta}</StillpointButton>
         </div>
-        {/* INTENTIONAL: performative social-proof copy. The moodboard's
-            anti-references explicitly said no "join thousands of users"
-            patterns. /critique flags as anti-reference violation;
-            /voice rewrites. */}
-        <p
-          style={{
-            fontFamily: "var(--stp-font-sans)",
-            fontSize: "var(--stp-text-sm)",
-            color: "var(--stp-color-text-subtle)",
-            margin: "var(--stp-space-5) 0 0 0",
-          }}
-        >
-          Join 10,000+ people finding their stillpoint.
-        </p>
+        {voiceApplied ? null : (
+          <p
+            style={{
+              fontFamily: "var(--stp-font-sans)",
+              fontSize: "var(--stp-text-sm)",
+              color: "var(--stp-color-text-subtle)",
+              margin: "var(--stp-space-5) 0 0 0",
+            }}
+          >
+            Join 10,000+ people finding their stillpoint.
+          </p>
+        )}
       </div>
     </Section>
   );

@@ -30,23 +30,43 @@ export type Annotation = { n: number; text: string };
 
 type Props = {
   afterLabel: string;
+  /**
+   * Override for the before-tab label. Defaults to "AI default" — right
+   * for demos whose before-state shows what AI would generate without the
+   * corrective. Stillpoint-grounded demos pass a context-specific label
+   * (e.g., "Before /voice") since their before is a real prior state of
+   * the case study, not a generic AI artifact.
+   */
+  beforeLabel?: string;
   before: ReactNode;
   after: ReactNode;
   annotations: Annotation[];
+  /**
+   * Optional editorial note rendered after the annotations, naming the
+   * demo subject's relationship to the actual case study. Used by the
+   * soft-fit corrective demos (/colorgrade, /reduce, /arrange) where
+   * the surface shown either doesn't exist on Stillpoint or where the
+   * before-state is fabricated for pedagogical contrast — naming the
+   * relationship keeps the catalog honest about which corrective work
+   * actually ships to /case-study versus which is illustrative.
+   */
+  demoNote?: ReactNode;
 };
 
 type View = "before" | "after";
 
 export function BeforeAfterDemo({
   afterLabel,
+  beforeLabel = "AI default",
   before,
   after,
   annotations,
+  demoNote,
 }: Props) {
   const [view, setView] = useState<View>("before");
 
   return (
-    <figure className="my-10 md:my-12">
+    <figure className="my-10 md:my-12 mx-2 sm:mx-4 md:mx-6 lg:mx-8">
       <header className="flex flex-wrap items-center justify-between gap-y-3 mb-5">
         <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
           Interactive
@@ -54,6 +74,7 @@ export function BeforeAfterDemo({
         <ToggleStrip
           view={view}
           onChange={setView}
+          beforeLabel={beforeLabel}
           afterLabel={afterLabel}
         />
       </header>
@@ -61,8 +82,11 @@ export function BeforeAfterDemo({
       {/* Card stage — bordered surface that visually contains the demo
           card. AnimatePresence with mode="wait" sequences the exit of the
           previous artifact before the next one enters; the brief gap reads
-          as a deliberate transition rather than a sloppy crossfade. */}
-      <div className="border border-rule-subtle bg-surface rounded-md px-7 py-8 md:px-9 md:py-10">
+          as a deliberate transition rather than a sloppy crossfade.
+          Padding is generous so contained Stillpoint surfaces (Lora at
+          display sizes, paragraph-scale lede copy) have editorial
+          breathing room and don't butt up against the card edges. */}
+      <div className="border border-rule-subtle bg-surface rounded-md px-8 py-10 md:px-14 md:py-14">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={view}
@@ -94,6 +118,22 @@ export function BeforeAfterDemo({
           ))}
         </ol>
       ) : null}
+
+      {/* Demo note — names the demo subject's relationship to the actual
+          case study. Always visible (not conditional on view) since it
+          describes the demo as a whole, not a specific state. Sits below
+          the annotations under a hairline so it reads as editorial
+          footer rather than as a sixth bullet. */}
+      {demoNote ? (
+        <div className="border-t border-rule-subtle mt-7 md:mt-8 pt-5">
+          <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-2">
+            On Stillpoint
+          </p>
+          <p className="text-sm text-ink-muted leading-snug max-w-prose text-pretty">
+            {demoNote}
+          </p>
+        </div>
+      ) : null}
     </figure>
   );
 }
@@ -120,14 +160,16 @@ export function Marker({ n }: { n: number }) {
 function ToggleStrip({
   view,
   onChange,
+  beforeLabel,
   afterLabel,
 }: {
   view: View;
   onChange: (v: View) => void;
+  beforeLabel: string;
   afterLabel: string;
 }) {
   const tabs: Array<[View, string]> = [
-    ["before", "AI default"],
+    ["before", beforeLabel],
     ["after", afterLabel],
   ];
   return (

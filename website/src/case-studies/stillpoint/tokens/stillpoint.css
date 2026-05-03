@@ -22,9 +22,22 @@
  *
  * DARK MODE
  * ─────────
- * Activated by `prefers-color-scheme: dark` OR by adding
- * `data-theme="dark"` to a `.stillpoint` element. Light mode can be
- * forced by adding `data-theme="light"`.
+ * Activated by either of two conditions, with explicit data-theme winning:
+ *   - `data-theme="dark"` set on the `.stillpoint` element (forces dark)
+ *   - Ancestor `html.dark` class (Spruce's manual dark mode), so demos
+ *     embedded inside the Spruce catalog cascade with Spruce's theme
+ *     toggle without each demo wiring its own theme controller
+ *
+ * Light can be forced by `data-theme="light"`, which wins over the
+ * Spruce cascade. /case-study uses this to carry its own theme state
+ * independently of Spruce.
+ *
+ * Note: there is deliberately NO `prefers-color-scheme: dark` @media
+ * block. Spruce's themeScript reads OS preference at startup and
+ * captures it into the `html.dark` class; making Stillpoint also read
+ * OS preference directly would mean a Spruce-light + OS-dark user gets
+ * dark Stillpoint demos despite their explicit Spruce choice. Following
+ * the cascade alone keeps Stillpoint and Spruce in sync.
  */
 
 /* ──────────────────────────────────────────────────────────────────
@@ -90,6 +103,14 @@
   --stp-color-peach: oklch(80% 0.090 50);
   --stp-color-peach-subtle: oklch(94% 0.040 50);
 
+  /* Banner gradient end — the warmth accent on the personalization
+     banner gradient. Peach in light (warmer, sunset character matching
+     the warm-cream surface); lavender in dark (cooler, holds its own
+     against the deeper background where peach would compete with the
+     warm-toned text). The dark override lives in the dark-mode block
+     below. */
+  --stp-color-banner-gradient-end: var(--stp-color-peach-subtle);
+
   /* Color — semantic, calibrated to fit the warm palette */
   --stp-color-success: oklch(58% 0.090 150);        /* sage-family green */
   --stp-color-warning: oklch(72% 0.130 70);         /* warm amber, not yellow */
@@ -147,46 +168,11 @@
    Dark mode — warm-tinted dark, never cold gray
    ────────────────────────────────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  .stillpoint:not([data-theme="light"]) {
-    --stp-color-bg: oklch(18% 0.012 270);
-    --stp-color-surface: oklch(22% 0.014 270);
-    --stp-color-surface-elevated: oklch(26% 0.016 270);
-    --stp-color-border: oklch(32% 0.020 270);
-    --stp-color-border-strong: oklch(42% 0.024 270);
-
-    --stp-color-text: oklch(94% 0.020 75);
-    --stp-color-text-muted: oklch(78% 0.025 75);
-    --stp-color-text-subtle: oklch(62% 0.025 75);
-
-    --stp-color-sage: oklch(68% 0.075 145);
-    --stp-color-sage-hover: oklch(73% 0.080 145);
-    --stp-color-sage-active: oklch(78% 0.080 145);
-    --stp-color-sage-subtle: oklch(28% 0.040 145);
-
-    --stp-color-lavender: oklch(78% 0.060 295);
-    --stp-color-lavender-subtle: oklch(28% 0.040 295);
-
-    --stp-color-peach: oklch(82% 0.080 50);
-    --stp-color-peach-subtle: oklch(28% 0.060 50);
-
-    --stp-color-success: oklch(70% 0.090 150);
-    --stp-color-warning: oklch(78% 0.130 70);
-    --stp-color-error: oklch(65% 0.150 25);
-    --stp-color-info: oklch(70% 0.075 230);
-
-    --stp-shadow-subtle: 0 1px 2px oklch(0% 0 0 / 0.20);
-    --stp-shadow-card:
-      0 2px 8px oklch(0% 0 0 / 0.30),
-      0 1px 2px oklch(0% 0 0 / 0.15);
-    --stp-shadow-lift:
-      0 8px 24px oklch(0% 0 0 / 0.35),
-      0 2px 4px oklch(0% 0 0 / 0.18);
-  }
-}
-
-/* Force dark explicitly */
-.stillpoint[data-theme="dark"] {
+/* Force dark explicitly OR cascade from Spruce's .dark class.
+   :where(html.dark) keeps specificity at zero so explicit data-theme
+   on a Stillpoint element still wins. */
+.stillpoint[data-theme="dark"],
+:where(html.dark) .stillpoint:not([data-theme="light"]) {
   --stp-color-bg: oklch(18% 0.012 270);
   --stp-color-surface: oklch(22% 0.014 270);
   --stp-color-surface-elevated: oklch(26% 0.016 270);
@@ -207,6 +193,11 @@
 
   --stp-color-peach: oklch(82% 0.080 50);
   --stp-color-peach-subtle: oklch(28% 0.060 50);
+
+  /* Dark mode: banner gradient end shifts to lavender — the dark
+     peach reads as muddy-warm against the deep indigo bg, while
+     lavender holds its own as a cooler warmth accent. */
+  --stp-color-banner-gradient-end: var(--stp-color-lavender-subtle);
 
   --stp-color-success: oklch(70% 0.090 150);
   --stp-color-warning: oklch(78% 0.130 70);
@@ -337,6 +328,20 @@
   color: var(--stp-color-text);
 }
 
+/* Interactive variant — lift + deepen shadow on hover. Applied when the
+   card is meant to be tapped (practice cards in the Practices section,
+   etc.). Default cards stay static. Gated on /refine in Home.tsx. */
+.stillpoint .stp-card--interactive {
+  cursor: pointer;
+  transition:
+    transform var(--stp-duration-base) var(--stp-ease-out),
+    box-shadow var(--stp-duration-base) var(--stp-ease-out);
+}
+.stillpoint .stp-card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--stp-shadow-lift);
+}
+
 /* Input — text input with calm sage focus ring */
 .stillpoint .stp-input {
   display: block;
@@ -387,6 +392,28 @@
   outline: 2px solid var(--stp-color-sage);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* Theme toggle — quiet icon button that swaps sun/moon glyph based on
+   current theme. Sits in Stillpoint's nav as a peer of the text links. */
+.stillpoint .stp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: var(--stp-space-1) var(--stp-space-2);
+  color: var(--stp-color-text-muted);
+  cursor: pointer;
+  border-radius: var(--stp-radius-sm);
+  transition: color var(--stp-duration-fast) var(--stp-ease-out);
+}
+.stillpoint .stp-theme-toggle:hover {
+  color: var(--stp-color-text);
+}
+.stillpoint .stp-theme-toggle:focus-visible {
+  outline: 2px solid var(--stp-color-sage);
+  outline-offset: 2px;
 }
 
 /* Reduced-motion honored across all primitive transitions */

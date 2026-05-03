@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ALL_SLUGS, TIERS } from "@/components/commands/data";
 
 export const metadata: Metadata = {
@@ -31,6 +32,17 @@ export default function CommandsIndex() {
           Spruce is structured as three tiers. They aren&rsquo;t levels of
           capability — they&rsquo;re shapes of conversation. Picking the right
           tier matters more than picking the right command within it.
+        </p>
+        <p className="text-base md:text-lg text-ink-muted leading-relaxed text-pretty max-w-prose mt-7">
+          For what running the full catalog produces on a real product, see
+          the{" "}
+          <Link
+            href="/case-study"
+            className="text-accent hover:text-accent-hover underline-offset-4 hover:underline transition-colors duration-fast ease-considered"
+          >
+            Stillpoint case study
+          </Link>
+          .
         </p>
       </header>
 

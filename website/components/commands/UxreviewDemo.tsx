@@ -1,33 +1,24 @@
 import { DocumentFrame } from "./DemoFrame";
 
 /**
- * /uxreview demo. A faithful render of what /uxreview's UX-focused review
- * looks like — characterization paragraph + state-completeness audit
- * call-out + severity-tiered findings (UX-dimension grouped within tiers,
- * with state completeness sub-headings in accent to mark them as the lead
- * UX concern) + numbered action plan.
+ * /uxreview demo. Faithful render of /uxreview's UX-focused review —
+ * characterization paragraph + state-completeness audit call-out +
+ * severity-tiered findings (UX-dimension grouped within tiers, with
+ * state completeness sub-headings in accent) + numbered action plan.
  *
- * Wraps in DocumentFrame (Pattern E chrome): document header bar with
- * OUTPUT eyebrow + scope, hairline-bound surface, end-of-output footer
- * marker.
+ * Subject: Stillpoint's practices section + signup form. UX commands
+ * are sharpest on form-and-state heavy surfaces, and Stillpoint's home
+ * page concentrates those concerns in those two areas — practice cards
+ * (interaction contracts), the personalization banner (empty-state
+ * fallback), the email signup (form + state coverage).
  *
  * Differentiated from /survey through:
  *   - Eyebrow label ("UX review" vs "Survey")
- *   - UX-focused characterization paragraph
  *   - Dedicated state-completeness audit summary in the header
  *   - State-completeness sub-headings rendered in accent
- *   - Findings reference UX dimensions (Information architecture, State
- *     completeness, Forms and input, Trust and transparency, etc.)
- *     rather than the seven Spruce dimensions
- *
- * Differentiated from /detect through severity-tiered structure (matching
- * /survey + /finish) and the depth of each finding (description + fix
- * line, not single-line scan summary).
- *
- * Continues the meditation-app context. The findings represent a realistic
- * /uxreview pass on the practice library, reflection screen, and account
- * settings — surfaces visitors have seen in /pace, /fortify, /decide, and
- * the corrective demos.
+ *   - Findings reference UX dimensions (Forms / State completeness /
+ *     Interaction contracts / Empty states / IA) rather than the seven
+ *     Spruce dimensions
  */
 
 type Severity = "critical" | "significant" | "polish" | "opportunity";
@@ -52,17 +43,8 @@ const TIERS: SeverityTier[] = [
   {
     key: "critical",
     label: "Critical",
-    count: 1,
-    findings: [
-      {
-        area: "Trust and transparency",
-        name: "Account deletion confirmation has destructive default",
-        description:
-          "The “Delete account” confirmation dialog styles the destructive button as primary with “Delete” as the default action. Users who accidentally tap Enter trigger an irreversible delete.",
-        fix: "Require deliberate selection — type the account name, or style destructive as secondary with Cancel as default.",
-        command: "/refine",
-      },
-    ],
+    count: 0,
+    findings: [],
   },
   {
     key: "significant",
@@ -72,36 +54,35 @@ const TIERS: SeverityTier[] = [
       {
         area: "State completeness",
         isStateCompleteness: true,
-        name: "Practice library missing loading state",
+        name: "Signup form missing error state",
         description:
-          "Practices appear in pop after fetch — the screen is empty for several seconds, then content materializes. Users won't know whether the screen is loading or whether nothing is there.",
-        fix: "Add skeleton screens matching the practice card shape.",
+          "If the visitor submits an invalid email or the network fails, there's no error feedback — the form looks the same after submit as before. Users will assume submission worked and won't know to retry.",
+        fix: "Add inline validation + visible error state with retry guidance.",
         command: "/fortify",
       },
       {
         area: "State completeness",
         isStateCompleteness: true,
-        name: "Practice library missing error state",
+        name: "Signup form missing success state",
         description:
-          "If the library fetch fails, the screen stays blank — no notification, no retry path. Users encountering this state won't know what happened or how to recover.",
-        fix: "Add error state with retry affordance.",
-        command: "/fortify",
-      },
-      {
-        area: "State completeness",
-        isStateCompleteness: true,
-        name: "Reflection screen missing save-failure state",
-        description:
-          "Auto-save runs silently. If the network drops, the user has no indication their reflection isn't saved — they may close the screen thinking their writing is preserved when it isn't.",
-        fix: "Add visible save-failure state with manual retry.",
+          'After submission there\'s no confirmation that the email was received. The form simply renders the same "Get Started" button it did before — visitors who submit successfully have no acknowledgment.',
+        fix: "Add success state — quiet confirmation matching Stillpoint's voice.",
         command: "/fortify",
       },
       {
         area: "Forms and input",
-        name: "Practice preferences uses save-on-submit",
+        name: "Signup input lacks client-side validation",
         description:
-          "Users change Default session length or Voice guide, then have to scroll to find a Save button. Easy to leave the screen without saving — and the form gives no indication that changes are unsaved.",
-        fix: "Switch to inline auto-save with a brief saved indicator. This is a flow decision worth directing.",
+          "The email field accepts any input. Users typing an obviously incomplete address (no @, no domain) get no feedback until — at best — the back-end rejects on submit. A small live validation cue would catch errors at the source.",
+        fix: "Add inline validation feedback (helper text, focus state on incomplete input).",
+        command: "/fortify",
+      },
+      {
+        area: "Information architecture",
+        name: "Hero CTAs unclear in priority",
+        description:
+          'The hero pairs "Get Started" (primary button) with "How it works ↓" (tertiary button). Both compete for attention; the relationship between "begin" and "explain first" is unclear. A visitor unsure which action serves them might hesitate.',
+        fix: "Direct the call: single CTA, or clearly subordinated secondary action.",
         command: "/decide",
       },
     ],
@@ -112,20 +93,21 @@ const TIERS: SeverityTier[] = [
     count: 2,
     findings: [
       {
-        area: "Empty states",
-        name: "Practice history missing first-time framing",
+        area: "Interaction contracts",
+        name: "Practice cards lack interactivity affordance",
         description:
-          "New users see “No practices yet” — null-check copy that doesn't explain what the area is or that completing a practice will populate it.",
-        fix: "Three-part empty state: explanation of the space, why it's empty now, what to do.",
-        command: "/fortify",
+          "Cards have a quiet hover border-color shift but no lift, no shadow change, and no cursor change to indicate they're clickable (if they are). Users have to guess whether the cards do anything when tapped.",
+        fix: "Add subtle elevation shift + cursor:pointer on hover to signal interactivity.",
+        command: "/refine",
       },
       {
-        area: "Interaction contracts",
-        name: "Settings toggles lack hover treatment",
+        area: "Empty states",
+        isStateCompleteness: true,
+        name: "Personalization banner has no fallback",
         description:
-          "The toggle pill doesn't change visually on hover — users may not realize the row is interactive.",
-        fix: "Add hover state to toggle pill and surrounding row.",
-        command: "/refine",
+          "The banner /decide produced renders a hardcoded recommendation. If no time-of-day signal is available — or no recommendation lands — the banner has no quiet fallback. The space could go silent unhelpfully.",
+        fix: "Add a quiet fallback state (or hide the banner when no recommendation is available).",
+        command: "/fortify",
       },
     ],
   },
@@ -135,11 +117,11 @@ const TIERS: SeverityTier[] = [
     count: 1,
     findings: [
       {
-        area: "First impressions",
-        name: "Onboarding doesn't establish the recovery framing",
+        area: "Information architecture",
+        name: "Practices grid undersells natural ordering",
         description:
-          "The .spruce.md context describes recovery (not transformation) as the core experience, but onboarding doesn't surface this. Users may approach the product expecting transformation and feel mismatched.",
-        fix: "Optional — onboarding moment that names the recovery framing. Worth directing.",
+          "The three featured practices have an inherent time-of-day sequence — Morning, Mid-day, Evening. The current three-equal-cards layout treats them as parallel rather than as a daily rhythm. A tiered or sequential treatment could carry the structure visitors will already understand.",
+        fix: "Optional — surface morning/mid-day/evening as a journey rather than as three equal cards.",
         command: "/decide",
       },
     ],
@@ -152,109 +134,111 @@ const STATE_COMPLETENESS_COUNT = TIERS.reduce(
   0,
 );
 
-const NEXT_STEPS: Array<{ direction: string; command: string }> = [
+// Coverage map — surfaces audited × the gaps found × the corrective.
+// Different shape from /survey's numbered next-steps so the two
+// structured-finding diagnostics close differently. Mirrors the
+// state-completeness audit ribbon at the top of the document.
+const COVERAGE: Array<{ surface: string; gaps: string; command: string }> = [
   {
-    direction:
-      "Address the critical first — destructive default on account deletion is a real risk.",
-    command: "/refine",
-  },
-  {
-    direction:
-      "Tackle state completeness next — it's the most systemic UX gap. Practice library and reflection screen both need loading + error states; reflection screen needs save-failure handling.",
+    surface: "Signup form",
+    gaps: "Missing error, success, and client-side validation states",
     command: "/fortify",
   },
   {
-    direction:
-      "Direct the practice-preferences save behavior — auto-save vs explicit save is a flow decision worth surfacing before implementing.",
+    surface: "Personalization banner",
+    gaps: "Missing fallback state when no recommendation is available",
+    command: "/fortify",
+  },
+  {
+    surface: "Practice cards",
+    gaps: "No interactivity affordance on hover",
+    command: "/refine",
+  },
+  {
+    surface: "Hero CTA group",
+    gaps: "Two same-weight CTAs compete for attention",
     command: "/decide",
   },
 ];
 
 export function UxreviewDemo() {
+  // Filter empty tiers so "Critical (0)" doesn't render an empty section.
+  const visibleTiers = TIERS.filter((t) => t.count > 0);
+
   return (
     <DocumentFrame
       eyebrow="Output"
-      scope="/uxreview · meditation app"
+      scope="/uxreview · Stillpoint practices + signup"
       caption="/uxreview surfaces UX failures regardless of how the interface looks. The state-completeness audit runs on every review — it's the layer where polished-looking surfaces most often fail silently."
     >
       {/* UX review header — UX-focused characterization paragraph,
           severity-tier count line, then a dedicated state-completeness
-          audit call-out per the skill ("If the state completeness check
-          found significant gaps, call this out in the header"). */}
+          audit call-out. */}
       <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-3">
         UX review
       </p>
-        <p className="text-base md:text-lg text-ink leading-snug max-w-prose text-pretty">
-          Reviewed UX fundamentals across the meditation app. Information
-          architecture is sound and forms are mostly conversational.{" "}
-          <span className="text-ink-muted">
-            The most significant issues are state-completeness gaps across the
-            practice library and reflection screen, plus a destructive-default
-            risk in account deletion.
-          </span>
+      <p className="text-base md:text-lg text-ink leading-snug max-w-prose text-pretty">
+        Reviewed UX fundamentals across Stillpoint&rsquo;s practices
+        section and signup form. Information architecture is sound;
+        copy is mostly conversational; the practices grid is well-curated.{" "}
+        <span className="text-ink-muted">
+          The most significant issues are state-completeness gaps in the
+          signup form and an unclear hero CTA hierarchy.
+        </span>
+      </p>
+      <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mt-4">
+        {TOTAL_FINDINGS} UX issues ·{" "}
+        {TIERS.map((t) => `${t.count} ${t.label.toLowerCase()}`).join(" · ")}
+      </p>
+
+      {/* State completeness audit call-out — sits inside the header
+          block on a soft accent-bordered ribbon. */}
+      <div className="mt-5 border-l-2 border-accent pl-4 py-1">
+        <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-1">
+          State completeness audit
         </p>
-        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mt-4">
-          {TOTAL_FINDINGS} UX issues ·{" "}
-          {TIERS.map((t) => `${t.count} ${t.label.toLowerCase()}`).join(" · ")}
+        <p className="text-sm text-ink-muted leading-snug max-w-prose">
+          {STATE_COMPLETENESS_COUNT} missing states found across the
+          signup form and personalization banner. State-completeness
+          findings are highlighted in accent within the severity tiers
+          below.
         </p>
+      </div>
 
-        {/* State completeness audit call-out — sits inside the header
-            block on a soft accent-tinted background, calling out the
-            audit's findings count distinctly. The state-completeness
-            audit is /uxreview's signature pass; surfacing it visually
-            before the severity tiers makes the audit's prominence
-            explicit. */}
-        <div className="mt-5 border-l-2 border-accent pl-4 py-1">
-          <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-1">
-            State completeness audit
-          </p>
-          <p className="text-sm text-ink-muted leading-snug max-w-prose">
-            {STATE_COMPLETENESS_COUNT} missing states found across the
-            practice library and reflection screen. State-completeness
-            findings are highlighted in accent within the severity tiers
-            below.
-          </p>
-        </div>
+      <div className="border-t border-rule-subtle mt-7 mb-7" />
 
-        <div className="border-t border-rule-subtle mt-7 mb-7" />
-
-        {/* Severity tiers — same italic Fraunces tier label register as
-            /survey and /finish. Within each tier, findings group by UX
-            dimension; state-completeness sub-headers render in accent. */}
-        <div className="space-y-8">
-          {TIERS.map((tier) => (
-            <TierSection key={tier.key} tier={tier} />
-          ))}
-        </div>
-
-        <div className="border-t border-rule mt-9 mb-7" />
-
-        {/* Recommended next steps — same numbered action-plan structure as
-            /survey, calibrated to UX concerns. */}
-        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-4">
-          Recommended next steps
-        </p>
-        <ol role="list" className="list-none space-y-3 max-w-prose">
-          {NEXT_STEPS.map((step, i) => (
-            <li
-              key={i}
-              className="text-sm md:text-base text-ink leading-snug pl-7 relative text-pretty"
-            >
-              <span
-                aria-hidden
-                className="absolute left-0 top-0 font-mono text-sm md:text-base text-accent leading-snug"
-              >
-                {i + 1}.
-              </span>
-              {step.direction}{" "}
-              <span className="text-ink-subtle">Run </span>
-              <code className="font-mono text-sm text-accent">
-                {step.command}
-              </code>
-              <span className="text-ink-subtle">.</span>
-            </li>
+      {/* Severity tiers */}
+      <div className="space-y-8">
+        {visibleTiers.map((tier) => (
+          <TierSection key={tier.key} tier={tier} />
         ))}
-      </ol>
+      </div>
+
+      <div className="border-t border-rule mt-9 mb-7" />
+
+      {/* Coverage map close — extends the state-completeness audit
+          ribbon at the top into a final per-surface summary. */}
+      <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-1">
+        Coverage map
+      </p>
+      <p className="font-display italic font-normal text-sm text-ink-muted mb-4">
+        Surfaces audited, gaps marked
+      </p>
+      <ul role="list" className="list-none space-y-2.5 max-w-prose">
+        {COVERAGE.map((row) => (
+          <li
+            key={row.surface}
+            className="text-sm md:text-base leading-snug text-pretty"
+          >
+            <span className="font-display italic font-normal text-ink">
+              {row.surface}
+            </span>
+            <span className="text-ink-subtle"> — {row.gaps}. Run </span>
+            <code className="font-mono text-sm text-accent">{row.command}</code>
+            <span className="text-ink-subtle">.</span>
+          </li>
+        ))}
+      </ul>
     </DocumentFrame>
   );
 }
@@ -262,17 +246,13 @@ export function UxreviewDemo() {
 // ---------------------------------------------------------------------------
 // TierSection — one severity tier with its findings grouped by UX area.
 // State-completeness findings render together under an accent-colored
-// "State completeness" sub-header to call out the audit's findings within
-// the tier; other UX areas use the standard ink-subtle mono caps.
+// "State completeness" sub-header.
 // ---------------------------------------------------------------------------
 
 function TierSection({ tier }: { tier: SeverityTier }) {
-  // Group findings by area, with state-completeness items grouped together
-  // regardless of the order they appear in the tier definition.
   const stateFindings = tier.findings.filter((f) => f.isStateCompleteness);
   const otherFindings = tier.findings.filter((f) => !f.isStateCompleteness);
 
-  // Group non-state findings by area.
   const otherByArea = new Map<string, Finding[]>();
   for (const f of otherFindings) {
     const list = otherByArea.get(f.area) ?? [];
@@ -289,8 +269,6 @@ function TierSection({ tier }: { tier: SeverityTier }) {
         </span>
       </p>
 
-      {/* State completeness group — accent eyebrow to mark it as the lead
-          UX concern. */}
       {stateFindings.length > 0 ? (
         <div className="mb-6">
           <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-3">
@@ -304,7 +282,6 @@ function TierSection({ tier }: { tier: SeverityTier }) {
         </div>
       ) : null}
 
-      {/* Other UX areas — standard mono-caps eyebrows in ink-subtle. */}
       {Array.from(otherByArea.entries()).map(([area, findings]) => (
         <div key={area} className="mb-6 last:mb-0">
           <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-3">
@@ -322,11 +299,7 @@ function TierSection({ tier }: { tier: SeverityTier }) {
 }
 
 // ---------------------------------------------------------------------------
-// FindingItem — same structure as /survey's FindingItem: name (body, ink,
-// medium), description (body, ink-subtle), fix line ("Fix:" italic prefix
-// + ink-subtle prose + mono accent command). The shared structure rhymes
-// the two structured-findings demos visually while their content + section
-// architecture differentiates them.
+// FindingItem — same structure as /survey's FindingItem.
 // ---------------------------------------------------------------------------
 
 function FindingItem({ finding }: { finding: Finding }) {

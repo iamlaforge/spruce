@@ -1,117 +1,223 @@
+"use client";
+
+import type { CSSProperties, ReactNode } from "react";
 import { BeforeAfterDemo, Marker, type Annotation } from "./BeforeAfterDemo";
+import { StillpointScope } from "@/src/case-studies/stillpoint/components/StillpointScope";
+import { StillpointButton } from "@/src/case-studies/stillpoint/components/StillpointButton";
+import { StillpointInput } from "@/src/case-studies/stillpoint/components/StillpointInput";
 
 /**
- * /voice before/after demonstration. A meditation-app error-state alert
- * shown in two states: AI-default voice ("Oops! Something went wrong" +
- * apologetic verbose body + generic "Try again" CTA) vs after-/voice
- * (specific failure name, direct opening, explicit reassurance about user
- * work, action label tied to the actual fix).
+ * /voice demo. Stillpoint-grounded diff — focused close-ups of the two
+ * surfaces /voice addresses on Stillpoint home: the hero primary CTA
+ * and the signup section. Three discrete copy moves: hero CTA "Get
+ * Started" → "Begin practice", signup CTA "Get Started" → "Start
+ * practicing", and the performative-proof line removed.
  *
- * Mid-session connection drop chosen because it's a real meditation-app
- * failure moment — audio guides need network, dropouts happen — and the
- * user-work reassurance lands viscerally (losing your meditation practice
- * mid-session is a more felt worry than losing a draft).
- *
- * Container styling is held identical between states (Source Sans body +
- * amber CTA — the meditation app's design system per /foundations) so the
- * only perceptible change is copy. /voice doesn't redesign the surface;
- * it rewrites the words.
+ * Diff-style per Decision 1 of the corrective tier; isolated state per
+ * Decision 2 (each demo's after = Home with only that command applied).
+ * The actual changes shown here also populate Home.tsx via the `applied`
+ * system — when 'voice' is in the applied set, the home renders these
+ * same edits. Single source of truth for what /voice did.
  */
 
 const ANNOTATIONS: Annotation[] = [
   {
     n: 1,
-    text: "Title — names the actual failure. “Connection dropped” tells the user what happened; “Oops! Something went wrong” doesn't, and the apologetic emoji adds nothing.",
+    text: "Hero CTA — \"Begin practice\" matches Stillpoint's calm-supportive-friend voice. \"Get Started\" was the friendly-professional SaaS default the moodboard's anti-references explicitly excluded.",
   },
   {
     n: 2,
-    text: "Direct opening — body starts with what happened (“Your audio cut out”), not a softening apology. Users in a failed state want information first; warmth-padding delays it.",
+    text: "Signup CTA — \"Start practicing\" speaks to the actual commitment (signing up to begin a daily practice), not the generic \"begin a flow\" framing. Slight variation from the hero CTA fits the more specific moment.",
   },
   {
     n: 3,
-    text: "Reassurance about user work — explicitly notes the practice progress is saved. Users worry about losing their session; the copy answers that worry directly.",
-  },
-  {
-    n: 4,
-    text: "Specific action — the button label names the fix (“Reconnect”) instead of the generic “Try again.” The user knows what tapping does.",
+    text: "Performative-proof line removed. The moodboard explicitly excluded \"join thousands\" copy — wellness-influencer marketing in a product the .spruce.md describes as quiet, supportive, anti-performance. The line wasn't carrying weight; it was the SaaS instinct showing up.",
   },
 ];
-
-const SOURCE_SANS = "var(--font-source-sans), system-ui, sans-serif";
 
 export function VoiceDemo() {
   return (
     <BeforeAfterDemo
+      beforeLabel="Before /voice"
       afterLabel="After /voice"
       annotations={ANNOTATIONS}
-      before={<BeforeAlert />}
-      after={<AfterAlert />}
+      before={
+        <CloseUps>
+          <HeroCloseUp ctaLabel="Get Started" />
+          <SignupCloseUp
+            ctaLabel="Get Started"
+            socialProofState="present"
+          />
+        </CloseUps>
+      }
+      after={
+        <CloseUps>
+          <HeroCloseUp ctaLabel="Begin practice" markerN={1} />
+          <SignupCloseUp
+            ctaLabel="Start practicing"
+            socialProofState="removed"
+            ctaMarkerN={2}
+            removalMarkerN={3}
+          />
+        </CloseUps>
+      }
     />
   );
 }
 
 // ---------------------------------------------------------------------------
-// BeforeAlert — friendly-professional SaaS template copy on an otherwise
-// disciplined surface. Apologetic emoji, "Oops!" opener, vague body that
-// doesn't say what failed or what's safe, generic "Try again" CTA. The
-// container itself uses the meditation app's design system; only the words
-// betray the AI default.
+// CloseUps — stacks the two focused close-ups vertically. StillpointScope
+// applies the .stillpoint CSS scope so the --stp-* tokens cascade into
+// the primitives below, matching how they render inside Home.tsx.
+//
+// Padding sits on the inner div (inside the .stillpoint scope) rather than
+// on the BeforeAfterDemo card stage — the scope fills its container with
+// --stp-color-bg, so content needs its own breathing room from the visible
+// Stillpoint surface edge (especially in dark mode, where the BeforeAfter
+// card stage's bg-surface ring is invisible against dark Stillpoint).
 // ---------------------------------------------------------------------------
 
-function BeforeAlert() {
+function CloseUps({ children }: { children: ReactNode }) {
   return (
-    <div
-      className="max-w-md border border-stone-200 rounded-md bg-white p-5"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
-      <h4 className="text-base font-semibold text-stone-900 mb-1.5 flex items-center gap-2">
-        <span aria-hidden>⚠️</span>
-        Oops! Something went wrong
-      </h4>
-      <p className="text-sm text-stone-600 mb-4 leading-relaxed">
-        We&apos;re having trouble processing your request. Please try again
-        or contact support if the problem persists.
-      </p>
-      <button
-        type="button"
-        className="bg-amber-700 text-white text-sm font-medium px-3 py-1.5 rounded-md"
+    <StillpointScope>
+      <div
+        style={{
+          display: "grid",
+          gap: "var(--stp-space-12)",
+          gridTemplateColumns: "1fr",
+          padding: "var(--stp-space-12) var(--stp-space-8)",
+        }}
       >
-        Try again
-      </button>
+        {children}
+      </div>
+    </StillpointScope>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CloseUpLabel — small mono-caps eyebrow naming the surface the close-up
+// is showing. Reads as a section pointer, not as Stillpoint UI itself.
+// ---------------------------------------------------------------------------
+
+function CloseUpLabel({ children }: { children: ReactNode }) {
+  return (
+    <p
+      style={{
+        fontFamily: "var(--stp-font-sans)",
+        fontSize: "var(--stp-text-xs)",
+        textTransform: "uppercase",
+        letterSpacing: "var(--stp-tracking-wide)",
+        fontWeight: 500,
+        color: "var(--stp-color-text-subtle)",
+        margin: "0 0 var(--stp-space-4) 0",
+      }}
+    >
+      {children}
+    </p>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// HeroCloseUp — the hero's CTA row in isolation: primary + tertiary side
+// by side, matching the layout in Home.tsx's <Hero>. Marker on the primary
+// CTA in the after-state.
+// ---------------------------------------------------------------------------
+
+function HeroCloseUp({
+  ctaLabel,
+  markerN,
+}: {
+  ctaLabel: string;
+  markerN?: number;
+}) {
+  return (
+    <div>
+      <CloseUpLabel>Hero — primary CTA</CloseUpLabel>
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--stp-space-4)",
+          flexWrap: "wrap",
+        }}
+      >
+        <StillpointButton variant="primary">
+          {ctaLabel}
+          {markerN ? <Marker n={markerN} /> : null}
+        </StillpointButton>
+        <StillpointButton variant="tertiary">How it works ↓</StillpointButton>
+      </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// AfterAlert — same container, rewritten copy. Title names the failure.
-// Body opens directly with the cause, then names the fix, then explicitly
-// reassures about preserved practice progress. Action button names the
-// specific fix.
+// SignupCloseUp — the signup form row + the social-proof line beneath.
+// In the before-state both are present; in the after-state the form has
+// the rewritten CTA and the social-proof line is replaced by an editorial
+// "removed" caption that anchors marker 3.
 // ---------------------------------------------------------------------------
 
-function AfterAlert() {
+const REMOVAL_CAPTION_STYLE: CSSProperties = {
+  fontFamily: "var(--stp-font-sans)",
+  fontSize: "var(--stp-text-xs)",
+  fontStyle: "italic",
+  color: "var(--stp-color-text-subtle)",
+  margin: "var(--stp-space-5) 0 0 0",
+  opacity: 0.75,
+};
+
+function SignupCloseUp({
+  ctaLabel,
+  socialProofState,
+  ctaMarkerN,
+  removalMarkerN,
+}: {
+  ctaLabel: string;
+  socialProofState: "present" | "removed";
+  ctaMarkerN?: number;
+  removalMarkerN?: number;
+}) {
   return (
-    <div
-      className="max-w-md border border-stone-200 rounded-md bg-white p-5"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
-      <h4 className="text-base font-semibold text-stone-900 mb-1.5">
-        Connection dropped
-        <Marker n={1} />
-      </h4>
-      <p className="text-sm text-stone-700 mb-4 leading-relaxed">
-        Your audio cut out.
-        <Marker n={2} /> Reconnect to keep going — your progress through the
-        practice is saved.
-        <Marker n={3} />
-      </p>
-      <button
-        type="button"
-        className="bg-amber-700 text-white text-sm font-medium px-3 py-1.5 rounded-md"
-      >
-        Reconnect
-        <Marker n={4} />
-      </button>
+    <div>
+      <CloseUpLabel>Signup section</CloseUpLabel>
+      <div style={{ maxWidth: "480px" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--stp-space-3)",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ flex: "1 1 220px", minWidth: 0 }}>
+            <StillpointInput
+              type="email"
+              placeholder="you@email.com"
+              aria-label="Email address"
+            />
+          </div>
+          <StillpointButton variant="primary">
+            {ctaLabel}
+            {ctaMarkerN ? <Marker n={ctaMarkerN} /> : null}
+          </StillpointButton>
+        </div>
+        {socialProofState === "present" ? (
+          <p
+            style={{
+              fontFamily: "var(--stp-font-sans)",
+              fontSize: "var(--stp-text-sm)",
+              color: "var(--stp-color-text-subtle)",
+              margin: "var(--stp-space-5) 0 0 0",
+            }}
+          >
+            Join 10,000+ people finding their stillpoint.
+          </p>
+        ) : (
+          <p style={REMOVAL_CAPTION_STYLE}>
+            ↳ Performative-proof line removed
+            {removalMarkerN ? <Marker n={removalMarkerN} /> : null}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { StillpointScope } from "@/src/case-studies/stillpoint/components/StillpointScope";
+import { StillpointButton } from "@/src/case-studies/stillpoint/components/StillpointButton";
+import { StillpointLink } from "@/src/case-studies/stillpoint/components/StillpointLink";
 
 /**
  * /fortify demo. A state toggle controls both columns simultaneously —
@@ -14,13 +17,21 @@ import { useState } from "react";
  * encounter has been designed. The toggle steps the visitor through the
  * three most common gap states — Loading, Empty, Error — at fidelity.
  *
- * Continuing the meditation-app context from earlier demos. The surface
- * is a "Today's practices" list, the kind of list that needs all three
- * non-default states to feel complete.
+ * The list shells inside both columns render inside StillpointScope so
+ * the surface, borders, copy, skeletons, error treatment, and CTAs all
+ * pull from --stp-* tokens — and therefore cascade with Spruce's theme
+ * toggle the same way every other Stillpoint-grounded demo does. The
+ * argument here is state coverage (what's rendered), not palette
+ * character (which colors); using Stillpoint tokens for both columns
+ * isolates the state-coverage diff cleanly.
+ *
+ * The figure frame (header eyebrow, state toggle tabs, the outer card
+ * stage's bg-surface, the annotations list) stays in Spruce styling —
+ * those are catalog meta, not the Stillpoint surface being demonstrated.
  */
 
-const LORA = 'var(--font-lora), Georgia, "Times New Roman", serif';
-const SOURCE_SANS = "var(--font-source-sans), system-ui, sans-serif";
+const STP_FONT_SANS = "var(--stp-font-sans)";
+const STP_FONT_SERIF = "var(--stp-font-serif)";
 
 type StateKey = "loading" | "empty" | "error";
 
@@ -34,7 +45,7 @@ export function FortifyDemo() {
   const [state, setState] = useState<StateKey>("loading");
 
   return (
-    <figure className="my-10 md:my-12">
+    <figure className="my-10 md:my-12 mx-2 sm:mx-4 md:mx-6 lg:mx-8">
       <header className="flex flex-wrap items-center justify-between gap-y-3 mb-5">
         <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
           Interactive
@@ -42,9 +53,9 @@ export function FortifyDemo() {
         <StateToggle current={state} onChange={setState} />
       </header>
 
-      <div className="border border-rule-subtle bg-surface rounded-md px-5 py-7 md:px-7 md:py-9">
+      <div className="border border-rule-subtle bg-surface rounded-md px-8 py-10 md:px-14 md:py-14">
         <div className="grid grid-cols-2 gap-x-4 md:gap-x-6">
-          <Column label="AI default" sublabel="happy path only">
+          <Column label="Before /fortify" sublabel="happy path only">
             <ListShell>
               {state === "loading" ? <DefaultLoading /> : null}
               {state === "empty" ? <DefaultEmpty /> : null}
@@ -99,6 +110,26 @@ export function FortifyDemo() {
           page but matter to every user.
         </li>
       </ol>
+
+      {/* Demo note — Stillpoint's home doesn't currently render a state-
+          aware "Today's practices" list, so this demo illustrates the
+          principle on a related abstraction. /uxreview's findings on the
+          actual signup form + personalization banner remain noted. */}
+      <div className="border-t border-rule-subtle mt-7 md:mt-8 pt-5">
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-2">
+          On Stillpoint
+        </p>
+        <p className="text-sm text-ink-muted leading-snug max-w-prose text-pretty">
+          Stillpoint&rsquo;s home doesn&rsquo;t currently render a
+          state-aware &ldquo;Today&rsquo;s practices&rdquo; list — this
+          demo illustrates /fortify&rsquo;s principle on a related
+          abstraction. /uxreview surfaced real state-coverage gaps on
+          Stillpoint (signup form&rsquo;s missing error/success/validation
+          states; personalization banner&rsquo;s missing fallback); their
+          implementation sits in the corrective queue, outside this
+          catalog narrative&rsquo;s scope.
+        </p>
+      </div>
     </figure>
   );
 }
@@ -146,7 +177,8 @@ function StateToggle({
 
 // ---------------------------------------------------------------------------
 // Column — the labeled wrapper for one variant. Shared shell with the
-// /pace demo's columns: eyebrow + sublabel above the surface.
+// /pace demo's columns: eyebrow + sublabel above the surface in Spruce
+// mono so labels read as catalog meta, not as Stillpoint UI.
 // ---------------------------------------------------------------------------
 
 function Column({
@@ -178,31 +210,51 @@ function Column({
 }
 
 // ---------------------------------------------------------------------------
-// ListShell — the surrounding "Today's practices" list card. Both columns
-// share this shell so visitors read the demo as "same component, different
-// state coverage" rather than "two different products."
+// ListShell — the surrounding "Today's practices" list card. Wrapped in
+// StillpointScope so the surface, borders, eyebrow, and inner state
+// content all pull from --stp-* tokens. Both columns share this shell so
+// visitors read the demo as "same component, different state coverage"
+// rather than "two different products."
 // ---------------------------------------------------------------------------
 
 function ListShell({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="relative h-[220px] md:h-[240px] border border-stone-200 rounded-md px-4 py-4 overflow-hidden"
-      style={{ backgroundColor: "#FAFAF9" }}
-    >
-      <p
-        className="font-mono text-2xs uppercase tracking-widest text-stone-500 mb-3"
-        style={{ fontFamily: SOURCE_SANS }}
+    <StillpointScope>
+      <div
+        className="relative h-[220px] md:h-[240px] rounded-md overflow-hidden"
+        style={{
+          background: "var(--stp-color-bg)",
+          border: "1px solid var(--stp-color-border)",
+          padding: "var(--stp-space-4)",
+        }}
       >
-        Today&rsquo;s practices
-      </p>
-      <div className="relative h-[calc(100%-32px)]">{children}</div>
-    </div>
+        <p
+          style={{
+            fontFamily: STP_FONT_SANS,
+            fontSize: "var(--stp-text-xs)",
+            textTransform: "uppercase",
+            letterSpacing: "var(--stp-tracking-wide)",
+            fontWeight: 500,
+            color: "var(--stp-color-text-subtle)",
+            margin: "0 0 var(--stp-space-3) 0",
+          }}
+        >
+          Today&rsquo;s practices
+        </p>
+        <div className="relative" style={{ height: "calc(100% - 32px)" }}>
+          {children}
+        </div>
+      </div>
+    </StillpointScope>
   );
 }
 
 // ---------------------------------------------------------------------------
 // AI-default state treatments — what tools like v0 / Cursor / Claude
 // commonly produce when a state is technically handled but not designed.
+// Treatments are AI-default in form (spinner, null-check copy, failure
+// announcement) but rendered with Stillpoint tokens so the diff isolates
+// the form difference rather than mixing in palette character.
 // ---------------------------------------------------------------------------
 
 function DefaultLoading() {
@@ -212,7 +264,11 @@ function DefaultLoading() {
     <div className="absolute inset-0 flex items-center justify-center">
       <div
         aria-hidden
-        className="size-5 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin"
+        className="size-5 rounded-full animate-spin"
+        style={{
+          border: "2px solid var(--stp-color-border)",
+          borderTopColor: "var(--stp-color-sage)",
+        }}
       />
     </div>
   );
@@ -223,8 +279,12 @@ function DefaultEmpty() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <p
-        className="text-sm text-stone-400"
-        style={{ fontFamily: SOURCE_SANS }}
+        style={{
+          fontFamily: STP_FONT_SANS,
+          fontSize: "var(--stp-text-sm)",
+          color: "var(--stp-color-text-subtle)",
+          margin: 0,
+        }}
       >
         No items found
       </p>
@@ -237,8 +297,12 @@ function DefaultError() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <p
-        className="text-sm text-red-500"
-        style={{ fontFamily: SOURCE_SANS }}
+        style={{
+          fontFamily: STP_FONT_SANS,
+          fontSize: "var(--stp-text-sm)",
+          color: "var(--stp-color-error)",
+          margin: 0,
+        }}
       >
         Something went wrong
       </p>
@@ -255,51 +319,74 @@ function BuiltLoading() {
   // Skeleton bars matched to the list shape — three rows, each with a
   // title-width and meta-width segment. Tells the visitor what's arriving.
   return (
-    <ul role="list" className="list-none space-y-3 mt-1">
+    <ul role="list" className="list-none space-y-3" style={{ marginTop: 4 }}>
       {[
         { title: "60%", meta: "20%" },
         { title: "75%", meta: "18%" },
         { title: "55%", meta: "22%" },
       ].map((row, i) => (
         <li key={i} className="space-y-1.5">
-          <div
-            className="h-2.5 bg-stone-200 rounded-sm"
-            style={{ width: row.title }}
-          />
-          <div
-            className="h-2 bg-stone-100 rounded-sm"
-            style={{ width: row.meta }}
-          />
+          <SkeletonBar width={row.title} prominent />
+          <SkeletonBar width={row.meta} />
         </li>
       ))}
     </ul>
   );
 }
 
+function SkeletonBar({
+  width,
+  prominent = false,
+}: {
+  width: string;
+  prominent?: boolean;
+}) {
+  return (
+    <div
+      style={{
+        height: prominent ? 10 : 8,
+        width,
+        borderRadius: 2,
+        background: prominent
+          ? "var(--stp-color-border-strong)"
+          : "var(--stp-color-border)",
+        opacity: prominent ? 0.7 : 0.6,
+      }}
+    />
+  );
+}
+
 function BuiltEmpty() {
   // Three-part introduction: what the space is, why it's empty now,
-  // what to do about it. Editorial, calibrated to the meditation-app
-  // voice (warm, direct).
+  // what to do about it. Editorial, calibrated to Stillpoint's
+  // calm-supportive-friend voice.
   return (
     <div className="flex flex-col h-full">
       <p
-        className="text-base text-stone-900 leading-snug mb-1"
-        style={{ fontFamily: LORA }}
+        style={{
+          fontFamily: STP_FONT_SERIF,
+          fontSize: "var(--stp-text-base)",
+          lineHeight: "var(--stp-leading-snug)",
+          color: "var(--stp-color-text)",
+          margin: "0 0 var(--stp-space-1) 0",
+        }}
       >
         Practices land here once you schedule them.
       </p>
       <p
-        className="text-xs text-stone-600 leading-relaxed mb-3"
-        style={{ fontFamily: SOURCE_SANS }}
+        style={{
+          fontFamily: STP_FONT_SANS,
+          fontSize: "var(--stp-text-xs)",
+          lineHeight: "var(--stp-leading-relaxed)",
+          color: "var(--stp-color-text-muted)",
+          margin: "0 0 var(--stp-space-3) 0",
+        }}
       >
         Nothing scheduled for today.
       </p>
-      <p
-        className="text-xs text-amber-700 font-medium mt-auto"
-        style={{ fontFamily: SOURCE_SANS }}
-      >
-        Browse the library →
-      </p>
+      <div style={{ marginTop: "auto" }}>
+        <StillpointLink href="#">Browse the library →</StillpointLink>
+      </div>
     </div>
   );
 }
@@ -310,24 +397,31 @@ function BuiltError() {
   return (
     <div className="flex flex-col h-full">
       <p
-        className="text-sm text-stone-900 leading-snug mb-1"
-        style={{ fontFamily: SOURCE_SANS }}
+        style={{
+          fontFamily: STP_FONT_SANS,
+          fontSize: "var(--stp-text-sm)",
+          lineHeight: "var(--stp-leading-snug)",
+          color: "var(--stp-color-text)",
+          margin: "0 0 var(--stp-space-1) 0",
+          fontWeight: 500,
+        }}
       >
         Couldn&rsquo;t load today&rsquo;s practices.
       </p>
       <p
-        className="text-xs text-stone-600 leading-relaxed mb-3"
-        style={{ fontFamily: SOURCE_SANS }}
+        style={{
+          fontFamily: STP_FONT_SANS,
+          fontSize: "var(--stp-text-xs)",
+          lineHeight: "var(--stp-leading-relaxed)",
+          color: "var(--stp-color-text-muted)",
+          margin: "0 0 var(--stp-space-3) 0",
+        }}
       >
         Check your connection and try again.
       </p>
-      <button
-        type="button"
-        className="self-start text-xs text-stone-900 border border-stone-300 rounded-sm px-2.5 py-1 mt-auto hover:bg-stone-100 transition-colors duration-fast ease-considered"
-        style={{ fontFamily: SOURCE_SANS }}
-      >
-        Retry
-      </button>
+      <div style={{ marginTop: "auto" }}>
+        <StillpointButton variant="secondary">Retry</StillpointButton>
+      </div>
     </div>
   );
 }

@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { EASE_CONSIDERED } from "@/lib/motion";
+import { StillpointScope } from "@/src/case-studies/stillpoint/components/StillpointScope";
 
 /**
  * /pace demo. Two columns share a drawer interaction — visitors click
  * Open and both drawers slide in simultaneously; click again and both
- * slide out. The two columns differ only in the timing and easing applied
- * to the slide.
+ * slide out. The two columns differ only in the timing and easing
+ * applied to the slide.
  *
  * Why a drawer instead of a card arrival: the longer translate distance
  * makes the linear-vs-curve difference visible, not just felt. A 360ms
@@ -17,19 +17,25 @@ import { EASE_CONSIDERED } from "@/lib/motion";
  * toggle. Open *and* close both exhibit the timing — /pace's argument
  * (curves communicate motion character) applies to exits too.
  *
- * Continuing the meditation-app context from earlier demos so the drawer
- * content reads as familiar surface rather than abstract UI. The motion
- * is what differs; the content is constant.
+ * The drawer surfaces and content render inside StillpointScope so the
+ * stage backgrounds, borders, drawer card, typography, and accent all
+ * pull from --stp-* tokens — and therefore cascade with Spruce's theme
+ * toggle the same way every other Stillpoint-grounded demo does.
+ *
+ * The figure frame (header eyebrow, Open/Close trigger button, the
+ * outer card stage's bg-surface, the annotations list) stays in Spruce
+ * styling — those are catalog meta, not part of the Stillpoint surface
+ * being demonstrated.
  */
 
-const LORA = 'var(--font-lora), Georgia, "Times New Roman", serif';
-const SOURCE_SANS = "var(--font-source-sans), system-ui, sans-serif";
+const STP_FONT_SANS = "var(--stp-font-sans)";
+const STP_FONT_SERIF = "var(--stp-font-serif)";
 
 export function PaceDemo() {
   const [open, setOpen] = useState(false);
 
   return (
-    <figure className="my-10 md:my-12">
+    <figure className="my-10 md:my-12 mx-2 sm:mx-4 md:mx-6 lg:mx-8">
       <header className="flex flex-wrap items-center justify-between gap-y-3 mb-5">
         <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
           Interactive
@@ -44,21 +50,21 @@ export function PaceDemo() {
         </button>
       </header>
 
-      <div className="border border-rule-subtle bg-surface rounded-md px-5 py-7 md:px-7 md:py-9">
+      <div className="border border-rule-subtle bg-surface rounded-md px-8 py-10 md:px-14 md:py-14">
         <div className="grid grid-cols-2 gap-x-4 md:gap-x-6">
           <Column
-            label="AI default"
-            sublabel="360ms · linear"
+            label="Before /pace"
+            sublabel="200ms · linear"
             open={open}
-            duration={0.36}
+            duration={0.2}
             easing="linear"
           />
           <Column
             label="After /pace"
-            sublabel="240ms · ease-considered"
+            sublabel="320ms · ease-out"
             open={open}
-            duration={0.24}
-            easing={EASE_CONSIDERED as never}
+            duration={0.32}
+            easing={[0.16, 1, 0.3, 1]}
             isAfter
           />
         </div>
@@ -72,9 +78,10 @@ export function PaceDemo() {
           >
             1
           </span>
-          Easing changed from linear to a considered cubic-bezier curve
-          (0.4, 0, 0.1, 1). The drawer settles on entry and releases on
-          exit — both directions read as character, not as mechanism.
+          Easing changed from linear to Stillpoint&rsquo;s --stp-ease-out
+          (cubic-bezier(0.16, 1, 0.3, 1)) — strong deceleration matching
+          the calm, settled product. Linear reads as mechanical; ease-out
+          decelerates into rest, which reads as calm.
         </li>
         <li className="text-sm md:text-base text-ink-subtle leading-snug pl-7 relative">
           <span
@@ -83,9 +90,10 @@ export function PaceDemo() {
           >
             2
           </span>
-          Duration shortened from 360ms to 240ms. Substantial transforms
-          land confidently at base register; longer durations read as
-          sluggish.
+          Duration shifted from 200ms to Stillpoint&rsquo;s
+          --stp-duration-base (320ms). The faster AI default is snappy
+          and reactive; the calibrated 320ms gives the motion time to
+          feel deliberate rather than dismissive.
         </li>
         <li className="text-sm md:text-base text-ink-subtle leading-snug pl-7 relative">
           <span
@@ -96,20 +104,40 @@ export function PaceDemo() {
           </span>
           Both motions respect{" "}
           <code className="font-mono text-xs">prefers-reduced-motion</code>.
-          When set, the drawer appears in place without travel.
+          When set, the drawer appears in place without travel
+          (.stillpoint primitives honor the system pref via
+          tokens/stillpoint.css).
         </li>
       </ol>
+
+      {/* Demo note — Stillpoint's home doesn't include a drawer pattern;
+          this demo illustrates /pace's principle on a related abstraction.
+          The motion tokens shown are the actual values used by .stp-card
+          --interactive on the practices grid that ships at /case-study. */}
+      <div className="border-t border-rule-subtle mt-7 md:mt-8 pt-5">
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle mb-2">
+          On Stillpoint
+        </p>
+        <p className="text-sm text-ink-muted leading-snug max-w-prose text-pretty">
+          Stillpoint&rsquo;s home doesn&rsquo;t include a drawer pattern —
+          this demo illustrates /pace&rsquo;s principle on a related
+          abstraction. The motion tokens in the after column (320ms ·
+          ease-out) are the actual values wired into{" "}
+          <code className="font-mono text-xs">.stp-card--interactive</code>{" "}
+          on the practices grid that ships at /case-study; /pace&rsquo;s
+          work on Stillpoint is verification, not incremental change.
+        </p>
+      </div>
     </figure>
   );
 }
 
 // ---------------------------------------------------------------------------
 // Column — one variant of the drawer interaction. Header carries the
-// eyebrow (variant name) + sublabel (timing/easing summary). The stage
-// below is a clipped surface; the drawer slides in from the right edge.
-// Below the drawer's resting position, lightweight skeleton bars stand in
-// for the underlying page chrome — enough to read as "drawer over a page"
-// without distracting from the motion.
+// eyebrow (variant name) + sublabel (timing/easing summary) in Spruce
+// mono so it reads as catalog meta. The stage below sits inside a
+// StillpointScope so its surface, borders, drawer, and typography all
+// pull from --stp-* tokens and follow the theme cascade.
 // ---------------------------------------------------------------------------
 
 type ColumnProps = {
@@ -142,54 +170,105 @@ function Column({
         <p className="font-mono text-2xs text-ink-subtle">{sublabel}</p>
       </div>
 
-      {/* Stage — fixed height, clips the drawer when off-canvas. */}
-      <div
-        className="relative h-[200px] md:h-[220px] overflow-hidden border border-stone-200 rounded-md"
-        style={{ backgroundColor: "#FAFAF9" }}
-      >
-        {/* Page chrome behind the drawer — skeleton bars read as "this is
-            the page the drawer overlays" without competing for attention. */}
-        <div className="absolute inset-0 p-4 space-y-2.5">
-          <div className="h-2 w-1/3 bg-stone-200 rounded-sm" />
-          <div className="h-2 w-2/3 bg-stone-200 rounded-sm" />
-          <div className="h-2 w-1/2 bg-stone-200 rounded-sm" />
-          <div className="h-2 w-3/5 bg-stone-200 rounded-sm" />
-        </div>
-
-        {/* Drawer — slides from right edge. Width matches ~78% of stage so
-            the underlying page edge stays visible, anchoring the motion as
-            "drawer entering" rather than "background swap." */}
-        <motion.div
-          initial={false}
-          animate={{ x: open ? "0%" : "100%" }}
-          transition={{ duration, ease: easing as never }}
-          className="absolute inset-y-0 right-0 w-[78%] border-l border-stone-300 px-3.5 py-4 bg-white shadow-[-4px_0_12px_-6px_rgba(0,0,0,0.08)]"
+      {/* Stillpoint surface — the stage where the drawer animates. The
+          stage's bg, border, page-chrome bars, and drawer all pull from
+          --stp-* tokens, so the entire surface responds to Spruce's
+          theme toggle. */}
+      <StillpointScope>
+        <div
+          className="relative h-[200px] md:h-[220px] overflow-hidden rounded-md"
+          style={{
+            background: "var(--stp-color-bg)",
+            border: "1px solid var(--stp-color-border)",
+          }}
         >
-          <p
-            className="font-mono text-2xs uppercase tracking-widest text-stone-500 mb-2"
-            style={{ fontFamily: SOURCE_SANS }}
-          >
-            Tonight
-          </p>
-          <h4
-            className="text-base text-stone-900 leading-tight tracking-tight mb-2"
-            style={{ fontFamily: LORA }}
-          >
-            Evening practice
-          </h4>
-          <p
-            className="text-xs text-stone-700 leading-snug mb-3"
-            style={{ fontFamily: SOURCE_SANS }}
-          >
-            Five minutes of guided breath.
-          </p>
-          <div className="space-y-1.5">
-            <div className="h-1.5 w-full bg-stone-100 rounded-sm" />
-            <div className="h-1.5 w-4/5 bg-stone-100 rounded-sm" />
-            <div className="h-1.5 w-3/5 bg-stone-100 rounded-sm" />
+          {/* Page chrome behind the drawer — abstract bars representing the
+              underlying page content, tinted to read as Stillpoint surface. */}
+          <div className="absolute inset-0 p-4 space-y-2.5">
+            <Bar width="33%" />
+            <Bar width="66%" />
+            <Bar width="50%" />
+            <Bar width="60%" />
           </div>
-        </motion.div>
-      </div>
+
+          {/* Drawer — slides from right edge. Width matches ~78% of stage so
+              the underlying page edge stays visible, anchoring the motion as
+              "drawer entering" rather than "background swap." */}
+          <motion.div
+            initial={false}
+            animate={{ x: open ? "0%" : "100%" }}
+            transition={{ duration, ease: easing as never }}
+            className="absolute inset-y-0 right-0 w-[78%] px-4 py-4"
+            style={{
+              background: "var(--stp-color-surface-elevated)",
+              borderLeft: "1px solid var(--stp-color-border)",
+              boxShadow:
+                "-4px 0 12px -2px oklch(28% 0.060 270 / 0.10)",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: STP_FONT_SANS,
+                fontSize: "var(--stp-text-xs)",
+                textTransform: "uppercase",
+                letterSpacing: "var(--stp-tracking-wide)",
+                fontWeight: 500,
+                color: "var(--stp-color-sage)",
+                margin: "0 0 var(--stp-space-2) 0",
+              }}
+            >
+              Tonight
+            </p>
+            <h4
+              style={{
+                fontFamily: STP_FONT_SERIF,
+                fontSize: "var(--stp-text-base)",
+                lineHeight: "var(--stp-leading-snug)",
+                letterSpacing: "var(--stp-tracking-tight)",
+                color: "var(--stp-color-text)",
+                margin: "0 0 var(--stp-space-2) 0",
+                fontWeight: 400,
+              }}
+            >
+              Evening Wind-down
+            </h4>
+            <p
+              style={{
+                fontFamily: STP_FONT_SANS,
+                fontSize: "var(--stp-text-xs)",
+                lineHeight: "var(--stp-leading-snug)",
+                color: "var(--stp-color-text-muted)",
+                margin: "0 0 var(--stp-space-3) 0",
+              }}
+            >
+              Let the day settle. Seven minutes of body scan.
+            </p>
+            <div className="space-y-1.5">
+              <Bar width="100%" subtle />
+              <Bar width="80%" subtle />
+              <Bar width="60%" subtle />
+            </div>
+          </motion.div>
+        </div>
+      </StillpointScope>
     </div>
+  );
+}
+
+// Abstract horizontal bar — used for page-chrome skeleton and for the
+// drawer's content list. Stillpoint-tinted so it tracks the theme.
+function Bar({ width, subtle = false }: { width: string; subtle?: boolean }) {
+  return (
+    <div
+      style={{
+        height: subtle ? 6 : 8,
+        width,
+        borderRadius: 2,
+        background: subtle
+          ? "var(--stp-color-border)"
+          : "var(--stp-color-border-strong)",
+        opacity: subtle ? 0.6 : 0.7,
+      }}
+    />
   );
 }

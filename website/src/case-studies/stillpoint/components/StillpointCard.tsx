@@ -17,19 +17,28 @@ import type { HTMLAttributes, ReactNode } from "react";
 type Props = {
   children: ReactNode;
   as?: "div" | "article" | "section";
+  /** When true, applies the `.stp-card--interactive` modifier — cursor
+   *  pointer + subtle lift and shadow deepen on hover. Used for cards
+   *  that act as tap targets (practice cards, etc.). */
+  interactive?: boolean;
 } & HTMLAttributes<HTMLElement>;
 
 export function StillpointCard({
   className = "",
   children,
   as: Component = "div",
+  interactive = false,
   ...props
 }: Props) {
+  const cls = [
+    "stp-card",
+    interactive ? "stp-card--interactive" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <Component
-      className={`stp-card${className ? ` ${className}` : ""}`}
-      {...props}
-    >
+    <Component className={cls} {...props}>
       {children}
     </Component>
   );

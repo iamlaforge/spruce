@@ -830,7 +830,7 @@ export const COMMANDS: Record<string, CommandData> = {
     tagline: "Structured review across every dimension.",
     detail: {
       whatItDoes: [
-        "Where /detect names what's wrong fast and /critique speaks at the level of design feel, /survey is the diagnostic workhorse — a comprehensive structured review across all seven Spruce dimensions, calibrated to the product's context, with each finding paired to a fix and grouped by severity. The output is methodical: characterization paragraph, severity-tiered findings, numbered action plan.",
+        "The diagnostic workhorse — a comprehensive structured review across all seven Spruce dimensions, calibrated to the product's context, with each finding paired to a fix and grouped by severity. The output is methodical: characterization paragraph, severity-tiered findings, numbered action plan.",
         "/survey doesn't modify code. It produces findings the user can act on, usually by running the corrective commands the findings point to. The four severity tiers (Critical / Significant / Polish / Opportunity) calibrate to context — a missing focus state is critical on accessibility-sensitive products and significant on internal tools. Findings depend on what the product is trying to be, which is what the .spruce.md context file establishes.",
       ],
       whenToUse: [
@@ -854,7 +854,7 @@ export const COMMANDS: Record<string, CommandData> = {
           text: "Forty-finding surveys that overwhelm rather than guide. A survey that's exhaustive isn't actionable — aim for representative findings on systemic issues, not every instance of a recurring problem.",
         },
         {
-          text: "Padded P3 (\"Opportunity\") sections with filler items invented to look thorough. A genuine P3 is rare; if there are no real opportunities, skip the section.",
+          text: "Padded Opportunity tiers with filler items invented to look thorough. A genuine opportunity finding is rare; if there are no real ones, skip the section.",
         },
         {
           text: "Findings reported as opinions (\"could use more whitespace\") rather than as observations grounded in specific principles or measurable criteria.",
@@ -876,7 +876,7 @@ export const COMMANDS: Record<string, CommandData> = {
     tagline: "Review the UX substrate specifically.",
     detail: {
       whatItDoes: [
-        "Where /survey reviews all seven Spruce dimensions and /critique speaks at the level of design feel, /uxreview focuses exclusively on the UX substrate — information architecture, system feedback, forms, empty states, error recovery, cognitive load, progressive disclosure, interaction contracts, and state completeness. The layer that determines whether an interface actually works for the person using it, regardless of how it looks.",
+        "A review of the UX substrate — information architecture, system feedback, forms, empty states, error recovery, cognitive load, progressive disclosure, interaction contracts, and state completeness. The layer that determines whether an interface actually works for the person using it, regardless of how it looks.",
         "/uxreview exists because UX is consistently the layer that AI-generated interfaces get wrong while visual design gets the attention. An interface can look polished and still fail every UX fundamental — navigation that mirrors internal structure instead of user tasks, feedback that's missing or unclear, forms that interrogate instead of guide, empty states that abandon new users, errors that describe failures instead of fixes. A dedicated state-completeness audit runs on every review.",
       ],
       whenToUse: [
@@ -922,7 +922,7 @@ export const COMMANDS: Record<string, CommandData> = {
     tagline: "An opinionated design-director read.",
     detail: {
       whatItDoes: [
-        "Where /survey produces structured findings with severity tiers and /uxreview audits the UX substrate, /critique engages the work at the level neither of the other diagnostics can: does this feel like what it's trying to be, does it have a point of view, does the whole add up to more than the sum of the parts. /critique speaks with a design-director's sensibility — willing to say something doesn't land, willing to name when a design is hedging, willing to question direction — but always tied to specific observations and the product's stated context. Opinionated, not imperious.",
+        "The design-director read. /critique engages the work at the level of design feel: does this feel like what it's trying to be, does it have a point of view, does the whole add up to more than the sum of the parts. It speaks with the willingness to make a claim — willing to say something doesn't land, willing to name when a design is hedging, willing to question direction — but always tied to specific observations and the product's stated context. Opinionated, not imperious.",
         "/critique doesn't modify code. It produces feedback in narrative form — overall take, character and point of view, coherence across the work, specific moments, brief direction forward. The format is essay, not punch list; the value is in seeing the work at the level of design feel rather than at the level of cataloged issues.",
       ],
       whenToUse: [
@@ -931,6 +931,7 @@ export const COMMANDS: Record<string, CommandData> = {
         "The product's emotional register or brand coherence is in question.",
         "A /survey returned few issues but the work still doesn't feel right — the problems may be directional rather than technical.",
         "You're evaluating whether to continue a direction or pivot and want a design-minded take.",
+        "You're asking \"what do you think,\" \"does this feel right,\" or \"does this have a point of view.\"",
       ],
       howToUse: {
         examples: [
@@ -968,7 +969,7 @@ export const COMMANDS: Record<string, CommandData> = {
     tagline: "Anti-pattern scan across all dimensions.",
     detail: {
       whatItDoes: [
-        "Where /survey produces comprehensive findings with severity and /critique offers narrative feedback on direction, /detect does one thing: scan for specific named anti-patterns and accessibility blockers, and point to the commands that would fix them. It's the lightest of the diagnostic commands — fast, structured, optimized for speed of decision rather than depth of analysis.",
+        "The fast scan. /detect does one thing: flag the named anti-patterns and accessibility blockers present in a project and point to the commands that would fix them. The lightest of the diagnostic commands — fast, structured, optimized for speed of decision rather than depth of analysis.",
         "Each Spruce reference file (Typography, Color, Spatial, Component, Motion, Voice, UX Patterns) ends with a catalog of named anti-patterns. /detect runs through those catalogs plus a small set of accessibility blockers, flags matches, notes locations, and points to the corrective command. The output names what's wrong and tells you what to run next — nothing more.",
       ],
       whenToUse: [
@@ -977,6 +978,7 @@ export const COMMANDS: Record<string, CommandData> = {
         "You're triaging — deciding whether any corrective work is needed before committing to a full review.",
         "You want a fast check before running /finish for ship readiness.",
         "A quick sanity check during active development.",
+        "You're asking \"quick scan,\" \"anything wrong here,\" or \"any anti-patterns to flag.\"",
       ],
       howToUse: {
         examples: [
@@ -1015,7 +1017,7 @@ export const COMMANDS: Record<string, CommandData> = {
     detail: {
       whatItDoes: [
         "Spruce's “show your work” command. The other generative and corrective commands produce designs with brief decision notes; /explain opens up the full reasoning behind those decisions — what was considered, why specific choices were made, how they connect to the product's character and the design principles that governed them.",
-        "/explain serves Spruce's deepest commitment: that users should develop taste and direction, not just receive outputs. Each walkthrough is an opportunity to understand how design decisions are made, so the next brief lands with more confidence and more specific direction. /explain operates on prior context — the most recent design output in the conversation — and walks through decisions in order of impact, from character direction down to craft details.",
+        "/explain serves Spruce's deepest commitment: that users should develop taste and direction, not just receive outputs. Each walkthrough shows how the decisions actually got made, so the next brief lands with more confidence and more specific direction. /explain operates on prior context — the most recent design output in the conversation — and walks through decisions in order of impact, from character direction down to craft details.",
       ],
       whenToUse: [
         "You want to understand why a design looks the way it does.",

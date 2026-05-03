@@ -1,156 +1,222 @@
 "use client";
 
-import { useState } from "react";
-import { BeforeAfterDemo, type Annotation } from "./BeforeAfterDemo";
+import type { CSSProperties, ReactNode } from "react";
+import { BeforeAfterDemo, Marker, type Annotation } from "./BeforeAfterDemo";
+import { StillpointScope } from "@/src/case-studies/stillpoint/components/StillpointScope";
+import { StillpointCard } from "@/src/case-studies/stillpoint/components/StillpointCard";
+import { StillpointHeading } from "@/src/case-studies/stillpoint/components/StillpointHeading";
+import {
+  MoonIcon,
+  SunRisingIcon,
+  WaveIcon,
+} from "@/src/case-studies/stillpoint/components/StillpointIcons";
 
 /**
- * /refine before/after demonstration. A live primary button — the
- * meditation app's "Begin practice" CTA — that visitors actually interact
- * with. Hover for hover state, tab for focus, click for active. A small
- * toggle below the button flips it into a disabled state (since disabled
- * is a property the element holds, not an event you can trigger). The
- * before view shows the same button with the AI-default baseline: only
- * the default state has any treatment, focus is suppressed via
- * outline:none with no replacement, hover and active produce no visible
- * change. The contrast between the dead before button and the responsive
- * after button is the demonstration.
+ * /refine demo. Stillpoint-grounded diff — the practices grid before
+ * and after the layout + hover-affordance refinement.
  *
- * Single live button (not a static grid) because interactive states are
- * temporal — they exist in time, not in space — and the demo's argument
- * is more honest when the visitor experiences the states by interacting
- * rather than by reading labels next to mock buttons.
+ *   - Before: three identical practice cards in a uniform row, no
+ *     hover treatment. The moodboard's anti-references explicitly
+ *     excluded "aggressive symmetry" against the established "quietly
+ *     asymmetric" direction; the equal grid sits exactly in the
+ *     failure mode.
  *
- * Both states use the meditation app's amber-700 accent (per /foundations
- * + /colorgrade) and Source Sans body. Color and typography are held
- * constant so the only perceptible variable is state coverage — what
- * /refine adds.
+ *   - After: asymmetric arrangement — Morning Grounding featured
+ *     full-width above the two supporting practices side-by-side.
+ *     Featured card uses the larger heading level (StillpointHeading
+ *     'section' instead of 'sub') for editorial weight. All cards
+ *     gain the .stp-card--interactive modifier so they respond to
+ *     hover with a subtle lift + deeper shadow.
+ *
+ * The actual layout + interactivity changes shown here also populate
+ * Home.tsx via the `applied` system — when 'refine' is in the applied
+ * set, the practices section renders this same arrangement. The hover
+ * treatment is live: mouse over a card in the after view to see it.
+ *
+ * Card rendering duplicates Home.tsx's PracticeCard structure rather
+ * than importing it — same primitives, same props, but staying
+ * decoupled keeps demo isolation clean (the demo doesn't depend on
+ * Home.tsx's internals).
  */
+
+const PRACTICES = [
+  {
+    title: "Morning Grounding",
+    duration: "5 min · Breath",
+    description: "Begin the day with a few mindful minutes.",
+    Icon: SunRisingIcon,
+  },
+  {
+    title: "Mid-day Reset",
+    duration: "3 min · Breath",
+    description: "A short pause to reset between meetings.",
+    Icon: WaveIcon,
+  },
+  {
+    title: "Evening Wind-down",
+    duration: "7 min · Body scan",
+    description: "Let the day settle before sleep.",
+    Icon: MoonIcon,
+  },
+];
 
 const ANNOTATIONS: Annotation[] = [
   {
     n: 1,
-    text: "Hover — surface darkens to confirm pointer interactivity. AI-generated buttons often skip the hover treatment; the cursor changes but the button doesn't.",
+    text: "Layout shift — three identical cards in a uniform grid → asymmetric arrangement. Morning Grounding featured full-width above the two supporting practices side-by-side; the featured card uses a larger heading level (StillpointHeading 'section' instead of 'sub') for editorial weight. The moodboard's anti-references explicitly excluded the 'aggressive symmetry' the equal grid was producing.",
   },
   {
     n: 2,
-    text: "Active — pressed state goes one step darker again, with subtle inset to confirm the click landed. Frequently missed; users tap and aren't sure whether the action registered.",
-  },
-  {
-    n: 3,
-    text: "Focus — visible ring with offset for keyboard navigation. Required for accessibility. AI defaults frequently strip the ring or fall back to the browser's outline.",
-  },
-  {
-    n: 4,
-    text: "Disabled — reduced opacity and a not-allowed cursor. Legible at a glance that the button can't be used right now, distinct from the default state.",
+    text: "Hover affordance — cards become interactive, responding to hover with a subtle lift and deeper shadow. The before-state had no hover treatment (users had to guess whether the cards did anything); cards now signal they're tap targets. Try hovering any card in the after view to see the lift.",
   },
 ];
-
-const SOURCE_SANS = "var(--font-source-sans), system-ui, sans-serif";
-
-// Before — only the default state has any treatment. focus:outline-none
-// suppresses the browser indicator with no replacement (the worst-case AI
-// default). Hover and active have no variants so the button shows no visual
-// change when interacted with.
-const BUTTON_DEFAULT_ONLY =
-  "bg-amber-700 text-white text-sm font-medium px-4 py-2 rounded-md focus:outline-none";
-
-// After — full interactive state coverage. Each Tailwind variant attaches
-// the treatment described in the annotations: hover darkens, active darkens
-// further plus shadow-inner, focus-visible adds an offset accent ring,
-// disabled fades and switches the cursor. The disabled:* overrides keep
-// hover/active visuals from firing on top of the disabled treatment.
-const BUTTON_FULL_STATES = [
-  "bg-amber-700 text-white text-sm font-medium px-4 py-2 rounded-md",
-  "transition-all duration-150",
-  "hover:bg-amber-800",
-  "active:bg-amber-900 active:shadow-inner",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2",
-  "disabled:opacity-40 disabled:cursor-not-allowed",
-  "disabled:hover:bg-amber-700 disabled:active:bg-amber-700 disabled:active:shadow-none",
-].join(" ");
 
 export function RefineDemo() {
   return (
     <BeforeAfterDemo
+      beforeLabel="Before /refine"
       afterLabel="After /refine"
       annotations={ANNOTATIONS}
-      before={<BeforeButton />}
-      after={<AfterButton />}
+      before={<BeforeLayout />}
+      after={<AfterLayout />}
     />
   );
 }
 
-function BeforeButton() {
+// ---------------------------------------------------------------------------
+// CloseUp — wraps the layout in StillpointScope with internal padding so
+// the cards have breathing room from the visible Stillpoint surface edge
+// (the .stillpoint scope's bg fills the BeforeAfterDemo card stage; in
+// dark mode the outer card-stage ring is invisible against the dark
+// Stillpoint surface, so the inner padding is what shows up visually).
+// ---------------------------------------------------------------------------
+
+function CloseUp({ children }: { children: ReactNode }) {
   return (
-    <div
-      className="flex flex-col items-center py-10"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
-      <button type="button" className={BUTTON_DEFAULT_ONLY}>
-        Begin practice
-      </button>
-    </div>
+    <StillpointScope>
+      <div style={{ padding: "var(--stp-space-12) var(--stp-space-8)" }}>
+        {children}
+      </div>
+    </StillpointScope>
   );
 }
 
-function AfterButton() {
-  const [disabled, setDisabled] = useState(false);
+// ---------------------------------------------------------------------------
+// BeforeLayout — three identical cards in a row. Stack to single column
+// at narrow widths (matches Home.tsx's existing responsive collapse).
+// ---------------------------------------------------------------------------
 
+function BeforeLayout() {
   return (
-    <div
-      className="flex flex-col items-center gap-5 py-6"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
-      <button
-        type="button"
-        disabled={disabled}
-        className={BUTTON_FULL_STATES}
+    <CloseUp>
+      <div
+        className="grid grid-cols-1 sm:grid-cols-3"
+        style={{ gap: "var(--stp-space-4)" }}
       >
-        Begin practice
-      </button>
-      <p className="font-mono text-2xs uppercase tracking-widest text-stone-500">
-        Hover &middot; Tab &middot; Click
-      </p>
-      <DisabledToggle
-        on={disabled}
-        onToggle={() => setDisabled((d) => !d)}
-      />
-    </div>
+        {PRACTICES.map((p) => (
+          <PracticeCard key={p.title} practice={p} />
+        ))}
+      </div>
+    </CloseUp>
   );
 }
 
 // ---------------------------------------------------------------------------
-// DisabledToggle — small pill switch that flips the live button into a
-// disabled state. Disabled is a property of the element rather than an
-// event, so it gets its own affordance rather than living in the action
-// prompt. Label stays "Disabled"; the pill position visually carries on/off.
+// AfterLayout — featured card spans full width above two supporting cards
+// side-by-side. Featured card carries Marker 1 in its heading; the first
+// supporting card carries Marker 2 to anchor the hover affordance
+// annotation (the hover itself is live — mouse over any card to feel it).
 // ---------------------------------------------------------------------------
 
-function DisabledToggle({
-  on,
-  onToggle,
+function AfterLayout() {
+  return (
+    <CloseUp>
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2"
+        style={{ gap: "var(--stp-space-4)" }}
+      >
+        <PracticeCard
+          practice={PRACTICES[0]}
+          featured
+          interactive
+          headingMarkerN={1}
+          style={{ gridColumn: "1 / -1" }}
+        />
+        <PracticeCard
+          practice={PRACTICES[1]}
+          interactive
+          headingMarkerN={2}
+        />
+        <PracticeCard practice={PRACTICES[2]} interactive />
+      </div>
+    </CloseUp>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PracticeCard — same structure as Home.tsx's PracticeCard, plus an
+// optional `headingMarkerN` slot so the demo can anchor markers without
+// modifying the home-page component. The featured prop bumps the icon
+// size and switches the heading level; interactive opts into the hover
+// lift via .stp-card--interactive.
+// ---------------------------------------------------------------------------
+
+function PracticeCard({
+  practice,
+  featured = false,
+  interactive = false,
+  headingMarkerN,
+  style,
 }: {
-  on: boolean;
-  onToggle: () => void;
+  practice: (typeof PRACTICES)[number];
+  featured?: boolean;
+  interactive?: boolean;
+  headingMarkerN?: number;
+  style?: CSSProperties;
 }) {
+  const Icon = practice.Icon;
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={on}
-      className="flex items-center gap-2.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 rounded-sm"
-    >
-      <span
-        aria-hidden
-        className={`inline-flex items-center w-9 h-5 rounded-full p-0.5 transition-colors duration-150 ${
-          on ? "bg-stone-700 justify-end" : "bg-stone-300 justify-start"
-        }`}
+    <StillpointCard interactive={interactive} style={style}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--stp-space-2)",
+          color: "var(--stp-color-sage)",
+          margin: "0 0 var(--stp-space-3) 0",
+        }}
       >
-        <span className="block w-4 h-4 rounded-full bg-white transition-all" />
-      </span>
-      <span className="text-xs text-stone-600 group-hover:text-stone-900 transition-colors">
-        Disabled
-      </span>
-    </button>
+        <Icon size={featured ? 24 : 20} aria-hidden />
+        <span
+          style={{
+            fontFamily: "var(--stp-font-sans)",
+            fontSize: "var(--stp-text-xs)",
+            textTransform: "uppercase",
+            letterSpacing: "var(--stp-tracking-wide)",
+            fontWeight: 500,
+          }}
+        >
+          {practice.duration}
+        </span>
+      </div>
+      <StillpointHeading
+        level={featured ? "section" : "sub"}
+        style={{ marginBottom: "var(--stp-space-3)" }}
+      >
+        {practice.title}
+        {headingMarkerN ? <Marker n={headingMarkerN} /> : null}
+      </StillpointHeading>
+      <p
+        style={{
+          fontFamily: "var(--stp-font-sans)",
+          fontSize: "var(--stp-text-base)",
+          lineHeight: "var(--stp-leading-base)",
+          color: "var(--stp-color-text-muted)",
+          margin: 0,
+        }}
+      >
+        {practice.description}
+      </p>
+    </StillpointCard>
   );
 }

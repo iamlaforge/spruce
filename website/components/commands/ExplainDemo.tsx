@@ -1,83 +1,67 @@
 import { ManuscriptFrame } from "./DemoFrame";
 
 /**
- * /explain demo. A faithful render of what /explain's reasoning
- * walkthrough looks like — italic Fraunces decision-area headings + brief
- * framing paragraph + reasoning paragraph for each section, working from
- * highest-impact decisions (character, layout, typography) down to craft
- * details.
+ * /explain demo. Faithful render of /explain's reasoning walkthrough —
+ * italic Fraunces decision-area headings + brief framing paragraph +
+ * reasoning paragraph for each section, working from highest-impact
+ * decisions down to craft details.
+ *
+ * Subject: the personalization banner /decide produced for Stillpoint's
+ * practices section. /explain works best on a recent specific moment —
+ * the banner is the freshest case-study artifact in the catalog and
+ * carries enough decisions to walk through.
  *
  * Differentiated from /critique through scope and structure: /critique
  * addresses the work-as-a-whole in 4 essay sections; /explain walks
  * through individual decisions in 5-9 sections, each scoped to one
  * decision area. /explain's tone is informational ("here's what was
  * decided and why") rather than evaluative ("does this work").
- *
- * Continues the meditation-app context. The walkthrough explains the
- * decisions made when /design generated the Tonight home screen visible
- * in the /design demo — so visitors who've seen that surface can read the
- * /explain output as the show-your-work for what they already saw.
  */
 
 export function ExplainDemo() {
   return (
     <ManuscriptFrame
       eyebrow="A walkthrough"
-      scope="Subject · Tonight home screen"
-      caption="/explain shows the work behind a recent design — what was considered, why specific choices were made, how they connect to the product's context. The format is a walkthrough, ordered by decision impact: character first, craft last."
+      scope="Subject · Personalization banner"
+      caption="/explain shows the work behind a recent design — what was considered, why specific choices were made, how they connect to the product's context. The format is a walkthrough, ordered by decision impact: feature direction first, craft last."
     >
-      {/* Walkthrough opener — orienting frame paragraph. The Manuscript
-          frame provides the subject metadata in its header, so the demo
-          opens directly with the reader-facing frame sentence. */}
-      <p className="text-base md:text-lg text-ink-muted leading-snug max-w-prose text-pretty mb-8">
-        Working from the highest-impact decisions down to the specific
-        details — the choices that shaped this surface and why each one
-        fits the meditation app&rsquo;s context.
-      </p>
+      <DecisionSection
+        title="The feature direction"
+        framing="Picked personalization over filtering, save-for-later, or adding a fourth featured card."
+        reasoning="Filtering puts the work on the visitor — they have to know what mood or duration they want before the system helps. Save-for-later requires sign-in and breaks the home page's marketing-first frame. A fourth card would have compounded the three-equal-cards pattern the moodboard already flagged as an anti-reference. Personalization moves the work to Stillpoint — the product makes a small thoughtful suggestion based on context the visitor has already given (time of day) without asking for any input. Matches the .spruce.md voice description of a “calm, supportive friend” more directly than the alternatives."
+      />
 
-        <DecisionSection
-          title="Character direction"
-          framing="Chose to express the meditation app's recovery framing through compositional restraint rather than explicit copy."
-          reasoning="The home screen leads with the date (Tuesday evening), names tonight's practice, and offers a single quiet action. Nothing competes with the practice itself — the framing is enacted through what isn't on screen as much as through what is. This matches the .spruce.md's “spacious, single-purpose” density direction and avoids the wellness-app default of stacking encouragement copy, motivational stats, and feature affordances around the primary action."
-        />
+      <DecisionSection
+        title="Placement"
+        framing="Sat the banner above the existing eyebrow + heading + grid rather than replacing a card or sitting alongside as a fourth."
+        reasoning="The .sketch.md's layout direction was “editorial spreads, quietly asymmetric.” Replacing a card or adding a fourth would have compounded the three-equal-cards pattern already in the practices grid — a worse outcome than the existing layout, which /critique was already going to flag. Above-grid keeps the curated three intact while making the personal moment unmistakable. Reads as a different KIND of UI than the cards beneath, which is the desired distinction — recommendation, not catalog entry."
+      />
 
-        <DecisionSection
-          title="Layout archetype"
-          framing="Used a hero-with-secondary-cards composition rather than a list or feed."
-          reasoning="The Tonight hero anchors visual attention on the primary practice; the secondary cards (Body scan, For sleep) sit below as quiet alternatives without competing for the hero's prominence. This is asymmetric on purpose — the .spruce.md asks for tension over symmetry, and an editorial layout where one element clearly leads expresses that tension better than three equal-weight cards would."
-        />
+      <DecisionSection
+        title="Recognition strategy"
+        framing="Time-of-day signal over mood-prompt or session-continuation."
+        reasoning="The .spruce.md describes the audience as adults building a sustainable practice — not specialists who'd answer a 12-question mood survey before being recommended a practice. Time-of-day works equally well for first-time visitors (no session history) and returning ones (no specific journey to continue). Mood-prompt would have required interaction before any value lands — adds friction for nothing. Continuation would have required session history not every visitor has. Time-of-day is the lowest-friction signal that delivers the most value, and it ties naturally to the practices' existing morning/mid-day/evening framing."
+      />
 
-        <DecisionSection
-          title="Typography direction"
-          framing="Lora regular for display, Source Sans 3 for body and metadata, JetBrains Mono for small-caps eyebrows and date stamps."
-          reasoning="Lora carries the editorial register the .spruce.md describes — drawn-quality letterforms that feel warm rather than geometric. Source Sans keeps body copy comfortable for mid-evening reading; the mono caps mark eyebrows as structural rather than as content. The combination commits to the warm humanist character explicitly — and explicitly avoids the Inter / Geist / generic-grotesque defaults the context file calls out as unacceptable."
-        />
+      <DecisionSection
+        title="Copy register"
+        framing={`“It’s evening — let the day settle with Evening Wind-down.” over “Recommended tonight: Evening Wind-down.”`}
+        reasoning="The .spruce.md voice direction is calm and encouraging — like a calm, supportive friend; direct without being curt; warm without being saccharine. Direct-functional copy reads as utility (the SaaS-template register the moodboard explicitly excluded). Quiet-recommendation (no surrounding copy, just the practice name) underweights the moment — it'd land as system metadata rather than as a personal suggestion. Warm-conversational matches the voice already established in Stillpoint's body copy and gives the recommendation the conversational pacing the rest of the page commits to."
+      />
 
-        <DecisionSection
-          title="Color direction"
-          framing="Warm Canvas (#FAFAF9) base, stone-900 ink, single committed amber-700 accent."
-          reasoning="Accent appears only on the Begin CTA — amber lives as a single committed point of attention rather than as a heatmap across multiple surfaces. The warm temperature is honey-light, not cool-clinical, which fits the recovery framing better than the wellness-app cool-blue default. Stone-900 over pure #000 gives the ink palette a temperature that sits inside the warm system rather than punching out of it."
-        />
+      <DecisionSection
+        title="Visual treatment"
+        framing="Soft sage-to-lavender gradient with a sage border. Not a tinted band, not a callout box, not a system-alert pattern."
+        reasoning="The personalization is a personal moment, not a system message — the visual treatment had to read as a quiet recommendation rather than as a UI alert. The gradient uses two of the foundation's established accent families (sage primary + lavender warmth) so the banner stays inside Stillpoint's palette without introducing a new color zone. Sage border provides just enough definition to read as a contained surface; a heavier border or shadow would have signaled “card” and competed with the practices grid below. Soft tones keep it as a quiet visual moment that yields to the cards underneath when the visitor is ready to browse."
+        isLast
+      />
 
-        <DecisionSection
-          title="Voice direction"
-          framing="Direct and unhurried. “Settle the day. Five minutes of guided breath — sit or lie down,” not “Tonight's mindfulness practice for a peaceful evening.”"
-          reasoning="The voice respects the user as someone who chose to be here, not someone who needs to be warmed up. The friendly-professional SaaS register (“Welcome back!”, “Your daily moment of calm”) is explicitly avoided per the .spruce.md's voice direction. The em-dash structure of the body line creates a gentle pause that fits the product's pacing — punctuation as voice."
-          isLast
-        />
-
-      {/* Closing meta-line — heavier rule above (border-rule vs the
-          border-rule-subtle between decision sections) marks this as the
-          document's close rather than as another paragraph in sequence.
-          The line itself models how /explain actually exits a walkthrough
-          in conversation. */}
+      {/* Closing meta-line — heavier rule above marks document close. */}
       <div className="border-t border-rule mt-2 pt-6">
         <p className="text-sm text-ink-muted leading-relaxed text-pretty max-w-prose">
           Want any decision unpacked further? Run{" "}
-          <code className="font-mono text-sm text-accent">
-            /explain typography
-          </code>{" "}
-          for a deeper read on the type system, or{" "}
+          <code className="font-mono text-sm text-accent">/explain copy</code>{" "}
+          for a deeper read on the voice register, or{" "}
           <code className="font-mono text-sm text-accent">/decide</code> if
           you want to revisit a specific call.
         </p>
@@ -88,11 +72,9 @@ export function ExplainDemo() {
 
 // ---------------------------------------------------------------------------
 // DecisionSection — one decision area with framing + reasoning. Italic
-// Fraunces title (matching /critique's section register) + a body-register
-// framing sentence that summarizes what was decided + a reasoning
-// paragraph that connects the decision to the .spruce.md context and the
-// design principle that governs it. Hairline rule between sections except
-// the last.
+// Fraunces title + body-register framing sentence + reasoning paragraph
+// that connects the decision to context and design principles. Hairline
+// rule between sections except the last.
 // ---------------------------------------------------------------------------
 
 function DecisionSection({
@@ -104,8 +86,8 @@ function DecisionSection({
   title: string;
   framing: string;
   reasoning: string;
-  /** When true, suppress the bottom hairline so the closing meta-line's
-   *  heavier rule above can mark the document's close cleanly. */
+  /** Suppress the bottom hairline so the closing meta-line's heavier
+   *  rule above marks the document's close cleanly. */
   isLast?: boolean;
 }) {
   return (

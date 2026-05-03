@@ -1,0 +1,72 @@
+/*
+ * AI-default palette for the /colorgrade demo's fabricated before-state.
+ *
+ * Defined as a parallel CSS-variable scope (.colorgrade-ai-palette)
+ * rather than as inline values in the demo component — so the AI
+ * palette responds to Spruce's theme toggle the same way Stillpoint
+ * does. Without this, the before-state would stay light when Spruce
+ * flips dark, and the after-state (which uses --stp-* tokens that
+ * cascade with html.dark) would be the only thing that changed.
+ *
+ * Activation matches Stillpoint's pattern:
+ *   - Default rules apply in light context
+ *   - Dark overrides apply when ancestor html.dark is present
+ *   - Explicit data-theme on the scoped element wins (not currently used
+ *     by the demo but mirrored here for consistency with the Stillpoint
+ *     pattern in case the demo ever needs forced light/dark)
+ *
+ * The AI-default palette character itself is meant to read as the
+ * cool/clinical SaaS palette the moodboard's anti-references explicitly
+ * excluded — tech-blue accents, blue-to-purple gradient, generic gray
+ * neutrals, no warmth or commitment.
+ */
+
+.colorgrade-ai-palette {
+  /* Outer surface — pure white in light, generic cool dark in dark */
+  --ai-color-outer-bg: oklch(99% 0 0);
+
+  /* Banner gradient — pale blue to pale purple, the SaaS marketing default */
+  --ai-color-banner-grad-start: oklch(95% 0.040 250);
+  --ai-color-banner-grad-end: oklch(94% 0.055 295);
+  --ai-color-banner-border: oklch(58% 0.180 250);
+
+  /* Accent — tech blue, the statistical AI default */
+  --ai-color-accent: oklch(58% 0.180 250);
+
+  /* Card surface — pure white, characterless */
+  --ai-color-card-bg: oklch(100% 0 0);
+  --ai-color-card-shadow:
+    0 1px 2px oklch(0% 0 0 / 0.06),
+    0 2px 6px oklch(0% 0 0 / 0.06);
+
+  /* Text — near-black + cool gray, generic */
+  --ai-color-text-primary: oklch(15% 0 0);
+  --ai-color-text-muted: oklch(45% 0 0);
+}
+
+/* Force dark explicitly OR cascade from Spruce's .dark class — same
+   pattern as .stillpoint. :where() keeps specificity at zero so any
+   future explicit data-theme on a .colorgrade-ai-palette wins. */
+.colorgrade-ai-palette[data-theme="dark"],
+:where(html.dark) .colorgrade-ai-palette:not([data-theme="light"]) {
+  /* Outer surface — slight cool dark, the typical AI-default dark page */
+  --ai-color-outer-bg: oklch(18% 0.008 250);
+
+  /* Banner gradient — dark blue tint to dark purple tint */
+  --ai-color-banner-grad-start: oklch(28% 0.060 250);
+  --ai-color-banner-grad-end: oklch(28% 0.070 295);
+  --ai-color-banner-border: oklch(65% 0.180 250);
+
+  /* Accent — brighter tech blue for dark backgrounds */
+  --ai-color-accent: oklch(68% 0.180 250);
+
+  /* Card surface — slightly elevated dark */
+  --ai-color-card-bg: oklch(22% 0.008 250);
+  --ai-color-card-shadow:
+    0 1px 2px oklch(0% 0 0 / 0.30),
+    0 2px 6px oklch(0% 0 0 / 0.30);
+
+  /* Text — generic light + cool gray */
+  --ai-color-text-primary: oklch(95% 0 0);
+  --ai-color-text-muted: oklch(70% 0 0);
+}

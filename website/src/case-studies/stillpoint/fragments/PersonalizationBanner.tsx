@@ -27,8 +27,12 @@ import { StillpointLink } from "../components/StillpointLink";
  */
 
 const CONTAINER_STYLE: CSSProperties = {
+  // Sage to warmth gradient. The end color is theme-switching:
+  // peach in light (sunset character against the warm-cream surface),
+  // lavender in dark (cooler warmth accent that holds its own against
+  // the deep indigo bg). See tokens/stillpoint.css for the override.
   background:
-    "linear-gradient(135deg, var(--stp-color-sage-subtle) 0%, var(--stp-color-lavender-subtle) 100%)",
+    "linear-gradient(135deg, var(--stp-color-sage-subtle) 0%, var(--stp-color-banner-gradient-end) 100%)",
   border: "1px solid var(--stp-color-sage)",
   borderRadius: "var(--stp-radius-md)",
   padding: "var(--stp-space-6)",

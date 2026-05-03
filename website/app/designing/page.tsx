@@ -101,6 +101,14 @@ function PageHero() {
               >
                 /commands
               </Link>
+              . For the cumulative live result of running through the loop,
+              see the{" "}
+              <Link
+                href="/case-study"
+                className="text-accent hover:text-accent-hover underline-offset-4 hover:underline transition-colors duration-fast ease-considered"
+              >
+                Stillpoint case study
+              </Link>
               .
             </p>
           </div>

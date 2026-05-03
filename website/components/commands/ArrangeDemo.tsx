@@ -1,23 +1,40 @@
+"use client";
+
+import type { CSSProperties, ReactNode } from "react";
 import { BeforeAfterDemo, Marker, type Annotation } from "./BeforeAfterDemo";
+import { StillpointScope } from "@/src/case-studies/stillpoint/components/StillpointScope";
+import { StillpointInput } from "@/src/case-studies/stillpoint/components/StillpointInput";
 
 /**
- * /arrange before/after demonstration. The meditation app's settings page
- * shown in two states: AI default with cramped, uneven, and symmetric
- * spacing vs after-/arrange with scale-conformant rhythm, asymmetric
- * heading margins, capped helper-text measure, and clear section
- * breathing.
+ * /arrange before/after demonstration. A Stillpoint settings page shown
+ * in two states: AI default with cramped, uneven, and symmetric spacing
+ * vs after-/arrange with scale-conformant rhythm, asymmetric heading
+ * margins, capped helper-text measure, and clear section breathing.
  *
  * Settings page chosen because spatial discipline shows most clearly in
  * stacked dense layouts where labels, inputs, helper text, and section
- * headings each have their own relationship to neighbors. Sections are
- * meditation-app-specific (Practice preferences + Reminders) so the demo
- * threads with the workflow narrative the rest of the catalog has been
- * building.
+ * headings each have their own relationship to neighbors. Sections
+ * (Practice preferences + Reminders) are Stillpoint-specific so the
+ * demo threads with the workflow narrative the rest of the catalog has
+ * been building.
  *
- * Typography is held constant across both states (Source Sans throughout,
- * the meditation app's body face per /foundations) so the only perceptible
- * change is spacing — visitors attribute every difference to /arrange.
+ * Typography and palette are held constant across both states (Söhne
+ * sans + Stillpoint colors) so the only perceptible change is spacing —
+ * visitors attribute every difference to /arrange. Both forms render
+ * inside StillpointScope so colors, borders, fonts, and the input
+ * primitive's hover/focus states all cascade with Spruce's theme
+ * toggle.
+ *
+ * Inputs are read-only — they're demo decoration, not a functional
+ * form. Making them editable invites visitors to type values that
+ * disappear on toggle, which reads as broken; readOnly preserves the
+ * visual without the misleading interactivity.
  */
+
+const STP_FONT_SANS = "var(--stp-font-sans)";
+
+const HELPER_TEXT =
+  "Pick the voice that feels most calming. You can change this any time, even mid-practice.";
 
 const ANNOTATIONS: Annotation[] = [
   {
@@ -38,85 +55,130 @@ const ANNOTATIONS: Annotation[] = [
   },
 ];
 
-const SOURCE_SANS = "var(--font-source-sans), system-ui, sans-serif";
-
-const HELPER_TEXT =
-  "Pick the voice that feels most calming. You can change this any time, even mid-practice.";
-
 export function ArrangeDemo() {
   return (
     <BeforeAfterDemo
+      beforeLabel="Before /arrange"
       afterLabel="After /arrange"
       annotations={ANNOTATIONS}
-      before={<BeforeForm />}
-      after={<AfterForm />}
+      demoNote={
+        <>
+          Stillpoint&rsquo;s home doesn&rsquo;t include a settings form — this
+          demo illustrates /arrange&rsquo;s principle on a related Stillpoint
+          surface rather than on something currently shipped. The actual
+          section spacing on Home.tsx is calibrated by /foundations + the
+          Section component; /arrange&rsquo;s work on Stillpoint is
+          verification, not incremental change.
+        </>
+      }
+      before={
+        <CloseUp>
+          <BeforeForm />
+        </CloseUp>
+      }
+      after={
+        <CloseUp>
+          <AfterForm />
+        </CloseUp>
+      }
     />
   );
 }
 
 // ---------------------------------------------------------------------------
+// CloseUp — wraps the form in StillpointScope with internal padding so
+// the visible Stillpoint surface has breathing room (matching the other
+// Stillpoint-grounded demos' pattern).
+// ---------------------------------------------------------------------------
+
+function CloseUp({ children }: { children: ReactNode }) {
+  return (
+    <StillpointScope>
+      <div style={{ padding: "var(--stp-space-12) var(--stp-space-8)" }}>
+        {children}
+      </div>
+    </StillpointScope>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Shared style constants — held identical between forms so the diff
+// isolates only the spacing decisions /arrange addresses.
+// ---------------------------------------------------------------------------
+
+const HEADING_STYLE: CSSProperties = {
+  fontFamily: STP_FONT_SANS,
+  fontSize: "var(--stp-text-sm)",
+  fontWeight: 600,
+  color: "var(--stp-color-text)",
+  margin: 0,
+};
+
+const LABEL_STYLE: CSSProperties = {
+  fontFamily: STP_FONT_SANS,
+  fontSize: "var(--stp-text-xs)",
+  color: "var(--stp-color-text-muted)",
+  margin: 0,
+  display: "block",
+};
+
+const HELPER_STYLE: CSSProperties = {
+  fontFamily: STP_FONT_SANS,
+  fontSize: "var(--stp-text-xs)",
+  color: "var(--stp-color-text-subtle)",
+  lineHeight: "var(--stp-leading-snug)",
+  margin: 0,
+};
+
+const ROW_LABEL_STYLE: CSSProperties = {
+  fontFamily: STP_FONT_SANS,
+  fontSize: "var(--stp-text-sm)",
+  color: "var(--stp-color-text)",
+};
+
+// ---------------------------------------------------------------------------
 // BeforeForm — cramped, uneven, symmetric. Inline styles deliberately use
-// arbitrary px values to dramatize the lack of rhythm. Helper text runs
-// edge-to-edge of the form column.
+// arbitrary px values (3px, 6px, 8px, 11px, 14px) to dramatize the lack
+// of rhythm. Helper text runs edge-to-edge of the form column.
 // ---------------------------------------------------------------------------
 
 function BeforeForm() {
   return (
-    <div
-      className="max-w-md text-stone-900"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
-      <h4
-        className="text-sm font-semibold"
-        style={{ marginTop: "6px", marginBottom: "6px" }}
-      >
+    <div style={{ maxWidth: "28rem" }}>
+      <h4 style={{ ...HEADING_STYLE, marginTop: 6, marginBottom: 6 }}>
         Practice preferences
       </h4>
-      <p
-        className="text-xs text-stone-600"
-        style={{ marginBottom: "3px" }}
-      >
-        Default session length
-      </p>
-      <input
-        type="text"
-        defaultValue="5 minutes"
-        className="w-full text-sm border border-stone-300 rounded-sm px-2.5 py-1.5 bg-white"
-        style={{ marginBottom: "11px" }}
-      />
-      <p
-        className="text-xs text-stone-600"
-        style={{ marginBottom: "8px" }}
-      >
-        Voice guide
-      </p>
-      <input
-        type="text"
-        defaultValue="Maya"
-        className="w-full text-sm border border-stone-300 rounded-sm px-2.5 py-1.5 bg-white"
-        style={{ marginBottom: "4px" }}
-      />
-      <p
-        className="text-[11px] text-stone-500"
-        style={{ marginBottom: "14px" }}
-      >
-        {HELPER_TEXT}
-      </p>
-      <h4
-        className="text-sm font-semibold"
-        style={{ marginTop: "6px", marginBottom: "8px" }}
-      >
+      <p style={{ ...LABEL_STYLE, marginBottom: 3 }}>Default session length</p>
+      <div style={{ marginBottom: 11 }}>
+        <StillpointInput type="text" defaultValue="5 minutes" readOnly />
+      </div>
+      <p style={{ ...LABEL_STYLE, marginBottom: 8 }}>Voice guide</p>
+      <div style={{ marginBottom: 4 }}>
+        <StillpointInput type="text" defaultValue="Maya" readOnly />
+      </div>
+      <p style={{ ...HELPER_STYLE, marginBottom: 14 }}>{HELPER_TEXT}</p>
+      <h4 style={{ ...HEADING_STYLE, marginTop: 6, marginBottom: 8 }}>
         Reminders
       </h4>
       <div
-        className="flex items-center justify-between"
-        style={{ marginBottom: "5px" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 5,
+        }}
       >
-        <span className="text-sm text-stone-900">Daily reminder</span>
+        <span style={ROW_LABEL_STYLE}>Daily reminder</span>
         <Toggle on />
       </div>
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-stone-900">Weekly summary</span>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <span style={ROW_LABEL_STYLE}>Weekly summary</span>
         <Toggle />
       </div>
     </div>
@@ -125,62 +187,82 @@ function BeforeForm() {
 
 // ---------------------------------------------------------------------------
 // AfterForm — same content, scale-conformant rhythm. Asymmetric heading
-// margins, consistent label-input pairs (mb-1.5 → input → next row at 16px),
-// clear section break (mt-10), helper text capped at reading measure.
+// margins (more space above than below), consistent label-input pairs,
+// clear section break, helper text capped at reading measure.
 // ---------------------------------------------------------------------------
 
 function AfterForm() {
   return (
-    <div
-      className="max-w-md text-stone-900"
-      style={{ fontFamily: SOURCE_SANS }}
-    >
+    <div style={{ maxWidth: "28rem" }}>
       <section>
-        <h4 className="text-sm font-semibold mb-4">
+        <h4
+          style={{
+            ...HEADING_STYLE,
+            marginBottom: "var(--stp-space-4)",
+          }}
+        >
           Practice preferences
           <Marker n={1} />
         </h4>
-        <div className="space-y-4">
+        <div style={{ display: "grid", gap: "var(--stp-space-4)" }}>
           <div>
-            <label className="block text-xs text-stone-600 mb-1.5">
+            <label
+              style={{
+                ...LABEL_STYLE,
+                marginBottom: "var(--stp-space-2)",
+              }}
+            >
               Default session length
               <Marker n={2} />
             </label>
-            <input
-              type="text"
-              defaultValue="5 minutes"
-              className="w-full text-sm border border-stone-300 rounded-sm px-2.5 py-1.5 bg-white"
-            />
+            <StillpointInput type="text" defaultValue="5 minutes" readOnly />
           </div>
           <div>
-            <label className="block text-xs text-stone-600 mb-1.5">
-              Voice guide
-            </label>
-            <p className="text-[11px] text-stone-500 mb-2 max-w-[20rem] leading-snug">
+            <label style={LABEL_STYLE}>Voice guide</label>
+            <p
+              style={{
+                ...HELPER_STYLE,
+                margin: "var(--stp-space-2) 0",
+                maxWidth: "20rem",
+              }}
+            >
               {HELPER_TEXT}
               <Marker n={3} />
             </p>
-            <input
-              type="text"
-              defaultValue="Maya"
-              className="w-full text-sm border border-stone-300 rounded-sm px-2.5 py-1.5 bg-white"
-            />
+            <StillpointInput type="text" defaultValue="Maya" readOnly />
           </div>
         </div>
       </section>
 
-      <section className="mt-10">
-        <h4 className="text-sm font-semibold mb-4">
+      <section style={{ marginTop: "var(--stp-space-10)" }}>
+        <h4
+          style={{
+            ...HEADING_STYLE,
+            marginBottom: "var(--stp-space-4)",
+          }}
+        >
           Reminders
           <Marker n={4} />
         </h4>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Daily reminder</span>
+        <div style={{ display: "grid", gap: "var(--stp-space-4)" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={ROW_LABEL_STYLE}>Daily reminder</span>
             <Toggle on />
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Weekly summary</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={ROW_LABEL_STYLE}>Weekly summary</span>
             <Toggle />
           </div>
         </div>
@@ -190,18 +272,40 @@ function AfterForm() {
 }
 
 // ---------------------------------------------------------------------------
-// Toggle — minimal visual pill. Not interactive; the demo is a still life.
+// Toggle — minimal visual pill in Stillpoint colors. On state uses sage;
+// off uses border-strong. Knob uses elevated surface so the contrast
+// against either track reads cleanly. Not interactive — the demo is a
+// still life of the surface, not a functional form.
 // ---------------------------------------------------------------------------
 
 function Toggle({ on = false }: { on?: boolean }) {
   return (
     <span
       aria-hidden
-      className={`inline-flex items-center w-9 h-5 rounded-full p-0.5 transition-colors ${
-        on ? "bg-stone-700 justify-end" : "bg-stone-300 justify-start"
-      }`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        width: 36,
+        height: 20,
+        borderRadius: "var(--stp-radius-pill)",
+        padding: 2,
+        background: on
+          ? "var(--stp-color-sage)"
+          : "var(--stp-color-border-strong)",
+        justifyContent: on ? "flex-end" : "flex-start",
+        transition:
+          "background-color var(--stp-duration-fast) var(--stp-ease-out)",
+      }}
     >
-      <span className="block w-4 h-4 rounded-full bg-white" />
+      <span
+        style={{
+          display: "block",
+          width: 16,
+          height: 16,
+          borderRadius: "9999px",
+          background: "var(--stp-color-surface-elevated)",
+        }}
+      />
     </span>
   );
 }
