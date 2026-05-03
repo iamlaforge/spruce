@@ -4,6 +4,13 @@ import { DetailFade } from "@/components/commands/DetailFade";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
+// Stillpoint case-study tokens — defined under the .stillpoint scope, so
+// they cascade only to elements wrapped in <StillpointScope> (or any
+// element with className="stillpoint"). Imported here so every catalog
+// demo can render scoped Stillpoint UI without each demo importing the
+// CSS itself.
+import "@/src/case-studies/stillpoint/tokens/stillpoint.css";
+
 /**
  * Persistent shell for all /commands routes. The sidebar lives here so it
  * survives client-side navigation between commands without re-mounting.
