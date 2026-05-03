@@ -6,9 +6,9 @@ user-invocable: true
 
 # /detect
 
-The fast anti-pattern scanner. Where `/survey` produces comprehensive findings with severity and `/critique` offers narrative feedback on direction, `/detect` does one thing: scan for specific named anti-patterns and accessibility blockers, and point to the commands that would fix them.
+The fast anti-pattern scanner. `/detect` runs through the anti-pattern catalogs in each Spruce reference file plus a short accessibility checklist, flags every match with its location, and points to the corrective command that would fix it. No severity, no analysis — match, locate, route.
 
-This is the lightest of the diagnostic commands. It doesn't analyze, it doesn't critique, it doesn't produce severity assessments. It runs through the anti-pattern catalogs in each reference file, flags matches, notes locations, and points to the corrective command. The output is optimized for speed of decision — seeing what's wrong and knowing what to run next.
+This is the lightest of the diagnostic commands. The output is optimized for speed of decision — seeing what's wrong and knowing what to run next.
 
 ---
 

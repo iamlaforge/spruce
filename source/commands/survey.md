@@ -6,9 +6,9 @@ user-invocable: true
 
 # /survey
 
-The diagnostic workhorse. Where `/design` generates new work and `/decide` directs new decisions, `/survey` inspects existing work — reviewing an interface across all seven Spruce dimensions and producing a structured report of what's working, what isn't, and what to prioritize.
+The diagnostic workhorse. `/survey` walks an interface end-to-end across all seven Spruce dimensions and returns a structured report — every issue grouped by domain, ranked by severity, paired with a brief fix and the corrective command that would address it. The output is a triage list, not an essay.
 
-`/survey` doesn't modify code. It produces findings. The user decides which findings to act on, usually by invoking the corrective commands that address specific domains.
+`/survey` doesn't modify code. The user decides which findings to act on, usually by invoking the corrective commands the findings point to.
 
 ---
 

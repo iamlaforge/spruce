@@ -6,9 +6,9 @@ user-invocable: true
 
 # /uxreview
 
-One of Spruce's signature commands. While `/survey` reviews all seven dimensions, `/uxreview` focuses exclusively on the UX substrate — the layer that determines whether an interface actually works for the person using it, regardless of how it looks.
+The UX substrate audit. `/uxreview` ignores how an interface looks and asks whether it actually works for the person using it: is the information architecture matched to user tasks, does feedback arrive when needed, do forms guide instead of interrogate, do empty states orient new users, do errors describe fixes rather than failures.
 
-This command exists because UX is consistently the layer that AI-generated interfaces get wrong while visual design gets the attention. An interface can look polished and still fail at every UX fundamental: navigation that mirrors internal structure instead of user tasks, feedback that's missing or unclear, forms that interrogate instead of guide, empty states that abandon new users, errors that describe failures instead of fixes. `/uxreview` surfaces these failures without being distracted by how the interface looks.
+This command exists because UX is consistently the layer that AI-generated interfaces get wrong while visual design gets the attention. An interface can look polished and still fail at every UX fundamental. `/uxreview` surfaces those failures without being distracted by the surface.
 
 `/uxreview` does not modify code. It produces findings.
 

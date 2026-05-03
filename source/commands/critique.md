@@ -6,7 +6,7 @@ user-invocable: true
 
 # /critique
 
-The design director review. Where `/survey` produces structured findings and `/uxreview` audits the UX substrate, `/critique` engages the work at the level that neither of the other diagnostics can: does this feel like what it's trying to be, does it have a point of view, does the whole add up to more than the sum of the parts.
+The design director read. `/critique` engages a design at the level of feel and direction: does this feel like what it's trying to be, does it have a point of view, does the whole add up to more than the sum of its parts. These are questions a structured finding list can't answer.
 
 This is subjective work grounded in specific principles. `/critique` speaks with a design director's sensibility — willing to say something doesn't land, willing to name when a design is hedging, willing to question direction — but always tied to specific observations and the product's stated context. It's opinionated, not imperious.
 
