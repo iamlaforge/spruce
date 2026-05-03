@@ -3,23 +3,26 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { FADE, PAYOFF } from "@/lib/motion";
+import { stillpointContext } from "@/src/case-studies/stillpoint/content/context";
 import { TranscriptFrame } from "./DemoFrame";
 
 /**
  * /spruce-up demonstration. A stepped interview transcript: the visitor
  * advances through five Q&A pairs one at a time, simulating the guided
  * conversation /spruce-up runs in the terminal. The transcript builds up
- * as the visitor moves through it. On completion, a small "Context
- * captured" message frames what the answers feed into.
+ * as the visitor moves through it. On completion, a faithful rendering of
+ * the resulting `.spruce.md` file lands as the payoff.
  *
- * Format diverges from the phase 1 BeforeAfterDemo shell because /spruce-up
- * doesn't transform an existing artifact — it produces a new one through
+ * Worked example: Stillpoint, the meditation-app case study threaded
+ * through the catalog. /spruce-up is the first command in the Stillpoint
+ * build — every subsequent command (/sketch, /foundations, /design, the
+ * corrective tier) reads from this file before reasoning. Answers and the
+ * compiled context come from `src/case-studies/stillpoint/content/context.ts`
+ * so the demo stays in sync with the canonical context as it evolves.
+ *
+ * Format diverges from the BeforeAfterDemo shell because /spruce-up doesn't
+ * transform an existing artifact — it produces a new one through
  * conversation. The toggle pattern doesn't fit; a stepped reveal does.
- *
- * Sample product (a meditation app for parents) is intentionally distinct
- * from the Spruce site itself so the demo doesn't read as recursive — and
- * distinct enough in character that visitors can see /spruce-up adapting
- * to a product unlike the site.
  */
 
 const QA: Array<{ question: string; answer: string }> = [
@@ -27,28 +30,28 @@ const QA: Array<{ question: string; answer: string }> = [
     question:
       "What does this product do, and what's the core experience you want users to have?",
     answer:
-      "A short-session meditation app for parents — five-minute practices designed to fit into the gaps of a busy day. The core experience is recovery, not transformation.",
+      "A calm, accessible companion for daily mindfulness. The goal is to help people build a sustainable practice in just a few minutes a day — not transform their lives in a weekend retreat. Mindfulness for real life.",
   },
   {
     question: "Who uses it? What do you know about them?",
     answer:
-      "Parents of young children who never planned to meditate but need help recovering between moments. Skeptical of wellness theater. Short on time.",
+      "Adults 25–45 looking for stress relief, better sleep, emotional balance. Beginners through intermediate meditators. They want to be approached with respect and warmth, not as if they're broken.",
   },
   {
     question:
       "What character should the product have? Warm or cool? Restrained or expressive?",
     answer:
-      "Warm and unhurried. Calm without being precious. Closer to a deep breath than a yoga retreat.",
+      "Warm, grounded, quietly confident. Modern and inclusive. Should feel like a calm friend — not a lifestyle product, not a clinical tool.",
   },
   {
     question: "How dense should the interface feel?",
     answer:
-      "Spacious. Single-purpose screens. Nothing competes with the practice itself.",
+      "Spacious leaning balanced. Room to breathe but not so sparse it reads as precious or empty.",
   },
   {
     question: "What voice should the product speak in?",
     answer:
-      "Direct and gentle. Plain language. No “mindfulness journey” clichés. Address users as adults who chose to be here.",
+      "Calm and encouraging. Direct without being curt; warm without being saccharine. Treats users as competent adults pursuing peace.",
   },
 ];
 
@@ -125,30 +128,36 @@ export function SpruceUpDemo() {
 }
 
 // ---------------------------------------------------------------------------
-// CompletionMessage — closes the transcript with the actual artifact. A
-// faithful markdown rendering of the .spruce.md file (the answers compiled
-// into the project context) leads; a brief caption below frames what other
-// commands do with it. The mono code block creates a deliberate register
+// CompletionMessage — closes the transcript with the actual artifact.
+//
+// Renders the five essential sections of Stillpoint's .spruce.md, templated
+// from `stillpointContext` so the demo stays in sync with the canonical
+// case-study context. The mono code block creates a deliberate register
 // shift from the editorial transcript above — signaling "now you're seeing
 // the file, not the conversation."
+//
+// A small caption notes that the full Stillpoint context has more — the
+// optional depth questions in /spruce-up's tiered interview produce
+// typography, color, anti-pattern, and other sections that subsequent
+// commands in the catalog (/sketch, /foundations, /design) read from.
 // ---------------------------------------------------------------------------
 
-const SPRUCE_MD = `# Project context
+const ESSENTIAL_SECTIONS_MD = `# Spruce Context
 
 ## Product
-A short-session meditation app for parents — five-minute practices designed to fit into the gaps of a busy day. The core experience is recovery, not transformation.
+${stillpointContext.product}
 
 ## Audience
-Parents of young children who never planned to meditate but need help recovering between moments. Skeptical of wellness theater. Short on time.
+${stillpointContext.audience}
 
 ## Character
-Warm and unhurried. Calm without being precious. Closer to a deep breath than a yoga retreat.
+${stillpointContext.character}
 
 ## Density
-Spacious. Single-purpose screens. Nothing competes with the practice itself.
+${stillpointContext.density}
 
 ## Voice
-Direct and gentle. Plain language. No "mindfulness journey" clichés. Address users as adults who chose to be here.`;
+${stillpointContext.voice}`;
 
 function CompletionMessage() {
   // Slightly longer duration than the per-step entry — this is the payoff,
@@ -164,10 +173,18 @@ function CompletionMessage() {
       <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-3">
         .spruce.md
       </p>
-      <pre className="font-mono text-xs leading-relaxed text-ink border border-rule rounded-sm p-4 overflow-x-auto whitespace-pre-wrap">{SPRUCE_MD}</pre>
+      <pre className="font-mono text-xs leading-relaxed text-ink border border-rule rounded-sm p-4 overflow-x-auto whitespace-pre-wrap">{ESSENTIAL_SECTIONS_MD}</pre>
       <p className="text-sm text-ink-muted leading-relaxed text-pretty max-w-prose mt-4">
-        Every Spruce command reads from this file. Typography, color, voice,
-        and spacing decisions calibrate to the character captured here.
+        Stillpoint starts here. Every Spruce command in this catalog reads
+        from this file before reasoning &mdash; the visual direction in
+        /sketch, the tokens in /foundations, the surfaces in /design, all
+        calibrated to the character captured above.
+      </p>
+      <p className="text-sm text-ink-subtle leading-relaxed text-pretty max-w-prose mt-3">
+        The five essential questions produce the file you see here. Optional
+        depth questions add typography preferences, color preferences,
+        anti-patterns, and other sections — visible in the full Stillpoint
+        context as the catalog walkthrough advances.
       </p>
     </motion.div>
   );
