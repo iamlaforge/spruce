@@ -5,6 +5,7 @@ import { EndToEnd } from "@/components/sections/EndToEnd";
 import { FAQModule } from "@/components/sections/FAQModule";
 import { InstallParallel } from "@/components/sections/install/InstallParallel";
 import { PhilosophyCounterpointStrikethrough } from "@/components/sections/philosophy/PhilosophyCounterpointStrikethrough";
+import { Releases } from "@/components/sections/Releases";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <PhilosophyCounterpointStrikethrough />
         <EndToEnd />
         <FAQModule />
+        <Releases />
         <InstallParallel />
       </main>
       <Footer />

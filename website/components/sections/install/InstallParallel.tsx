@@ -99,7 +99,7 @@ export function InstallParallel() {
 
   return (
     <Section id="install" tone="default">
-      <SectionHeader mark="§ 04">Install &middot; One command</SectionHeader>
+      <SectionHeader mark="§ 05">Install &middot; One command</SectionHeader>
 
       <div className="grid grid-cols-12 gap-x-6 md:gap-x-8 lg:gap-x-12 gap-y-14 mb-16 md:mb-20">
         {/* LEFT: install action — unchanged. */}
