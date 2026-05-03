@@ -29,9 +29,17 @@ Before any specific guidance, understand the disposition this skill expects you 
 
 ## How Spruce Is Organized
 
-Spruce's knowledge is organized into seven domain-specific reference files, loaded alongside this orchestrating skill. You consult them together — they are not independent resources but a coordinated system where each reference informs the others.
+Spruce's knowledge is organized into domain-specific reference files, loaded alongside this orchestrating skill. You consult them together — they are not independent resources but a coordinated system where each reference informs the others.
 
-The reference files cover two layers. The **UX substrate** establishes what the interface needs to *do*:
+The reference files cover three layers. The **human-centered foundation** establishes who the product is for and what they're trying to do:
+
+- **Human-Centered Design** (`human-centered-design.md`) — the orchestrating discipline. When to use which HCD method (personas, jobs-to-be-done, journeys, scenarios), how the artifacts relate, the assumption-vs-research distinction, how upstream HCD work informs every downstream decision.
+- **Personas** (`personas.md`) — persona development as a decision-influencing artifact rather than a marketing asset. Confidence tiers (assumed / context-derived / research-grounded), persona anatomy, primary vs. secondary personas, anti-stereotype discipline.
+- **Jobs-to-be-Done** (`jobs-to-be-done.md`) — JTBD framework. Functional, emotional, and social jobs. Outcome statements. Switching interview pattern. Job vs. feature vs. solution distinctions.
+- **User Journeys** (`user-journeys.md`) — journey mapping principles. Current-state vs. future-state, emotional arcs, key moments, friction points, the discipline of mapping that connects to design decisions rather than mapping for its own sake.
+- **Research and Evaluation** (`research-and-evaluation.md`) — heuristic evaluation grounded in the named personas + journeys, behavioral anti-patterns vs. UI anti-patterns, the discipline that distinguishes evaluation rooted in real users from generic-checklist work.
+
+The **UX substrate** establishes what the interface needs to *do*:
 
 - **UX Decision Patterns** (`ux-decision-patterns.md`) — information architecture, system feedback, forms, empty states, cognitive load, progressive disclosure, first impressions, interaction contracts, and trust.
 
@@ -48,11 +56,13 @@ The **philosophy** (`PHILOSOPHY.md`) sits underneath all of these — the set of
 
 ### How the layers interact
 
-UX decisions precede visual decisions. Before you determine how a component should look, establish what it needs to do. A button's visual treatment follows from its role (primary, secondary, destructive). A form's visual hierarchy follows from the reading order of its fields. An empty state's design follows from what the user needs to understand and do at that moment.
+HCD decisions precede UX decisions. Before you determine what a surface needs to do, establish who it's for and what they're trying to accomplish. A button labeled "Begin practice" makes sense for one persona doing one job; a button labeled "Start session" makes sense for a different persona doing a different job. An empty state that introduces the space well for a first-time user is wrong for an expert user who knows the system. UX patterns are calibrated to who's using them and why.
+
+UX decisions then precede visual decisions. Before you determine how a component should look, establish what it needs to do. A button's visual treatment follows from its role (primary, secondary, destructive). A form's visual hierarchy follows from the reading order of its fields. An empty state's design follows from what the user needs to understand and do at that moment.
 
 The visual execution layers work together rather than independently. Typography decisions constrain color decisions (a serif editorial product calls for different color treatment than a sans-serif technical one). Color decisions constrain spacing (dense interfaces with low-contrast palettes need more spatial discipline). Component decisions draw on all of the above. Motion connects components to each other and to the user. Voice carries the character expressed by every other layer into language.
 
-When generating, you don't consult these files linearly — you reason across them simultaneously. A thoughtful typography choice without a thoughtful color choice produces incoherent output. A good component without appropriate motion feels dead. A polished interface with generic voice reveals itself as designed-but-not-considered.
+When generating, you don't consult these files linearly — you reason across them simultaneously. A thoughtful typography choice without a thoughtful color choice produces incoherent output. A good component without appropriate motion feels dead. A polished interface with generic voice reveals itself as designed-but-not-considered. And visual + UX work that has no HCD grounding underneath produces interfaces that look right but serve the wrong people doing the wrong jobs.
 
 ---
 
@@ -66,11 +76,19 @@ Context includes: the product's character (what it feels like, what it's trying 
 
 Without context, every design decision becomes a roll of the dice weighted toward statistical defaults. With context, decisions flow from the specific situation.
 
-### The context file
+### The context files
 
-Spruce projects include a context file — `.spruce.md` — that encodes the project's standing context in one place. When this file exists, you read it before any design work. Its contents shape every decision: typography choices, color palette, density, voice, all calibrated to the context.
+Spruce projects accumulate a small set of context files at the project root. Each captures a different layer of the project's standing context; each is read by the commands that depend on it.
 
-If a context file doesn't exist yet, you can establish minimal context through conversation — asking the user about their product, audience, and character — or by running the `/calibrate` command which will walk them through setting up a full context file.
+- **`.spruce.md`** — the foundational context file. Product character, audience, density, voice, explicit preferences. Created or updated via `/spruce-up`. Every Spruce command reads this file first.
+- **`.sketch.md`** — visual direction (palette character, typography candidates, motion bands, layout archetypes, anti-references). Created via `/sketch`; read by `/foundations` and the corrective tier.
+- **`.personas.md`** — user personas with confidence tiers (assumed / context-derived / research-grounded). Created via `/personas`. Read by every downstream command that should calibrate to who the design serves: `/design`, `/decide`, `/critique`, `/uxreview`, and the rest.
+- **`.jtbd.md`** — Jobs-to-be-Done statements (functional, emotional, social) tied to the named personas. Created via `/jtbd`. Read by `/design` and `/decide` to ground feature decisions in real user jobs; read by `/critique` and `/uxreview` to evaluate whether the work serves those jobs.
+- **`.journeys.md`** — mapped user journeys for specific scenarios. Created via `/journey`. Read by diagnostic commands when evaluating a flow's continuity, friction, or emotional arc.
+
+When these files exist, you read them before any design work. Their contents shape every decision: typography, palette, density, voice, feature choices, evaluation findings — all calibrated to the specific context the files capture.
+
+When a file doesn't exist yet, the right path depends on what the task needs. For tasks where the missing context is foundational (no `.spruce.md` for a generative task; no `.personas.md` for evaluation against user needs), recommend running the appropriate setup or discovery command before proceeding. For tasks where the missing context is auxiliary, you can infer transparently — note the assumptions you're making and proceed.
 
 ### When context is missing or thin
 

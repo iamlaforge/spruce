@@ -2,11 +2,21 @@
 
 *This file tells Spruce about your project so every command can calibrate its work to what you're actually making. Replace each prompt below with your answer. Keep what's useful, delete what isn't.*
 
+*This is the foundational file in the Spruce workflow:*
+
+```
+/spruce up  →  Discovery (HCD)  →  Generative  →  Diagnostic  →  Corrective  →  /finish
+```
+
+*After this file is created, the Discovery tier (`/personas`, `/jtbd`, `/journey`) deepens the user grounding into structured artifacts that every downstream command calibrates against.*
+
 ## Product
 
 What is the product, and what does it do?
 
 ## Audience
+
+*The starting capture of who the product serves. Once `/personas` runs, this section becomes a brief pointer to `.personas.md` — that file holds the structured persona work (motivations, fears, contexts of use, design implications) that downstream commands use as the canonical audience source.*
 
 Who uses it? What's their expertise level and context?
 

@@ -6,9 +6,15 @@ user-invocable: true
 
 # /spruce up
 
-The context-establishing command. `/spruce up` is typically the first Spruce command a user runs in a project — it creates the `.spruce.md` file that every other command reads to calibrate its work to the specific product.
+The context-establishing command. `/spruce up` is the **first command** a user runs in a project — it creates the `.spruce.md` file that every other Spruce command reads to calibrate its work to the specific product. The Spruce workflow flows from here:
 
-Without this file, every Spruce command is working from general principles alone. With it, every output is shaped by the specific product's character, audience, and preferences. The file is the difference between Spruce producing plausibly-designed generic output and Spruce producing output that feels like it belongs to this specific product.
+```
+/spruce up  →  Discovery (HCD)  →  Generative  →  Diagnostic  →  Corrective  →  /finish
+```
+
+`.spruce.md` captures the foundational product context — what the product is, its character, density, voice, and explicit preferences. The Discovery tier (`/personas`, `/jtbd`, `/journey`) then deepens the user grounding into structured artifacts that every downstream command calibrates against. The audience answer in `/spruce up` is the starting point; the Discovery work is what makes it research-grade.
+
+Without `.spruce.md`, every Spruce command is working from general principles alone. With it, every output is shaped by the specific product's character, audience, and preferences. The file is the difference between Spruce producing plausibly-designed generic output and Spruce producing output that feels like it belongs to this specific product.
 
 The command's name is deliberate: "spruce up" as in getting the project ready, tidied, and prepared for Spruce to do its work.
 
@@ -35,9 +41,9 @@ Do not use `/spruce up` when:
 
 At the start, check whether `.spruce.md` already exists in the project root.
 
-**If it doesn't exist:** Proceed directly into the interview.
+**If it doesn't exist:** Proceed directly into the interview. This is the typical first-run case.
 
-**If it exists:** Offer two paths:
+**If it exists:** Offer the standard paths:
 
 > Found an existing `.spruce.md` context file. How should I proceed?
 >
@@ -50,6 +56,16 @@ Wait for the user's choice before proceeding. If they choose "Show me," display 
 For **Update**: ask targeted questions about what has changed rather than re-running the full interview. Preserve answers that are still accurate.
 
 For **Rewrite**: run the full interview from scratch.
+
+### When `.personas.md` already exists
+
+`/spruce up` is normally the first command in a project, so `.personas.md` typically won't exist on first run. But on a re-run — when context has shifted enough that `/spruce up` is being run again — Discovery work may already be done.
+
+If `.personas.md` exists when `/spruce up` runs:
+
+- For **Q2 (Who uses it?)**, surface a summary of the existing personas rather than asking from scratch. "Your personas file lists [Primary persona name] as the primary user, with [Secondary] as secondary. Has this shifted, or should I keep these as the audience for the updated `.spruce.md`?"
+- If the personas have shifted, recommend re-running `/personas` after `/spruce up` to update them rather than capturing the new audience description in Q2's lightweight format.
+- Update `.spruce.md`'s Audience section to continue pointing at `.personas.md` as the canonical source.
 
 ---
 
@@ -75,9 +91,13 @@ Frame: "Who's the primary user? Expertise level, context, relationship with the 
 
 The audience shapes everything downstream — density, voice, complexity, visual register. Useful answers describe a specific kind of person, not a broad category: "Senior marketing directors at mid-size B2B companies, daily users, high domain expertise" is more useful than "professionals."
 
+This captures the **starting audience** — the lightweight version that anchors the rest of `/spruce up`. After this command completes, the recommended next step is `/personas`, which deepens this answer into structured persona artifacts (with motivations, fears, contexts of use, design implications). The answer here becomes the seed that `/personas` Mode A drafts from. Once `.personas.md` exists, it becomes the canonical audience source, and this section in `.spruce.md` becomes a brief pointer.
+
 **Question 3: What's the product's character?** (Multiple choice, with "Other" option)
 
 Frame: "In three to five words, what should the product feel like?"
+
+*Once `/personas` runs, this character should serve the personas' contexts. For now (the lightweight starting capture), this is the primary character signal. Expect the choice to remain valid through Discovery — character is a product-level decision; HCD work refines how it gets expressed, not what it is.*
 
 Options:
 - **Restrained and premium** — quiet confidence, refined execution, the product respects its own space
@@ -93,6 +113,8 @@ Options:
 
 Frame: "How dense should the interface be?"
 
+*Density most often calibrates to the primary persona's expertise + context. Once `/personas` runs, the calibration becomes more grounded — but the direction usually holds.*
+
 Options:
 - **Spacious** — generous whitespace, low information density, invites reading and reflection
 - **Balanced** — moderate density, neither cramped nor excessive
@@ -103,6 +125,8 @@ Include a brief note: "Most consumer products are spacious; most professional to
 **Question 5: What voice register?** (Multiple choice)
 
 Frame: "What should the product sound like?"
+
+*Voice register calibrates to who the product is for. Once `/personas` runs, voice decisions can reference the personas' communication preferences explicitly. For now, the register chosen here is the starting calibration.*
 
 Options:
 - **Direct and precise** — minimal words, no hedging, respects expertise
@@ -208,7 +232,7 @@ After the interview (essentials only or essentials plus depth), generate the `.s
 [One to two sentences describing what the product is and does, from Q1.]
 
 ## Audience
-[Description of the primary user from Q2 — who they are, their expertise, their relationship with the product.]
+[Lightweight starting capture from Q2 — who the primary user is, their expertise, their relationship with the product. Once `/personas` runs, this section becomes a brief pointer: "Primary persona: [Name] ([Role]). See `.personas.md` for full persona work — that file is the canonical audience source."]
 
 ## Character
 [The character direction from Q3, expanded into two or three sentences that elaborate what the character means for this product specifically.]
@@ -248,14 +272,29 @@ After the interview (essentials only or essentials plus depth), generate the `.s
 
 For essentials-only runs, the file will be shorter (sections after "Voice" may say "Not specified — ask the user or use defaults"). For full runs, every section is filled in.
 
-After generating the file, confirm completion:
+After generating the file, confirm completion and surface the recommended workflow:
 
-> Your `.spruce.md` context file is ready in the project root. This is what every Spruce command will read to calibrate its work to your specific product.
+> Your `.spruce.md` context file is ready in the project root. This is the foundational context every Spruce command reads.
+>
+> **Recommended next step: deepen the user grounding via Discovery.** The audience answer above is the lightweight starting capture. The Discovery tier turns it into structured artifacts that downstream commands calibrate against:
+>
+> 1. **`/personas`** — drafts structured personas from this context (Mode A reads your audience answer above as the starting point). Outputs `.personas.md`.
+> 2. **`/jtbd`** — articulates the Jobs-to-be-Done your personas are trying to accomplish. Outputs `.jtbd.md`.
+> 3. **`/journey`** (when needed) — maps specific user journeys for design scenarios. Outputs `.journeys.md`.
+>
+> Then the rest of the workflow:
+>
+> - **Generative** — `/sketch` → `/foundations` → `/design` / `/decide` / `/remix`
+> - **Diagnostic** — `/survey`, `/critique`, `/uxreview`, `/detect`, `/explain`
+> - **Corrective** — `/voice`, `/typeface`, `/refine`, `/colorgrade`, `/pace`, `/reduce`, `/arrange`, `/fortify`
+> - **Ship** — `/finish` for the closing pass + ship-readiness verdict
+>
+> The Discovery work isn't optional in spirit — design without user grounding is design weighted toward defaults. But it is skippable if the audience answer above is grounding enough for your scope (small surfaces, internal tools, throwaway prototypes). For anything substantial, run `/personas` next.
 >
 > Happy to:
-> - Adjust anything in the file if I've misinterpreted what you described
-> - Add additional context later — just edit the file directly or run `/spruce up` again to revise
-> - Get started with design work now — `/design`, `/foundations`, or any other command will use this context
+> - Adjust anything in the context file if I've misinterpreted what you described
+> - Continue to `/personas` now to deepen the user grounding (recommended)
+> - Skip ahead to design work if scope warrants it
 
 ---
 
@@ -294,6 +333,10 @@ After generating the file, confirm completion:
 **When the project is very early and nothing is decided yet.** Acknowledge that context will evolve. "This context file is a starting point, not a commitment. You can update it anytime as decisions get made."
 
 **When the user skips all depth questions.** Generate the file with essentials only, note in the closing that running `/spruce up` again later can add more context, and move on. Don't perform disappointment.
+
+**When the user asks to skip Discovery and jump to design work.** Don't gate them — they may know the scope is small enough that the lightweight audience capture is sufficient. But surface the trade-off: "Skipping `/personas` means downstream commands calibrate against the lightweight audience answer above rather than against structured personas. For small or throwaway surfaces, that's fine. For anything substantial, the design will be weighted toward defaults more than it would otherwise be. Want to proceed without Discovery, or run `/personas` first?"
+
+**When `.personas.md` already exists and is referenced in `.spruce.md`'s Audience section.** This means `/spruce up` is being re-run on a project that has already done Discovery. Preserve the pointer to `.personas.md` in the updated file rather than reverting to a lightweight Q2 capture. Treat the personas as the canonical audience source.
 
 ---
 

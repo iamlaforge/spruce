@@ -19,8 +19,12 @@
 export const stillpointContext = {
   product:
     "A calm, accessible companion for daily mindfulness — helping users build a sustainable meditation practice in just minutes a day.",
+  // Audience pointer to .personas.md — /personas ran on 2026-05-01 and
+  // produced structured personas (Maya as primary daily practitioner;
+  // Jordan as secondary skeptical first-timer). The personas file is now
+  // the canonical audience source; this field is the brief pointer.
   audience:
-    "Adults 25–45 seeking stress relief, better sleep, and emotional balance — beginners through intermediate meditators. Approached with respect and warmth, not condescension.",
+    "Primary persona: Maya (Daily Practitioner). Secondary: Jordan (Skeptical First-Timer). See .personas.md for full persona work and downstream-design implications. The original lightweight capture: adults 25–45 seeking stress relief, better sleep, and emotional balance — beginners through intermediate meditators.",
   character:
     "Warm, grounded, quietly confident, modern, inclusive. The product respects its own space and the user's time.",
   density:
