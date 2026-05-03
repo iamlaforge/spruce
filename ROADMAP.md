@@ -105,3 +105,27 @@ Currently Spruce installs into Claude Code via `npx spruce-skill add`. Need inte
 - The `/install` page on the marketing site needs to reflect available tools and install commands as integrations land.
 
 The website currently says "Cursor, Gemini, and other harnesses are coming soon" in the Install section — this work is what makes that claim true.
+
+### Figma read + write
+
+Bidirectional integration with Figma so Spruce reasoning crosses the design ↔ code boundary in both directions.
+
+**Read from Figma:**
+
+- A Spruce command that ingests a Figma file (or specific frame/component) and treats it as design input — extract typography, color tokens, spacing, component structure, and layout into the same reasoning Spruce applies to code.
+- Use cases: auditing an existing Figma design with `/survey`, `/uxreview`, or `/critique`; pressure-testing tokens in a Figma file with `/typeface`, `/colorgrade`, or `/refine`; running `/audit` against a Figma prototype with HCD artifacts already in place.
+- Tactical question: how granular — file-level, page-level, frame-level, or component-level scope.
+
+**Write to Figma:**
+
+- A Spruce command that produces Figma artifacts as output — generate a moodboard from `/sketch`, push tokens from `/foundations` into Figma variables, write a persona canvas from `/personas` as a Figma frame, materialize a journey map from `/journey` with proper swim lanes.
+- Use cases: design-team handoff (Spruce-generated context becomes Figma source-of-truth), parallel design-and-build workflows (the Discovery artifacts live in Figma alongside the codebase).
+- Tactical question: how to handle round-tripping — is the relationship one-directional (Spruce → Figma) or symmetric (changes in either propagate)?
+
+**Implementation considerations:**
+
+- Likely uses Figma's REST API (read) and Plugin API (write). The MCP integration with Figma (already available for Claude Code via `claude_ai_Figma`) is a possible bridge layer that simplifies authentication and makes the integration tool-agnostic across harnesses.
+- Authentication: Figma personal access tokens for individual use; OAuth for team/enterprise once that's relevant.
+- Scope: start with read (lower complexity, immediate value for evaluation/audit workflows), then write (more complex, opens up generative + handoff workflows).
+
+**Why on the roadmap:** Figma is where most design teams already work. Crossing the design ↔ code boundary makes Spruce useful in mixed workflows where some work happens in Figma and some in code, rather than forcing teams to commit fully to a code-first approach.
