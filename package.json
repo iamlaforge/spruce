@@ -1,0 +1,24 @@
+{
+  "name": "spruce",
+  "version": "0.1.0",
+  "description": "A design reasoning system for AI-generated interfaces",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "clean": "rm -rf dist packages"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamlaforge/spruce.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "design-system",
+    "ai-skills",
+    "claude-code"
+  ]
+}
