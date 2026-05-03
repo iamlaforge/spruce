@@ -65,8 +65,8 @@ export const TIERS: Tier[] = [
     id: "generative",
     label: "Generative",
     essay:
-      "Producing new design work. /sketch establishes visual direction first — typography, color, texture, motion, iconography — before any tokens commit. /foundations then codifies the direction into a starter system: color tokens, type scale, spacing, radius, motion, plus the primitive components everything else composes into. Then three commitment levels for the design work itself: autonomous (/design), guided (/decide), or exploratory (/remix), depending on how directed you want to be.",
-    slugs: ["sketch", "foundations", "design", "decide", "remix"],
+      "Producing new design work. The generative loop runs in sequence: /sketch establishes visual direction first; /foundations codifies it into tokens and primitives; /design produces a first-pass surface from that foundation; /remix surfaces alternative directions on that first pass; /decide guides specific decisions when you're adjusting or extending — adding features, refining a section, ideating on top of the chosen direction. Each command can stand alone, but together they shape the path from a single context file to a designed surface and beyond.",
+    slugs: ["sketch", "foundations", "design", "remix", "decide"],
   },
   {
     id: "diagnostic",
@@ -297,42 +297,46 @@ export const COMMANDS: Record<string, CommandData> = {
     slug: "decide",
     name: "/decide",
     tier: "generative",
-    tagline: "Direct each significant decision, one at a time.",
+    tagline: "Direct each significant decision when extending or adjusting a chosen direction.",
     detail: {
       whatItDoes: [
         "Most AI design tools take a prompt and produce output — deciding everything in between invisibly. /decide makes those intermediate decisions visible. It surfaces the meaningful tradeoffs as named options, lets you pick or delegate each one, and generates only after you've directed the significant calls.",
-        "Unlike /design (which ships in one autonomous pass) or /remix (which produces three distinct directions), /decide is the guided middle path. It identifies the two to four decisions that will most shape the output, presents them one at a time with named options, and stops to wait for your call. Each decision is a real creative-director choice — not a survey question, not a preference selection — with downstream implications you can think through before committing.",
+        "/decide sits late in the generative loop. /design produces a first-pass surface; /remix surfaces alternative directions; once a direction is chosen, /decide is the command for ideating *on top of* it — adding a feature, refining a section, deciding how a new piece of UI should fit. It identifies the two to four decisions that will most shape the addition, presents them one at a time with named options, and stops to wait for your call. Each decision is a real creative-director choice — not a survey question, not a preference selection — with downstream implications you can think through before committing.",
       ],
       whenToUse: [
-        "The task has multiple legitimate directions and the right answer depends on preferences you haven't yet articulated.",
+        "Adding a feature or new piece of UI to an existing screen, and the placement / prominence / pattern decisions are genuinely open.",
+        "Adjusting a section of a chosen design direction, where multiple legitimate alternatives exist.",
+        "The task has more than one reasonable answer and the right call depends on preferences you haven't yet articulated.",
         "You want creative-director control over the meaningful decisions, not an autonomous output to react to.",
         "The deliverable is significant enough that rework from wrong assumptions would cost time.",
-        "You've said something like “I want to design this but I'm not sure which direction” — /decide is built for that moment.",
       ],
       howToUse: {
         examples: [
-          "/decide pricing page",
-          "/decide onboarding flow",
-          "/decide reflection screen",
+          "/decide adding a personalization banner to the practices section",
+          "/decide a daily-reminder feature for the home page",
+          "/decide how to extend the pricing page with a comparison view",
         ],
         context:
-          "/decide accepts the same kind of brief as /design — a page, feature, screen, or moment. Instead of generating, it walks through the meaningful decisions one at a time. Each decision presents two or three named options plus a “Decide for me” delegation option. After all decisions are made, /decide generates output that reflects what you directed.",
+          "/decide accepts a brief describing what you're adding, adjusting, or ideating on. It walks through the meaningful decisions one at a time. Each decision presents two or three named options plus a “Decide for me” delegation. After all decisions are made, /decide generates output that reflects what you directed — a new component, a modified section, or a small new piece of the surface.",
       },
       antiPatterns: [
+        {
+          text: "Reaching for /decide when starting from scratch — that's /design's territory. /decide assumes a direction already exists; it ideates on top of it rather than producing the foundation.",
+        },
         {
           text: "Tools that decide everything invisibly, leaving the user to react to output rather than direct it.",
         },
         {
-          text: "Survey-fatigue tools that ask 15 questions before producing anything. /decide stops at 2-4 decisions — the ones that genuinely shape the result.",
+          text: "Survey-fatigue flows that ask 15 questions before producing anything. /decide stops at 2-4 decisions — the ones that genuinely shape the result.",
         },
         {
           text: "Template-based tools that present pre-made variations for selection. /decide is a guided process, not a curated menu.",
         },
         {
-          text: "Decision flows that surface trivial choices (button color, spacing values) instead of the substantive ones (overall layout archetype, hierarchy approach, voice register).",
+          text: "Decision flows that surface trivial choices (button color, spacing values) instead of the substantive ones (placement, prominence, register, pattern).",
         },
       ],
-      seeAlso: ["design", "remix", "foundations"],
+      seeAlso: ["remix", "design", "foundations"],
     },
   },
   design: {
