@@ -30,7 +30,7 @@ export function ThemeToggle() {
     return (
       <span
         aria-hidden
-        className="inline-flex size-9 items-center justify-center text-ink-subtle"
+        className="inline-flex size-9 items-center justify-center text-ink-muted"
       >
         <SunIcon />
       </span>
