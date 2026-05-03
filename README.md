@@ -12,15 +12,17 @@ Every AI model has been trained on the same statistical distribution of design c
 
 Spruce exists because looking designed and working well are not the same thing. Most AI design systems optimize for the former. Spruce is built around the latter — and around the belief that you, not the AI, should be the creative director.
 
+There's a deeper move too: Spruce starts with users, not pixels. The Discovery tier produces named personas, jobs-to-be-done, journeys, and scenarios that downstream commands ground every decision in. Most AI design tools have no concept of users at all; in Spruce, that grounding is foundational.
+
 ---
 
 ## How It Works
 
-Spruce is a skill system that installs into AI harnesses (Claude Code, Cursor, Gemini CLI, and others) and gives them deep design reasoning across seven dimensions of craft, plus a command set that lets you direct the AI's work with creative-director precision.
+Spruce is a skill system that installs into AI harnesses (Claude Code today; Cursor, Codex, VS Code, and Gemini coming) and gives them deep design reasoning across seven dimensions of craft, plus an HCD foundation layer and a command set that lets you direct the AI's work with creative-director precision.
 
 Where most AI design tools decide for you, Spruce:
 
-- Reasons from context — the `.spruce.md` file encodes your product's character, audience, and preferences, and every command calibrates its output to those specifics.
+- Reasons from a foundation — `.spruce.md` captures your product's character; the Discovery tier writes `.personas.md`, `.jtbd.md`, `.journeys.md`, and `.scenarios.md` for the people the product serves; every other command calibrates its output to those specifics.
 - Surfaces decisions — major design tradeoffs are presented to you before execution, not resolved silently.
 - Explains reasoning — every output can be re-run with full design thinking exposed, so you develop taste rather than dependency.
 - Actively resists the AI defaults — the specific typography, color, component, and voice patterns that mark "AI generated" output are explicitly named and replaced with deliberate alternatives.
@@ -31,7 +33,20 @@ Where most AI design tools decide for you, Spruce:
 
 ### The skill
 
-A core skill file (`SKILL.md`) that orchestrates seven reference files covering every design domain:
+A core skill file (`SKILL.md`) orchestrates two layers of reference material — Discovery references for who the design serves, and Design references for how it expresses itself.
+
+**Discovery references** — the HCD foundation:
+
+| Reference | Covers |
+|-----------|--------|
+| Human-Centered Design | Orchestrating reference for the HCD tier; how personas, jobs, journeys, and scenarios feed downstream commands |
+| Personas | Persona artifact format, three modes (draft from context / structure research / pressure-test), confidence labelling |
+| Jobs-to-be-Done | JTBD theory, functional/emotional/social layers, cross-persona analysis |
+| User Journeys | Touchpoint mapping, emotional arcs, current-state vs. future-state |
+| Scenarios | Concrete narratives anchored to persona + job + moment |
+| Research and Evaluation | HCD-grounded audit methodology, behavioral anti-patterns, severity tiers |
+
+**Design references** — the seven dimensions:
 
 | Reference | Covers |
 |-----------|--------|
@@ -47,7 +62,24 @@ Each reference file teaches the reasoning behind good decisions and names the sp
 
 ### The commands
 
-Twenty commands organized into three tiers:
+Twenty-five commands organized into five tiers, in workflow order:
+
+**Setup** — establish project context.
+- `/spruce up` — interactive context file setup; writes `.spruce.md`
+
+**Discovery** — ground the work in users.
+- `/personas` — establish primary + secondary user types; writes `.personas.md`
+- `/jtbd` — articulate functional/emotional/social jobs; writes `.jtbd.md`
+- `/journey` — map persona + job through real touchpoints; writes `.journeys.md`
+- `/scenarios` — anchor decisions in concrete moments; writes `.scenarios.md`
+- `/audit` — HCD-grounded evaluation against named personas + jobs (the diagnostic counterpart of the Discovery tier)
+
+**Generative** — create new work.
+- `/sketch` — establish visual direction before tokens commit
+- `/foundations` — generate a coherent design system (tokens + primitives)
+- `/design` — generate with full Spruce reasoning
+- `/remix` — generate three distinct design directions
+- `/decide` — surface tradeoffs before generating (creative-director mode)
 
 **Diagnostic** — analyze without changing code.
 - `/survey` — comprehensive quality review across all seven dimensions
@@ -57,7 +89,6 @@ Twenty commands organized into three tiers:
 - `/explain` — walk through the reasoning behind the most recent output
 
 **Corrective** — fix specific problems in existing code.
-- `/finish` — ship-ready final pass
 - `/typeface` — typography corrections
 - `/colorgrade` — color system corrections
 - `/arrange` — spatial corrections
@@ -66,31 +97,31 @@ Twenty commands organized into three tiers:
 - `/voice` — UX writing corrections
 - `/reduce` — strip to essentials
 - `/fortify` — edge cases and production readiness
-
-**Generative** — create new work.
-- `/design` — generate with full Spruce reasoning
-- `/decide` — surface tradeoffs before generating (creative-director mode)
-- `/remix` — generate three distinct design directions
-- `/foundations` — generate a coherent design system
-- `/sketch` — establish visual direction before tokens commit
-- `/spruce up` — interactive context file setup
+- `/finish` — ship-ready final pass
 
 ---
 
 ## Getting Started
 
-> **Note:** Spruce is currently in early development. Installation instructions, provider-specific bundles, and the website will be available in the first release.
+Install into Claude Code:
 
-Once installed into your AI harness:
+```sh
+npx spruce-skill add
+```
 
-1. Run `/spruce up` to establish your project's context — character, audience, density, voice direction, and preferences.
-2. Run any other Spruce command to generate, review, or correct design work calibrated to your project.
+(Cursor, Codex, VS Code, and Gemini support is on the roadmap; see [`ROADMAP.md`](ROADMAP.md).)
+
+Once installed, the workflow runs as a loop on a foundation:
+
+1. **Setup.** Run `/spruce up` to establish your project's context — character, audience, density, voice direction, and preferences. Writes `.spruce.md`.
+2. **Discovery (recommended, optional).** Run `/personas`, `/jtbd`, `/journey`, and `/scenarios` to ground the work in named users and the jobs they're hiring the product to do. Each command runs in three modes: draft from context when no research exists, structure user-supplied research when it does, or pressure-test a finished artifact.
+3. **Generate / review / refine.** Run any of the generative, diagnostic, or corrective commands — each calibrates its output to the foundation you've established.
 
 For example:
 
-- `/design the onboarding flow` — generates an onboarding flow calibrated to your product's character.
+- `/design the onboarding flow` — generates an onboarding flow calibrated to your product's character and the personas you captured.
 - `/decide the pricing page` — walks you through the key design decisions for a pricing page before generating.
-- `/survey` — reviews the current state of your project with findings and recommendations.
+- `/audit` — produces HCD-grounded findings tied to named personas + jobs (requires `.personas.md` + `.jtbd.md` in place).
 
 ---
 
@@ -108,10 +139,10 @@ The full philosophy is in [`source/PHILOSOPHY.md`](source/PHILOSOPHY.md).
 spruce/
 ├── source/             # Canonical source files — the truth
 │   ├── PHILOSOPHY.md
-│   ├── skills/spruce/  # Core skill and seven reference files
-│   └── commands/       # Twenty command files
-├── dist/               # Generated per-provider bundles (Claude Code, Cursor, etc.)
-├── templates/          # The .spruce.md context file template
+│   ├── skills/spruce/  # Core skill, six Discovery references, seven Design references
+│   └── commands/       # Twenty-five command files across five tiers
+├── dist/               # Generated per-provider bundles (Claude Code today)
+├── templates/          # The .spruce.md context file template + Discovery artifact templates
 ├── scripts/            # Build and packaging scripts
 ├── docs/               # Documentation source for the website
 ├── extension/          # Chrome extension (in development)
@@ -124,13 +155,15 @@ Edit source files in `source/`. The provider-specific distributions in `dist/` a
 
 ## Status
 
-Spruce is in active development. The knowledge layer (philosophy, skill, references) and command layer (twenty commands) are complete. Still in development:
+The knowledge layer (philosophy, skill, thirteen reference files), the command layer (twenty-five commands across five tiers), and the Claude Code distribution (`npx spruce-skill add`) are shipped. The public website is live with a complete catalog, a workflow page, an FAQ, and the Stillpoint case study demonstrating the end-to-end workflow.
 
-- Provider-specific build and packaging
+In active development (see [`ROADMAP.md`](ROADMAP.md)):
+
+- Imagery as an 8th design dimension
+- Multi-tool support — Cursor, Codex, VS Code, Gemini
 - Chrome extension
-- Documentation site
-- Public website
-- Installation flow
+- Release notes section on the home page
+- Additional case studies
 
 ---
 
