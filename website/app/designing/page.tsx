@@ -8,20 +8,21 @@ import {
 } from "@/components/designing/Walkthrough";
 
 /**
- * /designing — the workflow page (Workflow tab). The page presents the
- * Spruce loop as five moments of design reasoning, with the middle three
- * explicitly grouped as the iteration loop (any order, any number of
- * times) between Set up (begins) and Ship (closes).
+ * /designing — the workflow page (Workflow tab). Presents Spruce as an
+ * iteration loop sitting on a foundation: Set up establishes character,
+ * Discover grounds the work in named users + jobs, the loop (decide,
+ * review, refine) reasons from that foundation, and Ship closes.
  *
  * Structure:
- *   1. Hero — frame the loop, point at the catalog for depth
+ *   1. Hero — frame the workflow, point at the catalog for depth
  *   2. Set up phase — "First" indicator, full content
- *   3. Iteration loop — section header + LoopVisualization (animates on scroll)
+ *   3. Discover phase — "Foundation" indicator, full content (HCD tier)
+ *   4. Iteration loop — section header + LoopVisualization (animates on scroll)
  *      then the three middle phases (Decide / Review / Refine), each
  *      marked "Loop" rather than numbered, since they intermingle in any
  *      order
- *   4. Ship phase — "Last" indicator, full content
- *   5. Closing — gentle indication that the loop continues
+ *   5. Ship phase — "Last" indicator, full content
+ *   6. Closing — gentle indication that the loop continues
  *
  * Header, footer, and the Workflow / Tutorials tab bar live in the
  * /designing layout — this page just renders the workflow content. The
@@ -29,16 +30,13 @@ import {
  *
  * The page is "adjacent" to the catalog rather than duplicative: each
  * phase's artifact is a synthesized excerpt; visitors who want the full
- * demo follow the cross-reference to /commands. When the dedicated case
- * study lands (per ROADMAP.md), this page automatically benefits — the
- * artifacts pull from the catalog, which will pull from the case study's
- * real shipped output.
+ * demo follow the cross-reference to /commands.
  */
 
 export const metadata: Metadata = {
   title: "Workflow — Spruce",
   description:
-    "The Spruce workflow as five moments of design reasoning. Set up first, ship last, the middle three intermingle.",
+    "The Spruce workflow: set the project context, ground the work in named users + jobs, then run the iteration loop on top of that foundation. Ship last.",
 };
 
 export default function DesigningPage() {
@@ -46,6 +44,7 @@ export default function DesigningPage() {
     <>
       <PageHero />
       <SetUpPhase />
+      <DiscoverPhase />
       <LoopIntro />
       <DecidePhase />
       <ReviewPhase />
@@ -74,15 +73,17 @@ function PageHero() {
               Designing.
             </h1>
             <p className="mt-6 md:mt-8 font-display italic font-normal text-2xl md:text-3xl leading-snug tracking-tight text-ink-muted text-balance max-w-prose">
-              The loop, in five moments.
+              The loop, on a foundation.
             </p>
           </div>
           <div className="col-span-12 md:col-span-5 md:pt-6">
             <p className="text-base md:text-lg text-ink leading-relaxed text-pretty">
-              Spruce isn&rsquo;t a single command — it&rsquo;s a loop. The
-              first moment sets context. The last ships the work. The middle
-              three — decide, review, refine — intermingle in any order until
-              you&rsquo;re done.
+              Spruce isn&rsquo;t a single command — it&rsquo;s a loop on a
+              foundation. First you set the project&rsquo;s character. Then
+              you ground the work in named users and the jobs they&rsquo;re
+              hiring the product to do. The iteration loop — decide, review,
+              refine — sits on top of that grounding and intermingles in any
+              order until you ship.
             </p>
             <p className="mt-5 text-sm text-ink-muted leading-relaxed text-pretty">
               This page walks through the loop with artifacts from the
@@ -238,6 +239,60 @@ function SetUpPhase() {
 }
 
 // ---------------------------------------------------------------------------
+// DiscoverPhase — the Foundation phase. Optional but the iteration loop
+// reasons better when the HCD artifacts exist. Marked "Foundation" rather
+// than numbered or "Loop" because it's the substrate the loop reads from,
+// not a step in the iteration itself.
+// ---------------------------------------------------------------------------
+
+function DiscoverPhase() {
+  return (
+    <Phase
+      marker="Foundation"
+      name="Discover"
+      frame={
+        <>
+          <p>
+            Optional, but the loop reads better when it&rsquo;s in place. The
+            Discovery tier produces the HCD artifacts — personas, jobs,
+            journeys, scenarios — that downstream commands ground decisions
+            in.{" "}
+            <code className="font-mono text-base text-accent">/personas</code>{" "}
+            writes{" "}
+            <code className="font-mono text-base text-accent">.personas.md</code>;{" "}
+            <code className="font-mono text-base text-accent">/jtbd</code>{" "}
+            writes{" "}
+            <code className="font-mono text-base text-accent">.jtbd.md</code>;{" "}
+            <code className="font-mono text-base text-accent">/journey</code>{" "}
+            and{" "}
+            <code className="font-mono text-base text-accent">/scenarios</code>{" "}
+            write theirs.{" "}
+            <code className="font-mono text-base text-accent">/audit</code>{" "}
+            evaluates against all of them.
+          </p>
+          <p>
+            Each command runs in three modes — draft from context when no
+            research exists, structure user-supplied research when it does, or
+            pressure-test a finished artifact for assumptions. Context-derived
+            artifacts get labelled honestly, so the loop knows what to weight.
+          </p>
+          <p>
+            Without Discovery, the loop reasons from{" "}
+            <code className="font-mono text-base text-accent">.spruce.md</code>{" "}
+            character alone. With Discovery, every decision can be tied to a
+            named user doing a named thing.
+          </p>
+        </>
+      }
+      catalogPath="/commands/personas"
+      catalogText="See /personas, /jtbd, /journey, /scenarios, /audit"
+    >
+      <DiscoveryArtifact />
+    </Phase>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // LoopIntro — the section break that introduces the iteration loop. Pairs
 // an editorial frame (the loop's structure named explicitly) with the
 // LoopVisualization (animated triangle showing Decide / Review / Refine
@@ -260,14 +315,19 @@ function LoopIntro() {
           </div>
           <div className="col-span-12 lg:col-span-8 lg:col-start-5">
             <p className="text-base md:text-lg text-ink leading-relaxed text-pretty max-w-prose">
-              The middle three moments — decide, review, refine — intermingle.
-              You critique what you just decided, refine based on the critique,
-              decide more after refining, critique again. Any order, any
-              number of times.
+              The iteration loop sits on the foundation. Decide, review,
+              refine — three moments that intermingle. You critique what you
+              just decided, refine based on the critique, decide more after
+              refining, critique again. Any order, any number of times.
             </p>
             <p className="mt-4 text-sm text-ink-muted leading-relaxed text-pretty max-w-prose">
               Each is a different kind of conversation with Spruce; the loop
-              is what happens when you string them together.
+              is what happens when you string them together. Every command in
+              the loop reads from{" "}
+              <code className="font-mono text-sm text-accent">.spruce.md</code>{" "}
+              and the Discovery artifacts when they exist — so decisions stay
+              grounded in the product&rsquo;s character and the people it
+              serves.
             </p>
           </div>
         </div>
@@ -487,6 +547,57 @@ function ClosingNote() {
 // When the dedicated case study lands (per ROADMAP.md), these excerpts
 // get replaced with real shipped output rather than stubbed copy.
 // ---------------------------------------------------------------------------
+
+function DiscoveryArtifact() {
+  return (
+    <figure className="border border-rule-subtle bg-surface rounded-md overflow-hidden">
+      {/* Persona tile excerpt — Maya, the meditation app's primary persona */}
+      <div className="px-5 py-5 md:px-6 md:py-6 bg-surface-elevated border-b border-rule-subtle">
+        <div className="grid grid-cols-[auto_1fr] gap-x-4 md:gap-x-5 items-center">
+          <div
+            aria-hidden
+            className="shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-accent text-white flex items-center justify-center font-display font-normal text-xl md:text-2xl"
+          >
+            M
+          </div>
+          <div>
+            <p className="font-mono text-2xs uppercase tracking-widest text-accent mb-1">
+              Primary persona · from .personas.md
+            </p>
+            <h3 className="font-display font-normal text-xl md:text-2xl tracking-tight text-ink leading-tight">
+              Maya
+              <span className="text-ink-muted">— Daily Practitioner</span>
+            </h3>
+          </div>
+        </div>
+        <p className="mt-4 pt-3 border-t border-rule-subtle font-display italic font-normal text-sm md:text-base text-ink leading-snug text-pretty">
+          &ldquo;Wants the practice to be a small, reliable good choice in the
+          day — not a project, not a transformation.&rdquo;
+        </p>
+      </div>
+
+      {/* Footer strip — the rest of the foundation, named */}
+      <div className="px-5 py-4 md:px-6 md:py-5 grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6">
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
+          + .jtbd.md{" "}
+          <span className="text-ink-muted normal-case">— six jobs across three layers</span>
+        </p>
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
+          + .journeys.md{" "}
+          <span className="text-ink-muted normal-case">— current-state and future-state mapped</span>
+        </p>
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
+          + .scenarios.md{" "}
+          <span className="text-ink-muted normal-case">— concrete moments, persona by persona</span>
+        </p>
+        <p className="font-mono text-2xs uppercase tracking-widest text-ink-subtle">
+          + /audit{" "}
+          <span className="text-ink-muted normal-case">— findings tied to named users + jobs</span>
+        </p>
+      </div>
+    </figure>
+  );
+}
 
 function CritiqueArtifact() {
   return (
