@@ -1,13 +1,29 @@
 {
-  "name": "spruce",
-  "version": "0.2.0",
-  "description": "A design reasoning system for AI-generated interfaces",
+  "name": "spruce-skill",
+  "version": "0.3.0",
+  "description": "A design reasoning system for AI-generated interfaces. Installs into Claude Code, Cursor, Codex, Gemini, and other AI coding tools via the vercel-labs/skills ecosystem.",
   "private": true,
   "type": "module",
+  "bin": {
+    "spruce-skill": "./bin/cli.js"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "clean": "rm -rf dist packages"
   },
+  "files": [
+    "bin",
+    "scripts",
+    "source",
+    "templates",
+    ".claude",
+    ".cursor",
+    ".agents",
+    "PHILOSOPHY.md",
+    "README.md",
+    "ROADMAP.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -19,6 +35,8 @@
   "keywords": [
     "design-system",
     "ai-skills",
-    "claude-code"
+    "claude-code",
+    "cursor",
+    "anthropic-agent-skills"
   ]
 }
