@@ -39,6 +39,7 @@ const HARNESS_SKILL_DIRS = [
   { name: 'Claude Code', path: path.join(ROOT, '.claude/skills') },
   { name: 'Cursor', path: path.join(ROOT, '.cursor/skills') },
   { name: 'GitHub Copilot (VS Code)', path: path.join(ROOT, '.github/skills') },
+  { name: 'Gemini CLI', path: path.join(ROOT, '.gemini/skills') },
   { name: 'agents (harness-agnostic)', path: path.join(ROOT, '.agents/skills') },
 ];
 
