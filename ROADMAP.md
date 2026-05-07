@@ -156,6 +156,36 @@ This is exactly Spruce's anti-attractor philosophy turned on Spruce's own market
 
 **Why included:** small surface, high editorial value, fast to ship. Pairs naturally with the "document the Spruce site itself" case-study path — the case study would surface the editorial discipline as part of the design story.
 
+### Visitor feedback + questions
+
+Today, the spruce-website has no surface for visitors to submit feedback, questions, or bug reports. Anyone with something to say (a typo on a page, a question about install, a feature suggestion, a confusing UX moment) has to find the GitHub repo and open an issue, or just bounce. Most won't do either. The site needs a low-friction submission surface and a destination where submissions reach the maintainer reliably.
+
+**Scope of the addition:**
+
+- **Submission surface on the site** — likely a dedicated `/feedback` route (more deliberate, more typing room) or a footer-link modal (lower friction). Editorial register matching the rest of the site — not a generic SaaS form. Form captures: optional name, optional email (so we can reply if needed), optional category (feedback / question / bug / other), and the message itself.
+- **Submission handling** — a Next.js API route at `/api/feedback` that validates the submission, runs basic spam protection (honeypot field at minimum; hCaptcha or Turnstile only if real abuse appears), and routes the submission to its destination.
+- **Destination** — where submissions actually land for the maintainer to see.
+- **Confirmation UX** — after submission, show a brief acknowledgment (specific, not "Thanks!") and let the visitor send another or return to where they came from.
+
+**Destination — directed: email + GitHub combined.** Each submission goes to both:
+
+- **Email forwarding** via Resend (or Postmark / Mailgun) — submission body delivered to the maintainer's inbox the moment it lands. Subject line includes the category if one was picked. Body includes the message + a deep link to the GitHub issue so the maintainer can jump straight from inbox to triage.
+- **GitHub Issues** in a dedicated private intake repo (e.g., `iamlaforge/spruce-feedback`) — every submission becomes an issue with category-derived labels (`feedback`, `question`, `bug`, `other`). Maintainer triages, replies, closes, or escalates from there. Issues persist and become searchable history; reusable for trend-spotting later.
+
+The composition gives the maintainer immediate notification (email) + a persistent record in the project's existing tooling (GitHub). API route fires both calls in parallel; either can fail without blocking the other (failed email still leaves the GitHub issue and vice versa).
+
+**Other destination options not picked** (preserved for context if direction changes):
+
+- **Database + private dashboard** via Vercel KV or Supabase — better browsability than GitHub if the volume gets high enough that issue navigation becomes friction. Worth revisiting later if that happens.
+- **Slack / Discord webhook** — could compose with the above if real-time channel notification ever matters more than email.
+
+**Remaining open decisions to direct before implementing:**
+
+1. **Surface**: dedicated `/feedback` page vs. footer-link modal vs. both.
+2. **Categories**: differentiate feedback vs. questions vs. bug reports up front, or keep it as one form and let the maintainer triage via labels in GitHub after the fact.
+
+**Why on the roadmap:** the site is the public surface; without a feedback channel, useful signal from real visitors goes uncaptured. Especially valuable while Spruce is new and the audience is still forming — early questions and friction reports shape the next round of clarifications and the Discovery work for the product itself.
+
 ---
 
 ## Distribution + integrations
