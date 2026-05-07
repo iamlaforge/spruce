@@ -38,6 +38,7 @@ const TEMPLATES = path.join(ROOT, 'templates');
 const HARNESS_SKILL_DIRS = [
   { name: 'Claude Code', path: path.join(ROOT, '.claude/skills') },
   { name: 'Cursor', path: path.join(ROOT, '.cursor/skills') },
+  { name: 'GitHub Copilot (VS Code)', path: path.join(ROOT, '.github/skills') },
   { name: 'agents (harness-agnostic)', path: path.join(ROOT, '.agents/skills') },
 ];
 
