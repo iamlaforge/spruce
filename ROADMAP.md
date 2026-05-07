@@ -4,6 +4,7 @@ Forward-looking work for Spruce. Items here are planned but not yet scoped or sc
 
 ## Recently shipped
 
+- **Multi-tool support — all five major AI coding tools.** Spruce now installs into Claude Code, Cursor, Codex CLI, VS Code (with GitHub Copilot), and Gemini CLI via the same `npx spruce-skill add` command. Architecture: thin install wrapper around [`vercel-labs/skills`](https://github.com/vercel-labs/skills) (the open agent-skills installer) plus harness-specific build outputs at `.claude/skills/`, `.cursor/skills/`, `.github/skills/`, `.gemini/skills/`, and `.agents/skills/` — the same canonical source files (`source/commands/*.md`, `source/skills/spruce/`) authored once, written to each harness's expected path by `scripts/build.js`. 25 commands × 5 harnesses = 125 skill directories, plus 25 Claude Code slash commands at `.claude/commands/` for the slash UX. Each harness's adherence varies — Gemini is the strictest skill-follower (announces "Skill design activated" in its UI, cites `.spruce.md` in code comments), Codex and Cursor are clean, Copilot's training prior leaks through on specific avoid-list items in `/design`'s autonomous pass but the corrective tier (`/typeface`, `/refine`, etc.) reliably cleans them up via direct user instruction. Architecture validation: each new harness compatible with the [Anthropic Agent Skills](https://agentskills.io/specification) spec is a one-line addition to `HARNESS_SKILL_DIRS` in the build — proven across the rollout from Cursor (v0.3.0) → Codex (v0.4.0) → VS Code Copilot + Gemini (v0.5.0).
 - **Discovery tier (HCD) — five commands + visual artifact demos.** A new Discovery tier shipped between Setup and the generative loop: `/personas`, `/jtbd`, `/journey`, `/scenarios`, `/audit`. Each produces an HCD artifact (`.personas.md`, `.jtbd.md`, `.journeys.md`, `.scenarios.md`, audit findings) downstream commands read from. Three modes per command — draft from `.spruce.md` context when no research exists, structure user-supplied research, or pressure-test a finished artifact for assumptions. `/audit` is the diagnostic counterpart — the only diagnostic command that frames findings against named personas + jobs rather than general principles; cross-references added to `/survey`, `/uxreview`, `/critique`, `/detect`, and `/finish` naming the distinct value of each lens versus `/audit`'s HCD-grounded frame. Stillpoint case study has working artifact files for all five (Maya + Jordan personas, six jobs across three layers, current/future morning-practice journey, two scenarios, HCD-grounded audit with severity tiers and behavioral anti-patterns). Each command page on the website renders the artifact in its proper visual format — persona canvas (header band with geometric avatar + name + role + anchor quote, four-quadrant body, informs-design footer band), job map (canonical When / I want to / So I can three-part flow plus a cross-persona panel surfacing diverging + conflicting jobs), journey map (phase band + smooth SVG emotional-arc curve as the inline preview, full artifact with touchpoint swim lanes opens in a Lightbox built on native HTML `<dialog>` with focus trap, ESC, and backdrop-click close), scenario cards, audit findings document with severity badges and persona-grounded "Affects" lines. Inline-expand pattern (`ExpandablePanel`) on `/personas`, `/jtbd`, and `/audit` preserves each artifact's signature element even when collapsed; the Lightbox is reserved for `/journey` since the format itself needs a wider viewport than the command-detail container allows.
 - **Homepage + workflow repositioning around HCD foundation.** Hero tagline shifted from "design reasoning system that teaches AI tools how to think" to "The only AI design reasoning system that starts with users, not pixels" — supporting copy reinforces grounding in real people and the jobs they're doing rather than the average of training data. Philosophy section's alternative movement leads with the same positioning claim and unpacks the three-levels framing: the grounding makes the reasoning specific; the reasoning runs in the background; the commands put you in the chair. `/designing` reframed from "the loop in five moments" to "the loop on a foundation" — Discovery is a Foundation phase between Set up and the iteration loop, with a DiscoveryArtifact (Maya persona tile + footer naming the other Discovery artifacts). LoopVisualization extended with a foundation strip beneath the Decide/Review/Refine triangle naming the context files (`.spruce.md` + Discovery artifacts) the loop reads from, animated to land as the diagram's closing beat.
 - **Stillpoint case study artifact.** A complete Stillpoint marketing site lives at `/case-study` (home page) and `/case-study/practice/[slug]` (three practice detail pages — Morning Grounding, Mid-day Reset, Evening Wind-down). Stillpoint is the hypothetical meditation app that threads through every demo in the catalog; the case study surfaces it as the cumulative live result of running the full Spruce workflow. Includes a Stillpoint design system scoped under `.stillpoint` class (Söhne + Lora typography, warm-cream palette with sage primary, sage→peach gradient in light / sage→lavender in dark on the personalization banner), a full set of Stillpoint primitives (Button, Card, Input, Heading, Link, Scope, ThemeToggle), first-class dark mode that cascades with Spruce's theme via CSS scope, and a thin Spruce context banner above each case-study route for navigation back to the catalog. Discreet links from `/commands` and `/designing` point visitors to the artifact.
@@ -16,51 +17,6 @@ Forward-looking work for Spruce. Items here are planned but not yet scoped or sc
 ---
 
 ## Up next
-
-### Multi-tool support: Cursor, VS Code, Codex, Gemini
-
-Spruce installs into Claude Code today; the homepage hero, Install section, and `/install` page are already tool-agnostic and commit to a unified `npx spruce-skill add` installer. Reaching beyond Claude Code is the most direct way to grow Spruce's audience without changing the system itself, and the install story is now ahead of the implementation — the page promises what the package needs to deliver.
-
-**Priority order (Cursor first, then VS Code → Codex → Gemini):**
-
-1. **Cursor first.** Largest user base among Claude Code alternatives; `.cursor/rules/*.mdc` rule-file system maps cleanly to a per-tool transformation; first port also validates the per-tool adapter architecture.
-2. **VS Code second.** Massive base but more complex integration — likely a chat-participant extension that interops with the existing assistants (Copilot, Continue, Cline) rather than competing with them.
-3. **Codex (OpenAI) third.** Integration model needs research; potentially via the AGENTS.md convention plus a Codex-specific instruction file.
-4. **Gemini (Google) fourth.** Most exploratory; depends on how Google's extension surface evolves.
-
-**Per-tool shape — different harnesses get the shape that fits, from one source:**
-
-- The source files (`source/commands/*.md`, `source/skills/spruce/`, references) stay canonical. Each provider's transformer in `scripts/build.js` makes the call about what shape to emit.
-- **Claude Code keeps the current shape**: 25 separate command files at `.claude/commands/`, slash-invokable. This is right for Claude Code's slash-command model.
-- **Cursor uses an orchestrator shape**: one umbrella skill at `.cursor/skills/spruce/SKILL.md` with an auto-generated router table, and the 25 command files moved to `reference/` under the skill. Per-tool transformer reads each source command's frontmatter (`name`, `description`) and composes the router table; reference files get Claude Code-specific frontmatter stripped, the parent SKILL gets Cursor-appropriate frontmatter (description optimized for Cursor's agent-requested matching).
-- The cost: per-tool UX divergence. Claude Code users invoke `/typeface`; Cursor users describe intent ("fix the typography on the pricing page") and Cursor's agent-requested matching pulls in the spruce skill, which routes internally. This divergence is intentional — each harness gets the idiom it does best, rather than a single mental model that fits one tool well and the rest poorly.
-
-**Shared adapter architecture:**
-
-- `source/` is the single source of truth. No parallel authoring per tool.
-- `scripts/build.js` factored into per-provider transformer modules (one file per provider — `lib/transformers/cursor.js`, `lib/transformers/vscode.js`, etc.). Each transformer handles the strip-fields-the-target-doesn't-understand + resolve-placeholders + add-version-frontmatter mechanical work.
-- `npx spruce-skill add` (the unified installer) auto-detects the harness by checking which of `.claude/`, `.cursor/`, `.continue/`, `AGENTS.md`, etc. exists in the user's project. Prompts if multiple are present or none. `--tool=<name>` flag for explicit override.
-- Install is one command per project, regardless of which harness — same UX everywhere.
-
-**Per-tool tactical considerations:**
-
-- **Cursor** — agent-requested as the default load mode (description-driven matching, no context bloat); `@spruce` as the explicit escape hatch for users who want manual invocation. Pin/unpin pattern (worth borrowing from Impeccable's architecture) lets power users promote their most-used sub-commands to top-level shortcuts in their workspace. Cursor reads from `.cursor/skills/` first, falls back to `.agents/skills/` and `.claude/skills/` — useful for users who want to install Spruce once and have it work across multiple harnesses via symlink dedup.
-- **VS Code** — chat-participant extension (`@spruce` as a chat participant) plus a `.github/copilot-instructions.md` contribution for users who want it loaded into Copilot's context. Avoid building a standalone Spruce panel — interop with the existing assistants is lower-friction.
-- **Codex** — Codex CLI's instruction-file convention plus an `AGENTS.md` contribution. Commands invoked as natural-language references that Codex routes through the loaded skill rather than as slash commands.
-- **Gemini** — Gemini's extensions directory plus an instruction file contribution. Defer until the harness shape stabilizes.
-
-**Validation strategy per integration:**
-
-- Each tool integration needs to verify Spruce reasoning actually applies in that tool's context. The `/sketch` → `/foundations` → `/design` arc on Stillpoint is the smoke-test sequence — if the integration produces coherent output for that workflow, the harness is wired correctly.
-- Anti-patterns to test for: silently dropped references, command name collisions with the host tool's own commands, context-window exhaustion from loading all references unconditionally, the orchestrator's router failing to route correctly to a sub-command.
-
-**Site implications (mostly already shipped):**
-
-- `/install` page is live with tool-picker tabs + tool-status checklist + per-tool moderate-depth orientation panels. As each tool ships, flip its entry in `tool-status.ts` from `coming-soon` to `live` and replace the `(planned)` hedging in `ToolTabs.tsx` with actual install detail.
-- FAQ already mentions the multi-tool roadmap; will need per-tool addenda as harnesses ship (version-compatibility notes, harness-specific quirks).
-- Tutorials may need tool-specific notes where invocation patterns differ meaningfully (slash vs. agent-requested).
-
-**Currently in flight:** Cursor support is the active target. Architecture decisions made (orchestrator shape for Cursor; preserve Claude Code's per-command shape; per-provider transformer modules in build.js; unified installer with auto-detection). Next concrete steps: prototype the Cursor transformer to validate the output shape; build the `npx spruce-skill add` CLI; flip `/install` and homepage status indicators when Cursor ships.
 
 ### Imagery as an 8th dimension
 
