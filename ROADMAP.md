@@ -203,56 +203,94 @@ The product question is *what does the extension do that the CLI doesn't* — an
 
 **Relationship to Live browser iteration** (separate roadmap entry under Up next): both touch the browser, but they're distinct surfaces. The extension audits *any* web page from the browser chrome — designed for inspecting other people's products or evaluating the wild. Live browser iteration runs against the user's *own* dev server with a Spruce-aware element picker — designed for in-flow design work on whatever the user is actively building. They could share infrastructure (the picker UI, the design-token extractor) but serve different jobs and ship independently.
 
-### Figma read + write
+### Figma integration v1: Read + symmetric Discovery write
 
-Bidirectional integration with Figma so Spruce reasoning crosses the design ↔ code boundary in both directions.
+The first Figma release. Spruce gains the ability to **read** any Figma frame as input to its diagnostic commands, and to **symmetrically round-trip** the five Discovery artifacts (`/personas`, `/jtbd`, `/journey`, `/scenarios`, `/audit`) between their canonical markdown files and Figma frames. Designers using Spruce alongside Figma can refine artifacts in either surface and see the changes propagate to the other — Figma is a real workspace, not a one-way render target.
 
-**Read from Figma:**
+**Architecture — direct API + Node helper, no MCP dependency.**
 
-- A Spruce command that ingests a Figma file (or specific frame/component) and treats it as design input — extract typography, color tokens, spacing, component structure, and layout into the same reasoning Spruce applies to code.
-- Use cases: auditing an existing Figma design with `/survey`, `/uxreview`, or `/critique`; pressure-testing tokens in a Figma file with `/typeface`, `/colorgrade`, or `/refine`; running `/audit` against a Figma prototype with HCD artifacts already in place.
-- Tactical question: how granular — file-level, page-level, frame-level, or component-level scope.
+Spruce ships a Node helper bundled into the existing npm distribution, parallel to `npx spruce-skill add` and the planned `npx spruce detect`. Skill instructions tell the AI to invoke the helper; the helper handles Figma REST + Plugin API calls directly. Same wrapper pattern that worked for the multi-tool install rollout.
 
-**Write to Figma:**
+- **`npx spruce figma push <command>`** — markdown → Figma. Renders the canonical markdown as a Figma frame.
+- **`npx spruce figma pull <command>`** — Figma → markdown. Parses the Figma frame back into the canonical markdown, preserving structure.
+- **`npx spruce figma sync <command>`** — bidirectional, conflict-aware. Detects drift on both sides and either applies cleanly or surfaces a diff for explicit resolution.
+- **`npx spruce figma diff <command>`** — preview without applying. Shows what would change in either direction.
+- **`npx spruce figma status`** — surface every artifact's sync state across the project.
+- **`npx spruce figma auth`** — wire the user's Figma personal access token. PAT only for v1; OAuth deferred until team/enterprise demand surfaces.
 
-- A Spruce command that produces Figma artifacts as output — generate a moodboard from `/sketch`, push tokens from `/foundations` into Figma variables, write a persona canvas from `/personas` as a Figma frame, materialize a journey map from `/journey` with proper swim lanes.
-- Use cases: design-team handoff (Spruce-generated context becomes Figma source-of-truth), parallel design-and-build workflows (the Discovery artifacts live in Figma alongside the codebase).
-- Tactical question: how to handle round-tripping — is the relationship one-directional (Spruce → Figma) or symmetric (changes in either propagate)?
+The Anthropic Figma MCP is a possible bridge layer but rejected as the primary architecture — it forces every Spruce user to also install and configure the Figma MCP in their harness (install friction Spruce has worked hard to remove), and being downstream of someone else's roadmap on the write side specifically is a real risk for the bespoke artifact shapes (persona canvases, journey maps with emotional arcs, scenario cards) that the official MCP isn't designed around.
 
-**Implementation considerations:**
+**Read scope — diagnostic commands accept Figma input.**
 
-- Likely uses Figma's REST API (read) and Plugin API (write). The MCP integration with Figma (already available for Claude Code via `claude_ai_Figma`) is a possible bridge layer that simplifies authentication and makes the integration tool-agnostic across harnesses.
-- Authentication: Figma personal access tokens for individual use; OAuth for team/enterprise once that's relevant.
-- Scope: start with read (lower complexity, immediate value for evaluation/audit workflows), then write (more complex, opens up generative + handoff workflows).
+`/survey`, `/uxreview`, `/critique`, `/audit`, and `/detect` learn to take a Figma URL alongside their existing code-target inputs. Output format is unchanged — findings against `.spruce.md` + Discovery artifacts — but the input is the design artifact rather than running code. Use case: a designer brings work in Figma to Spruce for review before any code exists.
 
-**Why on the roadmap:** Figma is where most design teams already work. Crossing the design ↔ code boundary makes Spruce useful in mixed workflows where some work happens in Figma and some in code, rather than forcing teams to commit fully to a code-first approach.
+Frame-level scope (file/page-level dilutes feedback; component-level is too granular for the diagnostic commands). The user pastes a Figma frame URL; Spruce extracts the frame's structure, typography, color, spacing, and component treatment; the diagnostic command reasons against that input.
 
-### Discovery commands → Figma artifacts
+**Write scope — five Discovery artifacts, symmetric round-tripping.**
 
-Once the Figma write integration is in place, extend the Discovery tier so each command can materialize its artifact as a Figma frame in addition to writing the canonical `.md` file.
+Each Discovery command gains a render path producing a structured Figma frame matching the visual format already shown on the marketing site:
 
-**The disconnect today:** Discovery commands produce markdown — `.personas.md`, `.jtbd.md`, `.journeys.md`, `.scenarios.md`, audit findings. That's the canonical, version-controlled source of truth. But there's no visual rendering for handoff or team review. The Spruce marketing site shows what the artifacts *could* look like rendered (persona canvas with quadrants, job map with When / I want to / So I can flow, journey map with swim lanes and emotional arc), but those are React components on the site — not output that users get when they run the commands in their own projects.
+- **`/personas` → persona canvas frame.** Header band with avatar mark + name + role + anchor quote, four-quadrant body (Context+Expertise / Jobs / Motivations / Fears+Constraints), informs-design footer. Primary + secondary canvases as paired frames.
+- **`/jtbd` → job map frame.** Per-job three-part flow (When / I want to / So I can) with persona grouping and per-layer (functional / emotional / social) sectioning. Cross-persona panel surfaces shared / diverging / conflicting jobs.
+- **`/journey` → journey map frame.** Phase band, smooth emotional-arc curve as a vector path, touchpoint columns with swim lanes (Action / Thought / Friction / Opportunity). Current-state and future-state as paired frames.
+- **`/scenarios` → scenario card frames.** Editorial scenario cards anchored to persona + job + lived narrative + design implication.
+- **`/audit` → findings document frame.** Severity-tiered findings with behavioral-anti-pattern badges, persona-grounded "Affects" lines, recommended-corrective pointers.
 
-**Scope when the Figma integration is available:**
+**Symmetric round-tripping — schema discipline becomes load-bearing.**
 
-- **`/personas` → Figma persona canvas frame.** Header band with avatar mark + name + role + anchor quote, four-quadrant body (Context+Expertise / Jobs / Motivations / Fears+Constraints), informs-design footer. Per persona; primary + secondary canvases as a paired frame.
-- **`/jtbd` → Figma job map frame.** Per-job three-part flow (When / I want to / So I can) with persona grouping and per-layer (functional / emotional / social) sectioning. Cross-persona panel renders shared / diverging / conflicting jobs with the conflict visualization.
-- **`/journey` → Figma journey map frame.** Phase band, smooth emotional-arc curve as a vector path, touchpoint columns with swim lanes (Action / Thought / Friction / Opportunity). Current-state and future-state as paired frames for direct comparison.
-- **`/scenarios` → Figma scenario cards.** Editorial scenario cards anchored to persona + job + lived narrative + design implication.
-- **`/audit` → Figma findings document.** Severity-tiered findings with behavioral-anti-pattern badges, persona-grounded "Affects" lines, recommended-corrective pointers.
+Each artifact's Figma frame structure has to map cleanly to its markdown structure in both directions. The five artifacts vary in parse-back difficulty:
 
-**Why Figma rather than companion HTML files or a separate viewer tool:**
+- **Persona canvas, job map, audit findings** — structured layouts with named regions; parse back cleanly.
+- **Journey map** — moderate complexity. The emotional-arc curve has to round-trip as numeric anchor points (not get re-traced as a free-form path that loses fidelity); touchpoints in swim lanes need consistent positional anchors.
+- **Scenario cards** — hardest parse-back, largely prose. Strict frame-template discipline required so designers can't introduce structure that breaks the parser.
 
-The strategic answer for visual artifacts. Most design teams already work in Figma; putting the artifacts there means they live alongside the design work they inform, rather than as standalone files that need to be opened separately. Markdown stays as the canonical source of truth (version-controlled, diffable, editable in any text editor); the Figma render becomes the team-facing handoff format. Round-tripping is a future question — does updating the Figma frame propagate back to the markdown? Likely no in v1; the markdown is canonical, the Figma frame is generated from it.
+**Conflict resolution — required v1 work.**
 
-**Implementation considerations:**
+Each artifact carries a `last_synced` timestamp and content hash. `spruce figma pull` and `spruce figma sync` check both surfaces for changes since last sync:
 
-- Depends on the Figma read + write item above shipping first — needs the Figma Plugin API integration in place before this work can begin.
-- Each artifact type needs a Figma component template. The existing React components on the marketing site are visual references but won't translate directly — Figma's component model differs from React's.
-- A render sub-command per Discovery command (e.g., `/personas render`) that takes the canonical `.md` and produces the Figma frame. Or a single `/render personas` / `/render journey` pattern that reuses one render orchestrator.
-- The first concrete use case for the Figma write integration — proves the integration's value beyond moodboards and tokens.
+- **Only Figma changed** → apply to markdown.
+- **Only markdown changed** → apply to Figma.
+- **Both changed** → surface a diff for explicit resolution. No silent overwrites; no last-write-wins.
 
-**Why hold:** Depends on the Figma read + write item. Once that lands, this becomes the natural next step — and gives the Figma write integration its first concrete payoff.
+A `.spruce.figma.lock` file prevents concurrent writes during sync operations.
+
+**Test gate before release — release blocker, not aspirational.**
+
+Symmetric round-tripping fails dangerously when parse-back loses information. Before v1 ships:
+
+- **Round-trip fidelity** — markdown → Figma → markdown produces byte-identical output when no edits are made.
+- **Edit fidelity** — every supported edit in Figma round-trips to markdown losslessly. Per-artifact test matrix covering common edits (rename, restructure, prose changes, layout adjustments, addition/removal of items).
+- **Conflict surfacing** — every conflict scenario triggers the diff UX; no silent data loss.
+- **Lossy-edge cases** — when a designer makes an unsupported edit (custom layers, broken frame structure, nested groups outside the schema), the tool refuses to parse back rather than guessing. Clear error pointing to what broke.
+- **Real-designer pilot** — at least one external designer uses the tool against a real project for a week before release. Their breakage list becomes the final fix list.
+
+**Why one release rather than two.**
+
+Read and Discovery write ship together rather than as separate releases. The integration arrives as a complete bidirectional moment with the Discovery write as the headline differentiator and read as the natural counterpart. Splitting them dilutes both ships.
+
+**Why symmetric in v1 rather than one-way then later.**
+
+Designers using Spruce alongside Figma will edit in Figma — that's where their workflow lives. A one-way integration trains them to not edit there (because their changes get overwritten on the next sync), which biases the data toward "we never needed round-tripping" and defeats the integration's purpose. Symmetric in v1 with rigorous testing as the gate is the honest position.
+
+### Figma integration v2: Symmetric generative write
+
+Once v1 ships and the round-tripping infrastructure is proven, extend the symmetric write to the generative tier so designs, tokens, decisions, and remixes round-trip too.
+
+**Scope:**
+
+- **`/design` → page/feature frames in Figma.** Generated designs materialize as Figma frames matching the structure of the markup. Edits in Figma round-trip back to the source.
+- **`/foundations` → tokens written to Figma variables.** OKLCH colors, type scale, spacing, radii, shadows, motion durations + easings written as Figma variables (not local styles — variables for token-level interop). Updates in either surface propagate.
+- **`/decide` → decision-direction comparison frames.** The directional options surfaced during a `/decide` walkthrough render as side-by-side frames in Figma, letting the user see directions visually before answering.
+- **`/remix` → three-variant side-by-side frames.** Same value proposition as the Live browser iteration roadmap item, in the Figma surface — three meaningfully distinct variants rendered for comparison, with acceptance writing the chosen variant back to source.
+- **`/sketch` → moodboard frames.** Reference imagery, type samples, color palettes assembled as a Figma moodboard frame.
+
+**Test gate applies.**
+
+Same release-blocking discipline as v1: round-trip fidelity, edit fidelity, conflict surfacing, lossy-edge handling, real-designer pilot. Schema discipline gets harder for generative artifacts (a `/design` output has more freeform structure than a Discovery artifact) — that's the reason this is a separate release rather than bundled with v1.
+
+**Pairs especially well with Live browser iteration and `.design.md`.**
+
+`/decide` and `/remix` already touch Live browser iteration's core idea (rendered variants, user picks one). Symmetric Figma write makes the same value proposition available in the Figma surface — designers who don't run a dev server get the same in-flow iteration loop. `.design.md` (a separate roadmap item) is the canonical home for the tokens that `/foundations` writes to Figma variables; the artifact and the integration ship together as a coherent design-foundation story.
 
 ### Deterministic `npx spruce detect` CLI
 
